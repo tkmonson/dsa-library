@@ -1,0 +1,19 @@
+
+To sort is to rearrange elements in a structure such that they conform to an order. Sorting can potentially give a data structure faster search time.
+
+The sequential data structures have a natural order that is total (start -> end, head -> tail, top -> bottom, front -> back, i.e. by length).
+
+The hierarchical data structures (trees, DAGs) have a natural order that is partial (root -> leaf, i.e. by depth, level order). One can define a total order for these structures by redefining the order of equal-depth elements. This can be done by specifying the order of traversal. A BST has a total inorder traversal. Heaps do not not have total order.
+
+The relational data structures (graphs) have a natural quasiorder (predecessor -> successor, i.e by reachability). This allows for cycles. If the quasiorder is antisymmetric, it becomes a partial order (DAG). If the quasiorder is symmetric, the structure is undirected. A DAG is guaranteed to have a topological order, which is total.
+
+Some data structures have no natural order: sets, bags, maps, multimaps.
+
+
+                            Relational
+                           /          \
+   Undirected/Cyclic Graphs            Hierarchical (DAGs)
+                                      /                   \
+                                 Trees                     Non-tree DAGs
+                                /     \
+                      Sequential       b > 1
