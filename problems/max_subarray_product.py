@@ -12,10 +12,11 @@ The better solution is to realize that the product of a subarray is
 equal to its last element times the product of its previous elements.
 And the maximum product of a subarray ending at index i is equal to A[i]
 times either the minimum or maximum product of a subarray ending at
-i - 1, depending on whether A[i] is negative or positive. At each index
-i, we collect the minimum and maximum product of subarrays ending at i,
-and we use them to inform answers at higher indices. Finally, we return the
-maximum product of the subarray ending at index n - 1.
+i - 1, depending on whether A[i] is negative or positive (or, in certain
+cases, it is just A[i] because min_or_max(i - 1) * A[i] < A[i]).
+At each index i, we collect the minimum and maximum product of subarrays
+ending at i, and we use them to inform answers at higher indices.
+Finally, we return the maximum subarray product for the whole array.
 '''
 
 def max_subarray_product(arr):
