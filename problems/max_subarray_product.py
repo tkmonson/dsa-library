@@ -13,9 +13,9 @@ equal to its last element times the product of its previous elements.
 And the maximum product of a subarray ending at index i is equal to A[i]
 times either the minimum or maximum product of a subarray ending at
 i - 1, depending on whether A[i] is negative or positive. At each index
-i, we collect the minimum and maximum products of subarrays ending at i,
-use them to inform answers at higher indices, and return the maximum
-product of the subarray ending at index n - 1.
+i, we collect the minimum and maximum product of subarrays ending at i,
+and we use them to inform answers at higher indices. Finally, we return the
+maximum product of the subarray ending at index n - 1.
 '''
 
 def max_subarray_product(arr):
