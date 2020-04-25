@@ -4,6 +4,9 @@ Given an array of integers, find its maximum subarray product.
 [-6, 4, -5, 8, -10, 0, 8]  =>  1600 (subarray is [4, -5, 8, -10])
 [40, 0, -20, -10]  =>  200 (subarray is [-20, -10])
 
+Time Complexity: O(n)
+Auxiliary Space Complexity: O(1)
+
 The naive O(n^2) solution is to calculate the product of every subarray.
 The better solution is to realize that the product of a subarray is
 equal to its last element times the product of its previous elements.
