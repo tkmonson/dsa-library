@@ -16,3 +16,5 @@ def coin_sum(coins, n):
     return len(combos)
 
 print(coin_sum([2,3,5,6,], 10))
+
+# Consider a tabulation solution...

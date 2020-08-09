@@ -1,3 +1,9 @@
+# Three representations:
+    # Object-pointer
+    # Adjacency matrix
+    # Adjacency list
+    # (Set-notation, vertex and edge sets)
+
 from collections import defaultdict
 
 class Graph:

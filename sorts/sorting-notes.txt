@@ -1,4 +1,3 @@
-
 To sort is to rearrange elements in a structure such that they conform to an order. Sorting can potentially give a data structure faster search time.
 
 The sequential data structures have a natural order that is total (start -> end, head -> tail, top -> bottom, front -> back, i.e. by length).
