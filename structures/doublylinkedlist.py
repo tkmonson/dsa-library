@@ -196,6 +196,8 @@ class CircularDoublyLinkedList:
     #     points to head initially and explores the whole list in order.
     # In a circular list, every element is technically a middle element.
 
+    # Time: O(n) (but, practically, O(1) when data is not given)
+    # Auxiliary Space: O(1) 
     def __init__(self, data=[]):
         self.head = None
         self.size = 0
@@ -244,15 +246,14 @@ class CircularDoublyLinkedList:
     # Time: O(n)
     # Auxiliary Space: O(1)
     def search(self, data):
-        if not self.is_empty():
-            current = self.head
-            for i in range(self.size):
-                if current.data == data:
-                    return i
-                current = current.next
+        current = self.head
+        for i in range(self.size):
+            if current.data == data:
+                return i
+            current = current.next
         raise ValueError('Data not in list.')
 
-    # Time: O(n) in general, O(1) for head and tail
+    # Time: O(n) in general
     # Auxiliary Space: O(1)
     def insert(self, index, data):
         if self.is_empty():

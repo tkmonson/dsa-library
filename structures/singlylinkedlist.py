@@ -1,3 +1,7 @@
+# Possible expansions include:
+    # Prepend/Insert/Append All (complement to prune/graft)
+    # Traverse (complement to preorder/inorder/postorder)
+
 class SLLNode:
     def __init__(self, data):
         self.data = data
