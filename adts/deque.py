@@ -30,10 +30,10 @@ class Deque:
         self._structure.append(data)
 
     def dequeue_left(self):
-        return self._structure.pop()
+        return self._structure.pop(0)
 
     def dequeue_right(self):
-        return self._structure.pop(-1)
+        return self._structure.pop()
 
     def peek_left(self):
         return self._structure.access(0)

@@ -140,7 +140,7 @@ class SinglyLinkedList:
 
     # Time: O(n)
     # Auxiliary Space: O(1)
-    def pop(self, index=0):
+    def pop(self, index=-1):
         if self.is_empty():
             raise IndexError("Cannot pop empty list.")
 
@@ -304,7 +304,7 @@ class CircularSinglyLinkedList:
 
     # Time: O(n)
     # Auxiliary Space: O(1)
-    def pop(self, index=0):
+    def pop(self, index=-1):
         if self.is_empty():
             raise IndexError("Cannot pop empty list.")
 

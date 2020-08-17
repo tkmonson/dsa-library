@@ -24,11 +24,11 @@ class Stack:
         return self._structure.size
 
     def push(self, data):
-        self._structure.prepend(data)
+        self._structure.append(data)
 
     def pop(self):
         return self._structure.pop()
 
     def peek(self):
-        return self._structure.access(0)
+        return self._structure.access(-1)
 

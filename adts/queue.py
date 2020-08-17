@@ -27,7 +27,7 @@ class Queue:
         self._structure.prepend(data)
 
     def dequeue(self):
-        return self._structure.pop(-1)
+        return self._structure.pop()
 
     def peek(self):
         return self._structure.access(-1)
