@@ -1,3 +1,4 @@
+from collections import defaultdict
 from contextlib import suppress
 import itertools
 from math import floor, log2
@@ -12,58 +13,79 @@ class BTNode:
         self.parent = None
 
 class BinaryTree:
-    # Should empty BTs be allowed? Tradeoffs.
-    # BTs don't have indicies, so what should search return?
-    # Preorder is like drawing Ls, inorder scans left-to-right, postorder is
-    #     how you would build a pyramid, level-order is zig-zigs down.
-    # In the context of graph theory, a tree is undirected and unrooted. In the
-    #     context of computer science, specifically data structures, a tree is
-    #     typically assumed to be an arborescence (a directed, rooted tree)
-    #     with the additional structure of children being ordered (an ordered
-    #     or plane tree). If a tree has parent pointers, it is undirected.
-    # insert_left and insert_right input the parent (predecessor), while remove
-    #     inputs the node to be removed (current). This is possible because of
-    #     the parent pointers, similar to how linked lists can only remove
-    #     using a current pointer if the nodes have prev pointers.
-    # Empty/singleton/otherwise, Head/tail/middle <=> Root/leaf/internal
-    # Discuss grafting terminology.
-    # Why is size an attribute rather than a method based on traverse or fold?
-    #     Because it gives you O(1) access. The count method is O(n), but it
-    #     can be used to compute the size of subtrees.
-    # Talk about raising exceptions vs. returning None. If you know the answer,
-    #     return early. If you don't know the answer, and there is no point in
-    #     continuing the computation because it's not going to get an answer,
-    #     raise an exception. Sometimes the decision is between convenience for
-    #     the user (no null checks, fewer possible exceptions, nop behavior)
-    #     and semantic correctness (you shouldn't attempt to remove None from a
-    #     tree, here's an exception telling you not to do that and why).
-    # LCA: This can also be done without using parent pointers, but it would be
-    #     slower: search for either dA or dB while storing the path data in a
-    #     visited set; once you find one, search for the other specifically,
-    #     storing path data in an array; iterate over the array, from
-    #     descendant to root, and return the first node you encounter that is
-    #     in the visited set.
-    # STR: Only works for single-character data right now. Writing a version
-    #     for data of arbitrary length would be hard. Would require
-    #     preprocessing of the entire tree to fetch the lengths of each data
-    #     field. This length data would then be used to produce a
+    # In graph theory, a tree is an undirected, unrooted graph in which any two
+    #     vertices are connected by exactly one path. In computer science, a
+    #     tree is typically assumed to be an arborescence (a directed, rooted
+    #     tree in which there is exactly one path from the root to any other
+    #     node) whose children are ordered (that is, a child is distinguishable
+    #     as left/right or 1st/2nd/.../Kth; that is, it is an ordered or plane
+    #     tree). Thus, a binary tree is a bifurcating arborescence in which
+    #     each node has at most two children. This implementation has parent
+    #     pointers, which means that the tree is functionally undirected.
+    #
+    # The set of all binary trees may or may not include the empty tree. This
+    #     implementation does allow for binary trees to be empty.
+    #
+    # There are four standard orders in which the nodes of a binary tree may
+    #     be traversed: preorder, inorder, postorder, and level-order. Preorder
+    #     is like drawing hockey sticks, inorder scans nodes from left to
+    #     right, postorder is how you would build a pyramid, and level-order is
+    #     top-to-bottom, left-to-right.
+    #
+    # If a binary tree is complete, its structure can be described by a single
+    #     order. For non-complete binary trees with unique values, two orders
+    #     are required to fully describe the structure, one of which must be
+    #     inorder. For non-complete binary trees with duplicate values, two-
+    #     order construction will be structurally ambiguous. In this case, one
+    #     should instead use succinct construction, which inputs an order and a
+    #     list representing the structure of the tree.
+    #
+    # __str__ only works for single-character data right now. Writing a version
+    #     for data of arbitrary length would be hard. One potential solution
+    #     would involve preprocessing the entire tree to fetch the lengths of
+    #     each data field. This length data would then be used to produce a
     #     smallest-width string representation composed of variable-length
     #     links and spaces.
-    # Single-array construction assumes that the tree is complete.
-    # Level, depth, height, width
+    #
+    # This class has an interesting functional implementation of some of its
+    #     methods: a traverse method is called to recursively propagate
+    #     functions over a full or partial traversal of the tree's nodes, a
+    #     fold method is called to accumulate the tree's nodes to produce a
+    #     single value, and an ascend method is called to propagate functions
+    #     over a path toward the root. Traverse, fold, and ascend cannot pass
+    #     data in between nodes; if this is required, a custom method must be
+    #     written (see, e.g., the width method).
+    #
+    # The traverse method takes both void functions (procedures), which operate
+    #     on every node in the tree, and Boolean functions (predicates), which
+    #     cease traversal upon returning True.
+    #
+    # The insert method inserts a node at the first null found in a level-order
+    #     traversal. Subtypes of the binary tree like the binary search tree
+    #     and the binary heap do not have a choice of insertion location, so
+    #     this class cannot have a choice either (per Liskov Substitution
+    #     Principle). See the UnsortedBinaryTree subclass for a more flexible
+    #     insert method.
+    #
+    # Despite having a size attribute, this implementation also has an O(n)
+    #     count method, provided for computing the size of subtrees.
+    #
+    # The height of a node is the number of edges on the longest path from that
+    #     node to a leaf; the height of a tree is the height of its root node.
+    #     The depth of a node is the number of edges from that node to the
+    #     root; the maximum depth in a tree is equal to that tree's height. A
+    #     level is a set of all the nodes of equal depth in a tree; level n
+    #     contains all of the nodes of depth n; the level of a node is equal to
+    #     its depth. The width of a tree is the size of its largest level.
+    #
+    # Without parent pointers, the lowest_common_ancestor algorithm would be
+    #     slower: search for dA while storing path data in a visited set
+    #     (backtracking where necessary), search for dB while storing path data
+    #     in a list (backtracking where necessary), traverse the list from dB
+    #     to root, return the first node contained in the visited set.
 
-    # Duplicates? There's ambiguity in the tree structure if
-    #     dups are allowed, I think.
-    # It's biased toward the leftmost dup => it will construct
-    #     the trees whose right sides have more elements. If
-    #     there are more than 2 dups, this behavior will
-    #     propagate recursively.
-    # Duplicates are only a problem for trees that are not complete (so only a
-    #     problem for two-argument constructors).
-    # And, of course, trees can be modified after construction to have
-    #     duplicates. The problem relates to instantiation.
-    # Succinct data structures allow for duplicates.
-
+    # Time: O(n)
+    # Auxiliary Space: O(1)
     def __init__(self, preorder=[], inorder=[], postorder=[], levelorder=[]):
         selector = tuple(map(bool, (preorder, inorder, postorder, levelorder)))
         if sum(selector) > 2:
@@ -336,6 +358,8 @@ class BinaryTree:
 
         raise ValueError("Given two lists, one must be inorder.")
 
+    # Time: O(n)
+    # Auxiliary Space: O(1)
     @classmethod
     def succinct_construct(cls, structure, data, order="preorder"):
         if sum(structure) != len(data):
@@ -419,26 +443,25 @@ class BinaryTree:
         obj.size = len(data)
         return obj
 
-    # Time: O(2^h) (the number of nodes in a *complete* tree of height h)
-    # Auxiliary Space:
+    # Time: O(2^h) (the number of nodes in a complete tree of height h)
+    # Auxiliary Space: O(2^h)
     def __str__(self):
         if self.is_empty():
             return ""
 
-        max_height = self.fold(self.height)
-        max_depth = max_height - 1
-        leftmost_node_depth = self.fold(self.left_width) - 1
-        level_strings = []
+        max_depth = self.height()
+        leftmost_node_depth = self.fold(lambda root, left, right: left + 1) - 1
 
         def create_double_link(depth):
-            height_wrt_baseline = max_height - depth
-            if height_wrt_baseline == 1:
+            height_wrt_baseline = max_depth - depth
+
+            if height_wrt_baseline == 0:
                 return ""
+            if height_wrt_baseline == 1:
+                return "/ \\"
 
             def num_underscores(height_wrt_baseline):
                 if height_wrt_baseline == 2:
-                    return 0
-                if height_wrt_baseline == 3:
                     return 1
                 return 2 * num_underscores(height_wrt_baseline - 1) + 2
 
@@ -448,9 +471,10 @@ class BinaryTree:
         def blank(link):
             return " " * len(link)
 
+        level_strings = []
         q = queue.Queue()
         q.enqueue(self.root)
-        for depth in range(max_height):
+        for depth in range(max_depth + 1):
             data_strings = []
             link_strings = []
 
@@ -502,11 +526,32 @@ class BinaryTree:
         level_strings[-2] = level_strings[-2][:-1]
         return ''.join(level_strings[:-1])
 
+    # Time: O(n)
+    # Auxiliary Space: O(1)
+    def __eq__(self, other):
+        if type(self) is not type(other):
+            return False
+
+        def preorder(self_node, other_node):
+            if self_node is None and other_node is None:
+                return True
+            if self_node is None or other_node is None:
+                return False
+            return (self_node.data == other_node.data
+                and preorder(self_node.left, other_node.left)
+                and preorder(self_node.right, other_node.right))
+
+        return preorder(self.root, other.root)
+
+    # Time: O(1)
+    # Auxiliary Space: O(1)
     def is_empty(self):
         return self.size == 0
 
-# TRAVERSAL -------------------------------------------------------------------
+    # TRAVERSAL ---------------------------------------------------------------
 
+    # Time: O(n) (for full traversals)
+    # Auxiliary Space: O(1) for DFS, O(n) for BFS in the worst-case (balanced)
     def traverse(self, callback, root=None, order="preorder",
             visit_nulls=False):
         def preorder(root):
@@ -555,17 +600,23 @@ class BinaryTree:
             raise ValueError("Invalid traversal order given.")
         _traverse(self.root if root is None else root)
 
+    # Time: O(n)
+    # Auxiliary Space: O(n)
     def list_traversal_order(self, order):
         res = []
         self.traverse(lambda r: res.append(r.data), order=order)
         return res
 
+    # Time: O(n)
+    # Auxiliary Space: O(n)
     def list_tree_structure(self, order):
         res = []
         self.traverse(lambda r: res.append(0) if r is None else res.append(1),
             order=order, visit_nulls=True)
         return res
 
+    # Time: O(n)
+    # Auxiliary Space: O(1) for DFS, O(n) for BFS in the worst-case (balanced)
     def search(self, target, order="preorder"):
         res = []
         def target_found(root):
@@ -576,10 +627,32 @@ class BinaryTree:
         self.traverse(target_found, order=order)
         return res[0] if res else None
 
-# MUTATORS --------------------------------------------------------------------
+    # Time: O(n)
+    # Auxiliary Space: O(h)
+    def width(self, root=None):
+        if root is None:
+            root = self.root
 
+        level_widths = defaultdict(int)
+        def preorder(root, level_index):
+            if root is None:
+                return
+            level_widths[level_index] += 1
+            preorder(root.left, level_index + 1)
+            preorder(root.right, level_index + 1)
+
+        preorder(root, 0)
+        try:
+            return max(level_widths.values())
+        except ValueError:
+            return 0  # empty tree
+
+    # MUTATORS ----------------------------------------------------------------
+
+    # Time: O(n)
+    # Auxiliary Space: O(1) for DFS, O(n) for BFS in the worst-case (balanced)
     def insert(self, data):
-        def insertion_complete(root):
+        def insertion_completed(root):
             if root.left is None:
                 new = BTNode(data)
                 root.left = new
@@ -591,8 +664,10 @@ class BinaryTree:
                 new.parent = root
                 return True
             return False
-        self.traverse(insertion_complete, order="levelorder")
+        self.traverse(insertion_completed, order="levelorder")
 
+    # Time: O(1)
+    # Auxiliary Space: O(1)
     def remove(self, root):
         if root.left is not None and root.right is not None:
             raise ValueError("Node to be removed has two children.")
@@ -610,9 +685,14 @@ class BinaryTree:
             root.parent.right = child
         self.size -= 1
 
-# ACCUMULATION ----------------------------------------------------------------
+    # ACCUMULATION ------------------------------------------------------------
 
+    # Time: O(n)
+    # Auxiliary Space: O(1)
     def fold(self, callback, root=None, start=0):
+        if root is None:
+            root = self.root
+
         def preorder(root, accumulator):
             if root is None:
                 return accumulator
@@ -620,39 +700,54 @@ class BinaryTree:
                     preorder(root.left, accumulator),
                     preorder(root.right, accumulator))
         
-        return preorder(self.root if root is None else root, start)
+        return preorder(root, start)
 
-    def height(self, root, left, right):
-        return 1 + max(left, right)
+    # Time: O(n)
+    # Auxiliary Space: O(1)
+    def sum(self, root=None):
+        return self.fold(lambda root, left, right: root.data + left + right,
+                         root=root)
 
-    def sum(self, root, left, right):
-        return root.data + left + right
+    # Time: O(n)
+    # Auxiliary Space: O(1)
+    def count(self, root=None):
+        if root is None or root is self.root:
+            return self.size
+        return self.fold(lambda root, left, right: 1 + left + right,
+                         root=root)
 
-    def count(self, root, left, right):
-        return 1 + left + right
+    # Time: O(n)
+    # Auxiliary Space: O(1)
+    def height(self, root=None):
+        return self.fold(lambda root, left, right: 1 + max(left, right),
+                         root=root) - 1
 
-    def left_width(self, root, left, right):
-        return left + 1
+    # ASCENSION ---------------------------------------------------------------
 
-    def right_width(self, root, left, right):
-        return right + 1
-
-# ASCENSION -------------------------------------------------------------------
-
+    # Time: O(d)
+    # Auxiliary Space: O(1)
     def ascend(self, callback, root):
-        while root.parent is not None:
+        while root is not None:
             if callback(root):
                 break
             root = root.parent
 
+    # Time: O(d)
+    # Auxiliary Space: O(1)
     def depth(self, root):
-        count = itertools.count(0)
-        self.ascend(lambda r: next(count), root)
-        return next(count)
+        counter = itertools.count(-1)
+        def iterate(root):
+            next(counter)
+        self.ascend(iterate, root)
+        return next(counter)
 
+    # Time: O(d)
+    # Auxiliary Space: O(1)
     def level(self, root):
-        return self.depth(root) + 1
+        return self.depth(root)
 
+    # Time: O(d) where d is the depth of the deeper descendant
+    # Auxiliary Space: O(d_A) where d_A is the depth of descendant A
     def lowest_common_ancestor(self, descendantA, descendantB):
         visited = set()
         res = []
@@ -670,18 +765,25 @@ class BinaryTree:
 class UnsortedBinaryTree(BinaryTree):
     # Curiously, an UnsortedBinaryTree can be sorted. The "unsorted" descriptor
     #     denotes that there is no structural requirement that elements be
-    #     sorted in any particular way.
+    #     sorted in any particular way. As such, this class contains mutator
+    #     methods that cannot be inherited by subtypes of BinaryTree that do
+    #     have a structural requirement for sorted elements, such as the binary
+    #     search tree or binary heap.
 
-    # Can be passed to traverse method for recursive propagation.
-    def invert(self, root):
+    # Time: O(1)
+    # Auxiliary Space: O(1)
+    def invert(self, root):  # can be propagated through traverse/ascend
         root.left, root.right = root.right, root.left
 
+    # Time: O(1)
+    # Auxiliary Space: O(1)
     def insert(self, data, parent=None, right=False):
         if right:
             self.invert(parent)
 
         new = BTNode(data)
-        try: new.left = parent.left
+        try:
+            new.left = parent.left
         except AttributeError:  # inserting at self.root
             new.left = self.root
             with suppress(AttributeError):
@@ -696,6 +798,8 @@ class UnsortedBinaryTree(BinaryTree):
             self.invert(parent.left)
             self.invert(parent)
 
+    # Time: O(1)
+    # Auxiliary Space: O(1)
     def graft(self, root, scion, right=False):
         if not right and root.left is None:
             root.left = scion.root
@@ -708,6 +812,8 @@ class UnsortedBinaryTree(BinaryTree):
             scion.root.parent = root
         self.size += scion.size
 
+    # Time: O(n) (because of the call to count)
+    # Auxiliary Space: O(1)
     def prune(self, root):
         if root.parent is None:
             self.root = None
@@ -719,6 +825,6 @@ class UnsortedBinaryTree(BinaryTree):
         else:
             root.parent.right = None
 
-        pruned_branch_size = self.fold(self.count, root=root)
+        pruned_branch_size = self.count(root)
         self.size -= pruned_branch_size
 

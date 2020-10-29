@@ -1,185 +1,162 @@
+import unittest
+
 from structures import binarytree as bt
 
-# Enter your orders here:
-my_preorder   = [4,7,2,1,8,3,5]
-my_inorder    = [2,7,1,4,8,5,3]
-my_postorder  = [2,1,7,5,3,8,4]
-my_levelorder = [4,7,8,2,1,3,5]
+class TestBinaryTree(unittest.TestCase):
+    my_preorder      = [4,7,2,1,8,3,5]
+    my_inorder       = [2,7,1,4,8,5,3]
+    my_postorder     = [2,1,7,5,3,8,4]
+    my_levelorder    = [4,7,8,2,1,3,5]
+    my_pre_structure = [1,1,1,0,0,1,0,0,1,0,1,1,0,0,0]
+    my_lev_structure = [1,1,1,1,1,0,1,0,0,0,0,1,0,0,0]
 
-print("\nGiven:")
-print(f"\tPreorder:    {my_preorder}")
-print(f"\tInorder:     {my_inorder}")
-print(f"\tPostorder:   {my_postorder}")
-print(f"\tLevel-order: {my_levelorder}\n")
+    def setUp(self):
+        self.tree = bt.BinaryTree(
+            preorder=self.__class__.my_preorder,
+            inorder=self.__class__.my_inorder)
 
-# One-argument constructions
-print("Preorder construction:")
-print(bt.BinaryTree(preorder=my_preorder), end='\n\n')
-print("Inorder construction:")
-print(bt.BinaryTree(inorder=my_inorder), end='\n\n')
-print("Postorder construction:")
-print(bt.BinaryTree(postorder=my_postorder), end='\n\n')
-print("Level-order construction:")
-print(bt.BinaryTree(levelorder=my_levelorder), end='\n\n')
+    def test_0_is_empty(self):
+        self.assertEqual(self.tree.is_empty(), False)
 
-# Two-argument constructions
-print("Preorder/inorder construction:")
-print(bt.BinaryTree(preorder=my_preorder,
-                     inorder=my_inorder), end='\n\n')
-print("Inorder/postorder construction:")
-print(bt.BinaryTree(inorder=my_inorder,
-                  postorder=my_postorder), end='\n\n')
-print("Inorder/level-order construction:")
-print(bt.BinaryTree(inorder=my_inorder,
-                 levelorder=my_levelorder), end='\n\n')
+    def test_1_list_traversal_order(self):
+        self.assertEqual(
+            self.tree.list_traversal_order("preorder"),
+            self.__class__.my_preorder)
+        self.assertEqual(
+            self.tree.list_traversal_order("inorder"),
+            self.__class__.my_inorder)
+        self.assertEqual(
+            self.tree.list_traversal_order("postorder"),
+            self.__class__.my_postorder)
+        self.assertEqual(
+            self.tree.list_traversal_order("levelorder"),
+            self.__class__.my_levelorder)
 
-# Succinct constructions
-print("Succinct preorder construction:")
-print(bt.BinaryTree.succinct_construct(
-    structure=[1,1,1,0,0,1,0,0,1,0,1,1,0,0,0],
-    data=[4,7,2,1,8,3,5],
-    order="preorder"))
-print("Succinct level-order construction:")
-print(bt.BinaryTree.succinct_construct(
-    structure=[1,1,1,1,1,0,1,0,0,0,0,1,0,0,0],
-    data=[4,7,8,2,1,3,5],
-    order="levelorder"))
+    def test_2_list_tree_structure(self):
+        self.assertEqual(
+            self.tree.list_tree_structure("preorder"),
+            self.__class__.my_pre_structure)
+        self.assertEqual(
+            self.tree.list_tree_structure("levelorder"),
+            self.__class__.my_lev_structure)
 
-# Now go forward with one of the above trees
-def reset(cls=bt.UnsortedBinaryTree):
-    return cls(preorder=my_preorder,
-               inorder=my_inorder)
-t = reset()
-print("This is your input tree for all of the following method tests:\n")
-print(t, end='\n\n')
+    def test_3_search(self):
+        my_node = self.tree.root.left.right
+        self.assertIs(self.tree.search(1, "preorder"), my_node)
+        self.assertIs(self.tree.search(1, "inorder"), my_node)
+        self.assertIs(self.tree.search(1, "postorder"), my_node)
+        self.assertIs(self.tree.search(1, "levelorder"), my_node)
 
-print(f"Testing BinaryTree.is_empty... it\'s {t.is_empty()}!\n")
+    def test_4_width(self):
+        self.assertEqual(self.tree.width(), 3)
 
-print("Testing BinaryTree.list_traversal_order...\n")
-print(f"pre:   {t.list_traversal_order('preorder')}")
-print(f"in:    {t.list_traversal_order('inorder')}")
-print(f"post:  {t.list_traversal_order('postorder')}")
-print(f"level: {t.list_traversal_order('levelorder')}\n")
+    def test_5_insert(self):
+        resultant_tree = bt.BinaryTree(
+            preorder=[4,7,2,1,8,9,3,5],
+            inorder=[2,7,1,4,9,8,5,3])
+        self.tree.insert(9)
 
-print("Testing BinaryTree.list_tree_structure...\n")
-print(f"pre:   {t.list_tree_structure('preorder')}")
-print(f"in:    {t.list_tree_structure('inorder')}")
-print(f"post:  {t.list_tree_structure('postorder')}")
-print(f"level: {t.list_tree_structure('levelorder')}\n")
+        self.assertEqual(self.tree, resultant_tree)
 
-my_target = 3
-print(f"Testing BinaryTree.search({my_target})...\n")
-print(t, end='\n\n')
+    def test_6_remove(self):
+        resultant_tree = bt.BinaryTree(
+            preorder=[4,7,2,1,3,5],
+            inorder=[2,7,1,4,5,3])
+        self.tree.remove(self.tree.root.right)
 
-orders = {"preorder":   "Preorder:    ",
-          "inorder":    "Inorder:     ",
-          "postorder":  "Postorder:   ",
-          "levelorder": "Level-order: "}
+        self.assertEqual(self.tree, resultant_tree)
 
-for order in orders:
-    node = t.search(my_target, order=order)
+    def test_7_sum(self):
+        self.assertEqual(self.tree.sum(), 30)
 
-    if node.left is None:
-        left_data = "None"
-    else:
-        left_data = str(node.left.data)
+    def test_8_count(self):
+        self.assertEqual(self.tree.count(), 7)
 
-    if node.right is None:
-        right_data = "None"
-    else:
-        right_data = str(node.right.data)
+    def test_9_height(self):
+        self.assertEqual(self.tree.height(), 3)
 
-    if node.parent is None:
-        parent_data = "None"
-    else:
-        parent_data = str(node.parent.data)
+    def test_A_depth(self):
+        my_node = self.tree.root.left.right
+        self.assertEqual(self.tree.depth(my_node), 2)
 
-    print(orders[order] + f"data = {node.data}, left = {left_data}, right = {right_data}, parent = {parent_data}")
-print('')
+    def test_B_level(self):
+        my_node = self.tree.root.left
+        self.assertEqual(self.tree.level(my_node), 1)
 
-t = reset(cls=bt.BinaryTree)
-my_data = 9
-print(f"Testing BinaryTree.insert({my_data})...\n")
-print(t)
-t.insert(my_data)
-print(t, end='\n\n')
-t = reset()
+    def test_C_lowest_common_ancestor(self):
+        my_dA = self.tree.root.left.right
+        my_dB = self.tree.root.right.right
+        self.assertIs(
+            self.tree.lowest_common_ancestor(my_dA, my_dB),
+            self.tree.root)
 
-my_node = t.root.right
-print(f"Testing BinaryTree.remove({my_node.data})...\n")
-print(t)
-t.remove(my_node)
-print(t, end='\n\n')
-t = reset()
+class TestUnsortedBinaryTree(unittest.TestCase):
+    def setUp(self):
+        my_preorder      = [4,7,2,1,8,3,5]
+        my_inorder       = [2,7,1,4,8,5,3]
+        my_postorder     = [2,1,7,5,3,8,4]
+        my_levelorder    = [4,7,8,2,1,3,5]
+        my_pre_structure = [1,1,1,0,0,1,0,0,1,0,1,1,0,0,0]
+        my_lev_structure = [1,1,1,1,1,0,1,0,0,0,0,1,0,0,0]
 
-print(f"Testing BinaryTree.fold(BinaryTree.height)... it's {t.fold(t.height)}!\n")
+        self.tree = bt.UnsortedBinaryTree(
+            preorder=my_preorder,
+            inorder=my_inorder)
 
-print(f"Testing BinaryTree.fold(BinaryTree.sum)... it's {t.fold(t.sum)}!\n")
+    def test_0_invert(self):
+        resultant_tree = bt.UnsortedBinaryTree(
+            preorder=[4,8,3,5,7,1,2],
+            inorder=[3,5,8,4,1,7,2])
+        self.tree.traverse(self.tree.invert)
 
-print(f"Testing BinaryTree.fold(BinaryTree.count)... it's {t.fold(t.count)}!\n")
+        self.assertEqual(self.tree, resultant_tree)
 
-print(f"Testing BinaryTree.fold(BinaryTree.left_width)... it's {t.fold(t.left_width)}!\n")
+    def test_1_insert_left(self):
+        resultant_tree = bt.UnsortedBinaryTree(
+            preorder=[4,7,2,1,9,8,3,5],
+            inorder=[2,7,9,1,4,8,5,3])
+        self.tree.insert(9, parent=self.tree.root.left.right)
 
-print(f"Testing BinaryTree.fold(BinaryTree.right_width)... it's {t.fold(t.right_width)}!\n")
+        self.assertEqual(self.tree, resultant_tree)
 
-my_root = t.root.left.right
-print(f"Testing BinaryTree.depth({my_root.data})... it's {t.depth(my_root)}!\n")
+    def test_2_insert_right(self):
+        resultant_tree = bt.UnsortedBinaryTree(
+            preorder=[4,7,2,1,9,8,3,5],
+            inorder=[2,7,1,9,4,8,5,3])
+        self.tree.insert(9, parent=self.tree.root.left.right, right=True)
 
-my_root = t.root.left.right
-print(f"Testing BinaryTree.level({my_root.data})... it's {t.level(my_root)}!\n")
+        self.assertEqual(self.tree, resultant_tree)
 
-my_descendantA = t.root.left.right
-my_descendantB = t.root.right.right
-lca = t.lowest_common_ancestor(my_descendantA, my_descendantB)
-lca_data = str(lca.data) if lca is not None else "None"
-print(f"Testing BinaryTree.lowest_common_ancestor({my_descendantA.data}, {my_descendantB.data})... it's {lca_data}!\n")
-print(t, end='\n\n')
+    def test_3_graft_left(self):
+        my_scion = bt.BinaryTree(
+            preorder=['A','B','C','D'],
+            inorder=['B','A','C','D'])
+        resultant_tree = bt.UnsortedBinaryTree(
+            preorder=[4,7,2,1,8,'A','B','C','D',3,5],
+            inorder=[2,7,1,4,'B','A','C','D',8,5,3])
+        self.tree.graft(self.tree.root.right, my_scion)
 
-print("Testing BinaryTree.traverse(UnsortedBinaryTree.invert)...\n")
-print(t)
-t.traverse(t.invert)
-print(t, end='\n\n')
-t = reset()
+        self.assertEqual(self.tree, resultant_tree)
 
-my_data = 9
-my_parent = t.root.left.right
-print(f"Testing UnsortedBinaryTree.insert({my_data}, {my_parent.data}, right=False)...\n")
-print(t)
-t.insert(my_data, my_parent, right=False)
-print(t, end='\n\n')
-t = reset()
+    def test_4_graft_right(self):
+        my_scion = bt.BinaryTree(
+            preorder=['A','B','C','D'],
+            inorder=['B','A','C','D'])
+        resultant_tree = bt.UnsortedBinaryTree(
+            preorder=[4,7,2,1,'A','B','C','D',8,3,5],
+            inorder=[2,7,1,'B','A','C','D',4,8,5,3])
+        self.tree.graft(self.tree.root.left.right, my_scion, right=True)
 
-my_data = 9
-my_parent = t.root.left.right
-print(f"Testing UnsortedBinaryTree.insert({my_data}, {my_parent.data}, right=True)...\n")
-print(t)
-t.insert(my_data, my_parent, right=True)
-print(t, end='\n\n')
-t = reset()
+        self.assertEqual(self.tree, resultant_tree)
 
-my_root = t.root.right
-my_scion = bt.UnsortedBinaryTree(preorder=['A','B','C','D'],
-                                 inorder=['B','A','C','D'])
-print(f"Testing UnsortedBinaryTree.graft({my_root.data}, scion, right=False)...\n")
-print(t)
-t.graft(my_root, my_scion, right=False)
-print(t, end='\n\n')
-t = reset()
+    def test_4_prune(self):
+        resultant_tree = bt.UnsortedBinaryTree(
+            preorder=[4,7,2,1],
+            inorder=[2,7,1,4])
+        self.tree.prune(self.tree.root.right)
 
-my_root = t.root.left.right
-my_scion = bt.UnsortedBinaryTree(preorder=['A','B','C','D'],
-                                 inorder=['B','A','C','D'])
-print(f"Testing UnsortedBinaryTree.graft({my_root.data}, scion, right=True)...\n")
-print(t)
-t.graft(my_root, my_scion, right=True)
-print(t, end='\n\n')
-t = reset()
+        self.assertEqual(self.tree, resultant_tree)
 
-my_root = t.root.right
-print(f"Testing BinaryTree.prune({my_root.data})...\n")
-print(t)
-t.prune(my_root)
-print(t, end='\n\n')
-t = reset()
+if __name__ == "__main__":
+    unittest.main()
 
-print("End of testing.")
