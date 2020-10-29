@@ -17,11 +17,11 @@ class Stack:
     def __str__(self):
         return self._structure.__str__()
 
+    def __len__(self):
+        return self._structure.size
+
     def is_empty(self):
         return self._structure.is_empty()
-
-    def size(self):
-        return self._structure.size
 
     def push(self, data):
         self._structure.append(data)
