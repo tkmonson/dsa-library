@@ -85,7 +85,8 @@ class BinaryTree:
     #     to root, return the first node contained in the visited set.
 
     # Time: O(n)
-    # Auxiliary Space: O(1)
+    # Auxiliary Space: O(1) for empty, pre, in, and post constructions,
+    #                  O(n) for level and two-order constructions
     def __init__(self, preorder=[], inorder=[], postorder=[], levelorder=[]):
         selector = tuple(map(bool, (preorder, inorder, postorder, levelorder)))
         if sum(selector) > 2:
@@ -359,7 +360,7 @@ class BinaryTree:
         raise ValueError("Given two lists, one must be inorder.")
 
     # Time: O(n)
-    # Auxiliary Space: O(1)
+    # Auxiliary Space: O(1) for preorder, O(n) for level-order
     @classmethod
     def succinct_construct(cls, structure, data, order="preorder"):
         if sum(structure) != len(data):
@@ -511,7 +512,10 @@ class BinaryTree:
 
                     # Find length of excess whitespace on the left.
                     if depth == leftmost_node_depth:
-                        indent_offset = len(data_indent)
+                        if root.right is None:  # root is leaf
+                            indent_offset = len(data_indent)
+                        else:
+                            indent_offset = len(link_indent)
                 else:
                     data_strings.append(interdata_spacing + data)
                     link_strings.append(interlink_spacing + link)
@@ -551,7 +555,7 @@ class BinaryTree:
     # TRAVERSAL ---------------------------------------------------------------
 
     # Time: O(n) (for full traversals)
-    # Auxiliary Space: O(1) for DFS, O(n) for BFS in the worst-case (balanced)
+    # Auxiliary Space: O(1) for DFS, O(n) for BFS
     def traverse(self, callback, root=None, order="preorder",
             visit_nulls=False):
         def preorder(root):
@@ -616,7 +620,7 @@ class BinaryTree:
         return res
 
     # Time: O(n)
-    # Auxiliary Space: O(1) for DFS, O(n) for BFS in the worst-case (balanced)
+    # Auxiliary Space: O(1) for DFS, O(n) for BFS
     def search(self, target, order="preorder"):
         res = []
         def target_found(root):
@@ -650,7 +654,7 @@ class BinaryTree:
     # MUTATORS ----------------------------------------------------------------
 
     # Time: O(n)
-    # Auxiliary Space: O(1) for DFS, O(n) for BFS in the worst-case (balanced)
+    # Auxiliary Space: O(n)
     def insert(self, data):
         def insertion_completed(root):
             if root.left is None:
@@ -827,4 +831,90 @@ class UnsortedBinaryTree(BinaryTree):
 
         pruned_branch_size = self.count(root)
         self.size -= pruned_branch_size
+
+
+class BinarySearchTree(BinaryTree):
+    # Time: O(n)
+    # Auxiliary Space: O(1) for empty, pre, in, and post constructions,
+    #                  O(n) for level and two-order constructions
+    def __init__(self, preorder=[], inorder=[], postorder=[], levelorder=[]):
+        super().__init__(preorder, inorder, postorder, levelorder)
+        if not self._is_BST():
+            raise ValueError("Orders do not represent a binary search tree.")
+
+    # Time: O(n)
+    # Auxiliary Space: O(1) for preorder, O(n) for level-order
+    @classmethod
+    def succinct_construct(cls, structure, data, order="preorder"):
+        tree = super().succinct_construct(structure, data, order)
+        if not tree._is_BST():
+            raise ValueError("Orders do not represent a binary search tree.")
+        return tree
+        
+    # Time: O(n)
+    # Auxiliary Space: O(1)
+    def _is_BST(self):
+        def _is_BST_helper(root, min_data, max_data):
+            if root is None:
+                return True
+            with suppress(TypeError):
+                if root.data < min_data or root.data > max_data:
+                    return False
+    
+            return (_is_BST_helper(root.left, min_data, root.data)
+                and _is_BST_helper(root.right, root.data, max_data))
+
+        return _is_BST_helper(self.root, None, None)
+
+    # Time: O(logn) for binary search, O(n) otherwise
+    # Auxiliary Space: O(1)
+    def search(self, target, order="binary"):
+        if order != "binary":
+            return super().search(target, order=order)
+
+        def binary_search(root):
+            if root is None or root.data == target:
+                return root
+            if target < root.data:
+                return binary_search(root.left)
+            else:
+                return binary_search(root.right)
+
+        return binary_search(self.root)
+
+    # Time: O(h)
+    # Auxiliary Space: O(1)
+    def insert(self, data):
+        if self.is_empty():
+            self.root = BTNode(data)
+            return
+
+        def binary_insert(root):
+            if data < root.data:
+                if root.left is None:
+                    root.left = BTNode(data)
+                    root.left.parent = root
+                    return
+                binary_insert(root.left)
+            else:
+                if root.right is None:
+                    root.right = BTNode(data)
+                    root.right.parent = root
+                    return
+                binary_insert(root.right)
+
+        binary_insert(self.root)
+        self.size += 1
+
+    # Time: O(h)
+    # Auxiliary Space: O(1)
+    def remove(self, root):
+        if root.left is not None and root.right is not None:
+            inorder_successor = root.right
+            while inorder_successor.left is not None:
+                inorder_successor = inorder_successor.left
+            root.data = inorder_successor.data
+            root = inorder_successor
+
+        super().remove(root)
 

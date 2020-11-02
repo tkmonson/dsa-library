@@ -157,6 +157,49 @@ class TestUnsortedBinaryTree(unittest.TestCase):
 
         self.assertEqual(self.tree, resultant_tree)
 
+class TestBinarySearchTree(unittest.TestCase):
+    def setUp(self):
+        my_preorder      = ['M','G','C','A','F','D','K','J','I','L','X','V',
+                            'T','R','P','Q','U']
+        my_inorder       = ['A','C','D','F','G','I','J','K','L','M','P','Q',
+                            'R','T','U','V','X']
+        my_postorder     = ['A','D','F','C','I','J','L','K','G','Q','P','R',
+                            'U','T','V','X','M']
+        my_levelorder    = ['M','G','X','C','K','V','A','F','J','L','T','D',
+                            'I','R','U','P','Q']
+        my_pre_structure = [1,1,1,1,0,0,1,1,0,0,0,1,1,1,0,0,0,1,0,0,1,1,1,1,1,
+                            0,1,0,0,0,1,0,0,0,0]
+        my_lev_structure = [1,1,1,1,1,1,0,1,1,1,1,1,0,0,0,1,0,1,0,0,0,1,1,0,0,
+                            0,0,1,0,0,0,0,1,0,0]
+
+        self.tree = bt.BinarySearchTree(
+            preorder=my_preorder,
+            inorder=my_inorder)
+
+    def test_0_search(self):
+        my_node = self.tree.root.left.right.left
+        self.assertIs(self.tree.search('J'), my_node)
+
+    def test_1_insert(self):
+        resultant_tree = bt.BinarySearchTree(
+            preorder=['M','G','C','A','F','D','E','K','J','I','L','X','V','T',
+                      'R','P','Q','U'],
+            inorder=['A','C','D','E','F','G','I','J','K','L','M','P','Q','R',
+                     'T','U','V','X'])
+        self.tree.insert('E')
+
+        self.assertEqual(self.tree, resultant_tree)
+
+    def test_2_remove(self):
+        resultant_tree = bt.BinarySearchTree(
+            preorder=['M','I','C','A','F','D','K','J','L','X','V','T','R','P',
+                      'Q','U'],
+            inorder=['A','C','D','F','I','J','K','L','M','P','Q','R','T','U',
+                     'V','X'])
+        self.tree.remove(self.tree.root.left)
+
+        self.assertEqual(self.tree, resultant_tree)
+
 if __name__ == "__main__":
     unittest.main()
 
