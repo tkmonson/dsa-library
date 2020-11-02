@@ -453,7 +453,7 @@ class BinaryTree:
         max_depth = self.height()
         leftmost_node_depth = self.fold(lambda root, left, right: left + 1) - 1
 
-        def create_double_link(depth):
+        def create_link(depth):
             height_wrt_baseline = max_depth - depth
 
             if height_wrt_baseline == 0:
@@ -479,44 +479,66 @@ class BinaryTree:
             data_strings = []
             link_strings = []
 
-            double_link = create_double_link(depth)
-            interdata_spacing = blank(create_double_link(depth - 1))
-            interlink_spacing = blank(double_link) + 2 * " "
+            link_at_given_depth = create_link(depth)
+
+            interdata_spacing = blank(create_link(depth - 1))
+            interlink_spacing = blank(link_at_given_depth) + 2 * " "
             if depth == max_depth - 1:
                 interlink_spacing = interlink_spacing[2:]
 
-            for row_position in range(level_capacity := 2 ** depth):
-                if (root := q.dequeue()) is None:
-                    data = " "
-                    q.enqueue(None)
-                    q.enqueue(None)
-                else:
+            data_indent = " " * (len(interdata_spacing) // 2)
+            link_indent = " " * (len(interlink_spacing) // 2)
+
+            null_data_spacing = ""
+            null_link_spacing = ""
+
+            for level_position in range(level_capacity := 2 ** depth):
+                # Last level: spacing is 3 between siblings, 1 between cousins.
+                if depth == max_depth:
+                    interdata_spacing = 3 * " " if level_position % 2 else " "
+
+                root = q.dequeue()
+                try:
                     data = str(root.data)
+                    link = link_at_given_depth
                     q.enqueue(root.left)
                     q.enqueue(root.right)
 
-                # Nulls and leaves don't print links, other nodes do.
-                link = double_link
-                if root is None or (root.left is None and root.right is None):
+                except AttributeError:  # root is None
+                    data = " "
+                    link = blank(link_at_given_depth)
+                    q.enqueue(None)
+                    q.enqueue(None)
+
+                    if level_position == 0:
+                        null_data_spacing += data_indent + data
+                        null_link_spacing += link_indent + link
+                    else:
+                        null_data_spacing += interdata_spacing + data
+                        null_link_spacing += interlink_spacing + link
+                    continue
+
+                # Leaves don't print links, other non-null nodes do.
+                if root.left is None and root.right is None:
                     link = blank(link)
 
-                # Last level: spacing is 3 between siblings, 1 between cousins.
-                if depth == max_depth:
-                    interdata_spacing = 3 * " " if row_position % 2 else " "
-
-                if row_position == 0:
-                    data_indent = " " * (len(interdata_spacing) // 2)
-                    link_indent = " " * (len(interlink_spacing) // 2)
-                    data_strings.append(data_indent + data)
-                    link_strings.append(link_indent + link)
-
+                if level_position == 0:
                     # Find length of excess whitespace on the left.
                     if depth == leftmost_node_depth:
                         if root.right is None:  # root is leaf
                             indent_offset = len(data_indent)
                         else:
                             indent_offset = len(link_indent)
+
+                    data_strings.append(data_indent + data)
+                    link_strings.append(link_indent + link)
                 else:
+                    # Append spacing from preceding nulls, if any.
+                    data_strings.append(null_data_spacing)
+                    link_strings.append(null_link_spacing)
+                    null_data_spacing = ""
+                    null_link_spacing = ""
+
                     data_strings.append(interdata_spacing + data)
                     link_strings.append(interlink_spacing + link)
 
