@@ -218,7 +218,10 @@ class BinaryTree:
                 for _ in range(level_size):
                     root = q.dequeue()
 
-                    root.left = BTNode(levelorder[level_index])
+                    try:
+                        root.left = BTNode(levelorder[level_index])
+                    except IndexError:
+                        break
                     root.left.parent = root
                     q.enqueue(root.left)
                     level_index += 1
@@ -488,6 +491,8 @@ class BinaryTree:
 
             data_indent = " " * (len(interdata_spacing) // 2)
             link_indent = " " * (len(interlink_spacing) // 2)
+            if depth == max_depth:
+                data_indent = ""
 
             null_data_spacing = ""
             null_link_spacing = ""
