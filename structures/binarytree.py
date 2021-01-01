@@ -1,3 +1,4 @@
+from abc import ABC, abstractmethod
 from collections import defaultdict
 from contextlib import suppress
 import itertools
@@ -12,7 +13,7 @@ class BTNode:
         self.right = None
         self.parent = None
 
-class BinaryTree:
+class BaseBinaryTree(ABC):
     # In graph theory, a tree is an undirected, unrooted graph in which any two
     #     vertices are connected by exactly one path. In computer science, a
     #     tree is typically assumed to be an arborescence (a directed, rooted
@@ -59,13 +60,6 @@ class BinaryTree:
     # The traverse method takes both void functions (procedures), which operate
     #     on every node in the tree, and Boolean functions (predicates), which
     #     cease traversal upon returning True.
-    #
-    # The insert method inserts a node at the first null found in a level-order
-    #     traversal. Subtypes of the binary tree like the binary search tree
-    #     and the binary heap do not have a choice of insertion location, so
-    #     this class cannot have a choice either (per Liskov Substitution
-    #     Principle). See the UnsortedBinaryTree subclass for a more flexible
-    #     insert method.
     #
     # Despite having a size attribute, this implementation also has an O(n)
     #     count method, provided for computing the size of subtrees.
@@ -371,7 +365,7 @@ class BinaryTree:
 
         # Create an uninitialized BT, call its parent constructor.
         obj = cls.__new__(cls)
-        super(BinaryTree, obj).__init__()
+        super(BaseBinaryTree, obj).__init__()
 
         # Empty construction
         if (not structure or not structure[0]) and not data:
@@ -615,21 +609,21 @@ class BinaryTree:
                 q.enqueue(root)
             while not q.is_empty():
                 root = q.dequeue()
-                if callback(root):
-                    break
                 with suppress(AttributeError):
                     if root.left is not None or visit_nulls:
                         q.enqueue(root.left)
                     if root.right is not None or visit_nulls:
                         q.enqueue(root.right)
+                if callback(root):
+                    break
 
         dispatcher = {"preorder": preorder, "inorder": inorder,
                       "postorder": postorder, "levelorder": levelorder}
         try:
-            _traverse = dispatcher[order]
+            traverse = dispatcher[order]
         except KeyError:
             raise ValueError("Invalid traversal order given.")
-        _traverse(self.root if root is None else root)
+        traverse(self.root if root is None else root)
 
     # Time: O(n)
     # Auxiliary Space: O(n)
@@ -680,41 +674,85 @@ class BinaryTree:
 
     # MUTATORS ----------------------------------------------------------------
 
-    # Time: O(n)
-    # Auxiliary Space: O(n)
+    @abstractmethod
     def insert(self, data):
-        def insertion_completed(root):
-            if root.left is None:
-                new = BTNode(data)
-                root.left = new
-                new.parent = root
-                return True
-            if root.right is None:
-                new = BTNode(data)
-                root.right = new
-                new.parent = root
-                return True
-            return False
-        self.traverse(insertion_completed, order="levelorder")
+        pass
 
     # Time: O(1)
     # Auxiliary Space: O(1)
-    def remove(self, root):
-        if root.left is not None and root.right is not None:
+    def remove(self, removee):
+        if removee.left is not None and removee.right is not None:
             raise ValueError("Node to be removed has two children.")
 
         # If not left, child is either right or None.
-        child = root.left if root.left is not None else root.right
+        child = removee.left if removee.left is not None else removee.right
         with suppress(AttributeError):
-            child.parent = root.parent
+            child.parent = removee.parent
 
-        if root.parent is None:
+        if removee.parent is None:
             self.root = child
-        elif root is root.parent.left:
-            root.parent.left = child
+        elif removee is removee.parent.left:
+            removee.parent.left = child
         else:
-            root.parent.right = child
+            removee.parent.right = child
         self.size -= 1
+
+    def _swap_nodes(self, a, b):
+        if a.parent is b or b.parent is a:
+            parent = b if a.parent is b else a
+            child = a if a.parent is b else b
+
+            child.parent = child
+            with suppress(AttributeError):
+                child.left.parent = parent
+            with suppress(AttributeError):
+                child.right.parent = parent
+
+            with suppress(AttributeError):
+                if parent.parent.left is parent:
+                    parent.parent.left = child
+                else:
+                    parent.parent.right = child
+            if parent.left is child:
+                parent.left = parent
+                with suppress(AttributeError):
+                    parent.right.parent = child
+            else:
+                parent.right = parent
+                with suppress(AttributeError):
+                    parent.left.parent = child
+        else:
+            # Make any references TO (a) refer TO (b) instead.
+            with suppress(AttributeError):
+                if a.parent.left is a:
+                    a.parent.left = b
+                else:
+                    a.parent.right = b
+            with suppress(AttributeError):
+                a.left.parent = b
+            with suppress(AttributeError):
+                a.right.parent = b
+
+            # Make any references TO (b) refer TO (a) instead.
+            with suppress(AttributeError):
+                if b.parent.left is b:
+                    b.parent.left = a
+                else:
+                    b.parent.right = a
+            with suppress(AttributeError):
+                b.left.parent = a
+            with suppress(AttributeError):
+                b.right.parent = a
+
+        # Swap references FROM (a) with corresponding references FROM (b).
+        a.left, b.left = b.left, a.left
+        a.right, b.right = b.right, a.right
+        a.parent, b.parent = b.parent, a.parent
+        
+        if self.root is a:
+            self.root = b
+        elif self.root is b:
+            self.root = a
 
     # ACCUMULATION ------------------------------------------------------------
 
@@ -793,14 +831,7 @@ class BinaryTree:
         return res[0] if res else None
 
 
-class UnsortedBinaryTree(BinaryTree):
-    # Curiously, an UnsortedBinaryTree can be sorted. The "unsorted" descriptor
-    #     denotes that there is no structural requirement that elements be
-    #     sorted in any particular way. As such, this class contains mutator
-    #     methods that cannot be inherited by subtypes of BinaryTree that do
-    #     have a structural requirement for sorted elements, such as the binary
-    #     search tree or binary heap.
-
+class BinaryTree(BaseBinaryTree):
     # Time: O(1)
     # Auxiliary Space: O(1)
     def invert(self, root):  # can be propagated through traverse/ascend
@@ -809,21 +840,22 @@ class UnsortedBinaryTree(BinaryTree):
     # Time: O(1)
     # Auxiliary Space: O(1)
     def insert(self, data, parent=None, right=False):
+        insertee = BTNode(data)
+
         if right:
             self.invert(parent)
 
-        new = BTNode(data)
         try:
-            new.left = parent.left
+            insertee.left = parent.left
         except AttributeError:  # inserting at self.root
-            new.left = self.root
+            insertee.left = self.root
             with suppress(AttributeError):
-                self.root.parent = new
-            self.root = new
+                self.root.parent = insertee
+            self.root = insertee
         with suppress(AttributeError):
-            new.left.parent = new
-        new.parent = parent
-        parent.left = new
+            insertee.left.parent = insertee
+        insertee.parent = parent
+        parent.left = insertee
 
         if right:
             self.invert(parent.left)
@@ -860,7 +892,7 @@ class UnsortedBinaryTree(BinaryTree):
         self.size -= pruned_branch_size
 
 
-class BinarySearchTree(BinaryTree):
+class BinarySearchTree(BaseBinaryTree):
     # Time: O(n)
     # Auxiliary Space: O(1) for empty, pre, in, and post constructions,
     #                  O(n) for level and two-order constructions
@@ -912,21 +944,26 @@ class BinarySearchTree(BinaryTree):
     # Time: O(h)
     # Auxiliary Space: O(1)
     def insert(self, data):
+        insertee = BTNode(data)
+
         if self.is_empty():
-            self.root = BTNode(data)
+            self.root = insertee
+            self.size += 1
             return
 
         def binary_insert(root):
-            if data < root.data:
+            nonlocal insertee
+
+            if insertee.data < root.data:
                 if root.left is None:
-                    root.left = BTNode(data)
-                    root.left.parent = root
+                    root.left = insertee
+                    insertee.parent = root
                     return
                 binary_insert(root.left)
             else:
                 if root.right is None:
-                    root.right = BTNode(data)
-                    root.right.parent = root
+                    root.right = insertee
+                    insertee.parent = root
                     return
                 binary_insert(root.right)
 
@@ -935,13 +972,12 @@ class BinarySearchTree(BinaryTree):
 
     # Time: O(h)
     # Auxiliary Space: O(1)
-    def remove(self, root):
-        if root.left is not None and root.right is not None:
-            inorder_successor = root.right
+    def remove(self, removee):
+        if removee.left is not None and removee.right is not None:
+            inorder_successor = removee.right
             while inorder_successor.left is not None:
                 inorder_successor = inorder_successor.left
-            root.data = inorder_successor.data
-            root = inorder_successor
+            self._swap_nodes(removee, inorder_successor)
 
-        super().remove(root)
+        super().remove(removee)
 
