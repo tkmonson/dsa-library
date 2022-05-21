@@ -52,7 +52,6 @@ def dfs_postorder(root):
     return res
 
 if __name__ == "__main__":
-
     tree = BinaryTree(7)
     
     tree.left = BinaryTree(4)
@@ -66,3 +65,4 @@ if __name__ == "__main__":
     print("DFS pre: " + str(dfs_preorder(tree)))
     print("DFS in: " + str(dfs_inorder(tree)))
     print("DFS post: " + str(dfs_postorder(tree)))
+

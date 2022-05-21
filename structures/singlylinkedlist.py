@@ -37,7 +37,7 @@ class SinglyLinkedList:
         node_strings = []
         current = self.head
         for _ in range(self.size):
-            node_strings.append(str(current.data) + " --> ")
+            node_strings.append(str(current.data) + ' --> ')
             current = current.next
         return ''.join(node_strings)
 
@@ -57,7 +57,7 @@ class SinglyLinkedList:
             for _ in range(index):
                 current = current.next
             return current.data
-        raise IndexError("Index not in range.")
+        raise IndexError('Index not in range.')
 
     # Time: O(n)
     # Auxiliary Space: O(1)
@@ -116,7 +116,7 @@ class SinglyLinkedList:
     # Auxiliary Space: O(1)
     def remove(self, data):
         if self.is_empty():
-            raise ValueError("Cannot remove from empty list.")
+            raise ValueError('Cannot remove from empty list.')
 
         if self.head.data == data:
             if self.size == 1:
@@ -136,18 +136,18 @@ class SinglyLinkedList:
                 self.size -= 1
                 return
             predecessor = predecessor.next
-        raise ValueError("Data not in list.")
+        raise ValueError('Data not in list.')
 
     # Time: O(n)
     # Auxiliary Space: O(1)
     def pop(self, index=-1):
         if self.is_empty():
-            raise IndexError("Cannot pop empty list.")
+            raise IndexError('Cannot pop empty list.')
 
         if index < 0:
             index += self.size
         if index < 0 or index >= self.size:
-            raise IndexError("Index not in range.")
+            raise IndexError('Index not in range.')
 
         if index == 0:
             data = self.head.data
@@ -198,22 +198,22 @@ class CircularSinglyLinkedList:
     # Auxiliary Space: O(n)
     def __str__(self):
         if self.is_empty():
-            return ""
+            return ''
 
-        node_strings = ["--> "]
+        node_strings = ['--> ']
         character_total = 4
         current = self.tail.next
         for _ in range(self.size - 1):
             data_string = str(current.data)
-            node_strings.append(data_string + " --> ")
+            node_strings.append(data_string + ' --> ')
             character_total += (len(data_string) + 5)
             current = current.next
 
         data_string = str(current.data)
-        node_strings.append(data_string + " --\n")
+        node_strings.append(data_string + ' --\n')
         character_total += (len(data_string) + 3)
 
-        circular_link = "\\" + ''.join(["_" * (character_total - 2)]) + "/"
+        circular_link = '\\' + ''.join(['_' * (character_total - 2)]) + '/'
         node_strings.append(circular_link)
         return ''.join(node_strings)
 
@@ -226,7 +226,7 @@ class CircularSinglyLinkedList:
     # Auxiliary Space: O(1)
     def access(self, index):
         if self.is_empty():
-            raise IndexError("Cannot access an empty list.")
+            raise IndexError('Cannot access an empty list.')
 
         index %= self.size
         current = self.tail.next
@@ -287,7 +287,7 @@ class CircularSinglyLinkedList:
     # Auxiliary Space: O(1)
     def remove(self, data):
         if self.is_empty():
-            raise ValueError("Cannot remove from empty list.")
+            raise ValueError('Cannot remove from empty list.')
 
         predecessor = self.tail
         for _ in range(self.size):
@@ -300,13 +300,13 @@ class CircularSinglyLinkedList:
                 self.size -= 1
                 return
             predecessor = predecessor.next
-        raise ValueError("Data not in list.")
+        raise ValueError('Data not in list.')
 
     # Time: O(n)
     # Auxiliary Space: O(1)
     def pop(self, index=-1):
         if self.is_empty():
-            raise IndexError("Cannot pop empty list.")
+            raise IndexError('Cannot pop empty list.')
 
         index %= self.size
 

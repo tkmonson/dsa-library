@@ -124,3 +124,15 @@ def mirror(expression):
         out.append(ch)
     return ''.join(out)
 
+if __name__ == '__main__':
+    prefix = "+A/*BC^-DE^FG"
+    infix = "A+B*C/(D-E)^F^G"
+    postfix = "ABC*DE-FG^^/+"
+    
+    print(f"post2pre: {postfix} --> {postfix2prefix(postfix)}")
+    print(f"pre2post: {prefix} --> {prefix2postfix(prefix)}")
+    print(f"post2in:  {postfix} --> {postfix2infix(postfix)}")
+    print(f"pre2in:   {prefix} --> {prefix2infix(prefix)}")
+    print(f"in2post:  {infix} --> {infix2postfix(infix)}")
+    print(f"in2pre:   {infix} --> {infix2prefix(infix)}")
+

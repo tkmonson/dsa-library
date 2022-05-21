@@ -1,7 +1,6 @@
 # How many unique paths are there from the top-left to the bottom-right of a grid that contains obstacles?
 
 def unique_paths2(grid):
-
     if (grid is None) or (len(grid) == 0) or (len(grid[0]) == 0):
         return 0
 
