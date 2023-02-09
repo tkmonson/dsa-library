@@ -11,11 +11,11 @@ def solve2(board: list[list[str]]) -> None:
 
     def explore(r, c):
         if r < 0 or r >= m or c < 0 or c >= n:
-           return
-        if board[r][c] == 'X' or board[r][c] == '#':
-           return
+            return
         if board[r][c] == 'O':
             board[r][c] = '#'
+        else:
+            return
         explore(r, c + 1)
         explore(r + 1, c)
         explore(r, c - 1)
