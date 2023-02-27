@@ -5,23 +5,27 @@ Given a set of N items, each with a weight and a value, determine which items
 to include in a knapsack such that the total weight is less than or equal to
 the knapsack's capacity W and the total value is as large as possible. Return
 the total value.
+
+Recurrance relation: K(n, w) = max(val[n - 1] + K(n - 1, w - wt[n - 1]),
+                                   K(n - 1, w)
+                               )
 '''
 
 # Time: O(2^N)
 # Auxiliary Space: O(N) (call stack)
-def knapsack_naive(wt, val, W):
+def knapsack_naive(wt: list[int], val: list[int], W: int) -> int:
     N = len(wt)
     def knapsack(n, w):
         if n == 0 or w == 0:
             return 0
-    
+
         if (wt[n - 1] > w):
             return knapsack(n - 1, w)
         else:
             return max(
                 val[n - 1] + knapsack(n - 1, w - wt[n - 1]),
                 knapsack(n - 1, w)
-        )
+            )
 
     return knapsack(N, W)
 
@@ -41,7 +45,7 @@ This solution recomputes subproblems, which adds unnecessary complexity.
 
 # Time: O(N * W)
 # Auxiliary Space: O(N * W) + O(N) (2D array + call stack)
-def knapsack_memo(wt, val, W):
+def knapsack_memo(wt: list[int], val: list[int], W: int) -> int:
     N = len(wt)
     dp = [[-1 for _ in range(W + 1)] for _ in range(N + 1)]
 
@@ -76,7 +80,7 @@ across the same subproblem.
 
 # Time: O(N * W)
 # Auxiliary Space: O(N * W) (2D array)
-def knapsack_tab(wt, val, W):
+def knapsack_tab(wt: list[int], val: list[int], W: int) -> int:
     N = len(wt)
     dp = [[0 for _ in range(W + 1)] for _ in range(N + 1)]
 
@@ -114,14 +118,13 @@ knapsack with capacity w, given an item set of (A).
 
 # Time: O(N * W)
 # Auxiliary Space: O(W) (1D array)
-def knapsack(wt, val, W):
+def knapsack(wt: list[int], val: list[int], W: int) -> int:
     N = len(wt)
     dp = [0] * (W + 1)
 
     for n in range(1, N + 1):
-        for w in range(W, 0, -1):
-            if wt[n - 1] <= w:
-                dp[w] = max(val[n - 1] + dp[w - wt[n - 1]], dp[w])
+        for w in range(W, wt[n - 1] - 1, -1):
+            dp[w] = max(val[n - 1] + dp[w - wt[n - 1]], dp[w])
 
     return dp[W]
 
