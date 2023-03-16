@@ -5,6 +5,8 @@ Given a reference of a node in a connected, undirected graph, return a deep
 copy (clone) of the graph.
 '''
 
+from collections import deque
+
 class Node:
     def __init__(self, val = 0, neighbors = None):
         self.val = val
@@ -41,14 +43,14 @@ def clone_graph_bfs(node: Node) -> Node:
 
     node_map = {}
     node_map[node.val] = Node(node.val)
-    queue = [node]
+    queue = deque([node])
 
     def connect(node1, node2):
         node1.neighbors.append(node2)
         node2.neighbors.append(node1)
 
     while queue:
-        curr = queue.pop(0)
+        curr = queue.popleft()
         for nb in curr.neighbors:
             if nb.val not in node_map:
                 node_map[nb.val] = Node(nb.val)

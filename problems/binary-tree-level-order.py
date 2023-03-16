@@ -5,6 +5,8 @@ Given the root of a binary tree, return the level order traversal of its nodes'
 values (a list of lists, where each list in the list represents a level).
 '''
 
+from collections import deque
+
 class TreeNode:
     def __init__(self, val=0, left=None, right=None):
         self.val = val
@@ -17,7 +19,7 @@ def level_order(root: TreeNode | None) -> list[list[int]]:
         return []
 
     level_list = [[root]]
-    while len(level_list[-1]) > 0:
+    while level_list[-1]:
         next_level = []
         for i in range(len(level_list[-1])):
             node = level_list[-1][i]
@@ -35,13 +37,13 @@ def level_order2(root: TreeNode | None) -> list[list[int]]:
     if root is None:
         return []
 
-    queue = []
+    queue = deque()
     level_list = []
     queue.append(root)
-    while len(queue) > 0:
+    while queue:
         level = []
         for _ in range(len(queue)):
-            node = queue.pop(0)
+            node = queue.popleft()
             level.append(node.val)
             if node.left != None:
                 queue.append(node.left)
