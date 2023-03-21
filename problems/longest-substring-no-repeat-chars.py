@@ -1,11 +1,8 @@
 '''
-Longest Substring Without Repeating Characters
+Longest Substring Without Repeating Characters (#3)
 
 Given a string s, find the length of the longest substring without repeating
 characters.
-
--------------------------------------------------------------------------------
-
 '''
 
 def length_of_longest_substring(s: str) -> int:
@@ -20,4 +17,9 @@ def length_of_longest_substring(s: str) -> int:
         max_length = max(max_length, right - left + 1)
 
     return max_length
+
+
+if __name__ == '__main__':
+    s = 'jvnoqeiadfovjoasadfjowlasdkonvwoiajdovinowasldkjjvnowqhbfdswk'
+    print(length_of_longest_substring(s))
 
