@@ -72,11 +72,8 @@ class BaseBinaryTree(ABC):
     #     contains all of the nodes of depth n; the level of a node is equal to
     #     its depth. The width of a tree is the size of its largest level.
     #
-    # Without parent pointers, the lowest_common_ancestor algorithm would be
-    #     slower: search for dA while storing path data in a visited set
-    #     (backtracking where necessary), search for dB while storing path data
-    #     in a list (backtracking where necessary), traverse the list from dB
-    #     to root, return the first node contained in the visited set.
+    #     For a lowest_common_ancestor algorithm without parent pointers, see
+    #     lowest-common-ancestor.py under problems/.
 
     # Time: O(n)
     # Auxiliary Space: O(1) for empty, pre, in, and post constructions,
