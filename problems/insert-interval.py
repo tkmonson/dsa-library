@@ -55,20 +55,22 @@ make sure you merge correctly based on how the intervals intersect).
 
 def insert2(intervals: list[list[int]],
             new_interval: list[int]) -> list[list[int]]:
-        heap = []
+        pq = []
         for start, end in intervals + [new_interval]:
-            heapq.heappush(heap, (start, -1))
-            heapq.heappush(heap, (end, 1))
+            heapq.heappush(pq, (start, -1))
+            heapq.heappush(pq, (end, 1))
 
         intervals = []
         start, balance = None, 0
-        while heap:                            
-            i, val = heapq.heappop(heap)
-            if start is None: start = i
+        while pq:                            
+            i, val = heapq.heappop(pq)
+            if start is None:
+                start = i
             balance += val
             if balance == 0:
                 intervals.append([start, i])
                 start = None
+
         return intervals
 
 '''
