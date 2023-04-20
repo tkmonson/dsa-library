@@ -19,7 +19,7 @@ def knapsack_naive(wt: list[int], val: list[int], W: int) -> int:
         if n == 0 or w == 0:
             return 0
 
-        if (wt[n - 1] > w):
+        if wt[n - 1] > w:
             return knapsack(n - 1, w)
         else:
             return max(
@@ -53,16 +53,16 @@ def knapsack_memo(wt: list[int], val: list[int], W: int) -> int:
         if n == 0 or w == 0:
             return 0
 
-        if dp[n][w] != -1:
-            return dp[n][w]
+        if dp[n][w] == -1:
+            if wt[n - 1] > w:
+                dp[n][w] = knapsack(n - 1, w)
+            else:
+                dp[n][w] = max(
+                    val[n - 1] + knapsack(n - 1, w - wt[n - 1]),
+                    knapsack(n - 1, w)
+                )
 
-        if (wt[n - 1] > w):
-            return knapsack(n - 1, w)
-        else:
-            return max(
-                val[n - 1] + knapsack(n - 1, w - wt[n - 1]),
-                knapsack(n - 1, w)
-            )
+        return dp[n][w]
 
     return knapsack(N, W)
 
@@ -99,7 +99,7 @@ def knapsack_tab(wt: list[int], val: list[int], W: int) -> int:
 '''
 This is a tabulation, or bottom-up, solution. We create an array with N + 1
 rows and W + 1 columns, where each cell holds the computed value of a
-subproblem K(n, w), where n is some number of items in [0, n] and w is some
+subproblem K(n, w), where n is some number of items in [0, N] and w is some
 capacity in [0, W]. We already know the solution to any subproblem where n = 0
 or w = 0 is 0. We then consider subproblems where n = 1, for all w in [1, W],
 saving the results in the array. Then we do the same for n = 2, using the
