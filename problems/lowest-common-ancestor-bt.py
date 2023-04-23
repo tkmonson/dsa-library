@@ -13,6 +13,32 @@ class TreeNode:
         self.left = None
         self.right = None
 
+
+def lowest_common_ancestor(root: TreeNode,
+                           p: TreeNode, q: TreeNode) -> TreeNode:
+    if not root or root is p or root is q:
+        return root
+
+    left = lowest_common_ancestor(root.left, p, q)
+    right = lowest_common_ancestor(root.right, p, q)
+
+    if left and right:
+        return root
+    return left or right
+
+'''
+If q exists in the subtree rooted at p, p is the LCA (and vice-versa).
+Otherwise, the LCA is the node where the parent chains of p and q intersect.
+When this algorithm finds p or q (F) in a subtree, it propagates F up the call
+stack and looks for the other node (S) outside of that subtree. If it doesn't
+find S, then the LCA is F. If it does, then it propagates S up the call stack
+until it reaches a node whose other subtree returned F. Then, that node is the
+LCA.
+
+This algorithm has both preorder and postorder qualities. That is, a node may
+propagate a result upward immediately or after processing both of its subtrees.
+'''
+
 def lowest_common_ancestor_naive(root: TreeNode,
                                  p: TreeNode, q: TreeNode) -> TreeNode:
     def dfs(node):
@@ -38,30 +64,5 @@ Maintain a path that expands and shrinks as the tree is explored via DFS. When
 p or q is found, save a snapshot of the path. Traverse the two paths, starting
 at the root, until the paths diverge. The last node before divergence is the
 LCA.
-'''
-
-def lowest_common_ancestor(root: TreeNode,
-                           p: TreeNode, q: TreeNode) -> TreeNode:
-    if not root or root == p or root == q:
-        return root
-
-    left = lowest_common_ancestor(root.left, p, q)
-    right = lowest_common_ancestor(root.right, p, q)
-
-    if left and right:
-        return root
-    return left or right
-
-'''
-If q exists in the subtree rooted at p, p is the LCA (and vice-versa).
-Otherwise, the LCA is the node where the parent chains of p and q intersect.
-When this algorithm finds p or q (F) in a subtree, it propagates F up the call
-stack and looks for the other node (S) outside of that subtree. If it doesn't
-find S, then the LCA is F. If it does, then it propagates S up the call stack
-until it reaches a node whose other subtree returned F. Then, that node is the
-LCA.
-
-This algorithm has both preorder and postorder qualities. That is, a node may
-propagate a result upward immediately or after processing both of its subtrees.
 '''
 
