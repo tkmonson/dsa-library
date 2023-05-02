@@ -262,7 +262,7 @@ class BaseBinaryTree(ABC):
                 with suppress(AttributeError):
                     root.left.parent = root
 
-                # Values in inorder[index + 1:] belong to the left subtree.
+                # Values in inorder[index + 1:] belong to the right subtree.
                 root.right = pre_in_construct(partition_index + 1, in_end)
                 with suppress(AttributeError):
                     root.right.parent = root
