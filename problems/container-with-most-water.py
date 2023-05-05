@@ -19,23 +19,24 @@ E.g. height = [1, 8, 6, 2, 5, 4, 8, 3, 7]
 *   *   *   *   *   *   *   *   *
 '''
 
-def maxArea(height: list[int]) -> int:
+def max_area(height: list[int]) -> int:
     area = 0
-    l_ptr, r_ptr = 0, len(height) - 1
-    while l_ptr < r_ptr:
-        x = r_ptr - l_ptr
-        y1, y2 = height[l_ptr], height[r_ptr]
+    left, right = 0, len(height) - 1
+    while left < right:
+        x = right - left
+        y1, y2 = height[left], height[right]
         if y1 < y2:
             area = max(area, x * y1)
-            l_ptr = l_ptr + 1
+            left += 1
         else:
             area = max(area, x * y2)
-            r_ptr = r_ptr - 1
+            right -= 1
     return area
+
 
 if __name__ == '__main__':
     height = [1, 8, 6, 2, 5, 4, 8, 3, 7]
-    print(maxArea(height))
+    print(max_area(height))
 
 '''
 The naive solution is to check all pairs of vertical lines, (0, 1) to
@@ -44,7 +45,7 @@ The naive solution is to check all pairs of vertical lines, (0, 1) to
 The better solution comes from realizing that you are trying to maximize x*y.
 Start with the maximum possible x by setting a left pointer at 0 and a right
 pointer at n - 1. As x decrements, you would like y to increase. Because
-y = min(h[l_ptr], h[r_ptr]), only moving the pointer pointing to the smaller
+y = min(h[left], h[right]), only moving the pointer pointing to the smaller
 height can possibly yield a greater area. This is a greedy algorithm: trying to
 increase the area at each step will eventually produce the largest possible
 area.
