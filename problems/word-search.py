@@ -1,56 +1,57 @@
-# Given a 2D board and a word, find if the word exists in the grid.
-# The word can be constructed from letters that are horizontally or vertically adjacent.
-# The same letter cell may not be used more than once.
+'''
+Word Search (#79)
 
-# board =
-# [
-#   ['A','B','C','E'],
-#   ['S','F','C','S'],
-#   ['A','D','E','E']
-# ]
+Given a grid of characters `board` and a string `word`, return True if `word`
+exists in `board`, False otherwise. `word` exists in `board` if it can be
+constructed from letters in horizontally or vertically adjacent cells.
+'''
 
-# "ABCCED" => True
-# "SEE" => True
-# "ABCB" => False
-
-def word_search(board, word):
-    m = len(board)
-    n = len(board[0])
+def word_exists(board: list[list[str]], word: str) -> bool:
+    R, C = len(board), len(board[0])
     seen = set()
-    
-    def traverse(r, c, next_letter_index):
-        nonlocal m, n
-            
-        if next_letter_index == len(word):
+
+    def dfs(i, r, c):
+        if i == len(word):
             return True
-        
-        seen.add((r,c)) 
-        next_letter = word[next_letter_index]
-        
-        for (next_row, next_col) in [(r, c-1), (r-1, c), (r, c+1), (r+1, c)]:
-            if 0 <= next_row < m and 0 <= next_col < n:
-                if (next_row, next_col) not in seen:
-                    if board[next_row][next_col] == next_letter:
-                        if traverse(next_row, next_col, next_letter_index + 1):
-                            return True
-        
-        seen.remove((r,c))
-        return False
-    
-    first_letter = word[0]
-    for r in range(m):
-        for c in range(n):
-            if board[r][c] == first_letter:
-                if traverse(r, c, 1):
-                    return True
-                
+        if (r < 0 or r >= R or c < 0 or c >= C or board[r][c] != word[i] or
+            (r,c) in seen):
+            return False
+
+        seen.add((r, c))
+        found = (
+            dfs(i + 1, r, c + 1) or
+            dfs(i + 1, r + 1, c) or
+            dfs(i + 1, r, c - 1) or
+            dfs(i + 1, r - 1, c)
+        )
+        seen.remove((r, c))
+        return found
+
+    for r in range(R):
+        for c in range(C):
+            if dfs(0, r, c):
+                return True
+
     return False
 
-if __name__ == "__main__":
-    board = [
-        ['A','B','C','E'],
-        ['S','F','C','S'],
-        ['A','D','E','E']
-    ]
-    word = "ABCCED"
-    print(word_search(board, word))
+
+def word_exists2(board: list[list[str]], word: str) -> bool:
+    if len(word) > len(board) * len(board[0]):
+        return False
+
+    count = Counter(sum(board, []))
+    for c, count_word in Counter(word).items():
+        if count[c] < count_word:
+            return False
+
+    if count[word[0]] > count[word[-1]]:
+        word = word[::-1]
+
+    return word_exists(board, word)
+
+
+if __name__ == '__main__':
+    board = [['a', 'a']]
+    word = 'aaa'
+    print(word_exists(board, word))
+
