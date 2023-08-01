@@ -17,6 +17,8 @@ E.g. heights = [2, 1, 5, 6, 2, 3] => 10
 
 import heapq
 
+# Time: O(n)
+# Auxiliary space: O(n)
 def largest_rectangle_area(heights: list[int]) -> int:
     max_area = 0
     stack = []
