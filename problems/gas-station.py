@@ -1,6 +1,5 @@
 '''
 Gas Station (#134)
-PASSES BUT NOT OPTIMIZED FOR TIME, SPACE, OR READABILITY
 
 There are n gas stations along a circular route where the amount of gas at the
 ith station is gas[i]. You have a car with an unlimited gas tank and it costs
@@ -11,43 +10,78 @@ circuit once in the clockwise direction, otherwise return -1. If there exists a
 solution, it is guaranteed to be unique.
 '''
 
-def find_starting_gas_station(gas, cost):
-    n = len(gas)
-    gas_gained = []
-    for i in range(n):
-        gas_gained.append(gas[i] - cost[i])
-    tank = [gas_gained[-1]]
-    for i in range(n - 1):
-        tank.append(tank[-1] + gas_gained[i])
-    min_tank = min(tank)
-    if min_tank >= 0:
-        return n - 1
-    for i in reversed(range(n - 1)):
-        min_tank += gas_gained[i]
-        if min_tank >= 0:
+# Time: O(n)
+# Auxiliary space: O(1)
+def can_complete_circuit(gas: list[int], cost: list[int]) -> int:
+    total_gain = 0
+    tank = 0
+    start = 0
+    
+    for i in range(len(gas)):
+        total_gain += gas[i] - cost[i]
+        tank += gas[i] - cost[i]
+        
+        if tank < 0:
+            tank = 0
+            start = i + 1
+            
+    return start if total_gain >= 0 else -1
+
+'''
+gain[i] = gas[i] - cost[i]
+
+If you start at station A and get stuck at station B, there is no station C
+between A and B from which you could start and get to B (because you had to
+have had non-negative gas at C when starting at A and getting to B, so starting
+at C with zero gas will not help). So you should try starting at the next
+station after B.
+
+Let station 0 be the start station. Iterate through the stations. Accumulate
+the gain at each station into tank. If tank is ever negative during the
+iteration, reset it to zero and consider the next station to be the start
+station. Whatever the start station is at the end of the iteration is the
+answer, as long as the total sum of the gains is non-negative (i.e. there is
+enough gas available to make looping possible).
+'''
+
+# Time: O(n)
+# Auxiliary space: O(1)
+def can_complete_circuit2(gas: list[int], cost: list[int]) -> int:
+    tank = 0
+    tank_min = gas[0] - cost[0]
+    for i in range(n := len(gas)):
+        tank += gas[i] - cost[i]
+        tank_min = min(tank_min, tank)
+
+    if tank_min >= 0:
+        return 0
+
+    for i in range(n - 1, 0, -1):
+        tank_min += gas[i] - cost[i]
+        if tank_min >= 0:
             return i
+
     return -1
 
+'''
+If you fail a trip starting at station i, it is because the tank went below
+zero at some point. If you instead start at station i - 1, the tank will have
+an additional gain[i - 1] gas in it at each station. If that is enough gas to
+keep the tank from going below zero, then the trip will be successful when
+starting from station i - 1.
+
+Start at station 0. Iterate through all the stations, keeping track of the
+minimum tank value (min_tank). After iteration, if min_tank is negative, then
+the loop cannot be completed when starting at station 0. If min_tank can be
+made non-negative by starting at station n - 1 (adding gain[n - 1] to
+min_tank), then the loop can be completed from n - 1. If min_tank is still
+negative, try adding gain[n - 2] to it, and so on, all the way to considering
+station 1 as the start. If min_tank cannot be made non-negative, completing a
+loop is impossible.
+'''
+
 if __name__ == '__main__':
-    gas = [1, 2, 3, 4, 5]
-    cost = [3, 4, 5, 1, 2]
-    print(f'Gas: {gas}')
-    print(f'Cost: {cost}')
-    print(f'Start at index: {find_starting_gas_station(gas, cost)}')
-
-'''
-Because you gain and lose gas at each station, it is simpler to work with a
-(gas - cost) array.
-
-It is significant that you are traveling clockwise (or left to right). If you
-fail a trip starting at station i, it is because the tank went below 0 at some
-point. By exploring start stations counterclockwise (or right to left), it is
-like attempting the previous trip but starting with (gas - cost) gas gained
-from station (i - 1) (and you don't have to travel the last leg of the previous
-trip, so it doesn't matter if that leg was a success or not). If that gas fixes
-the dips below 0 from the previous trip, you know the current trip will be
-successful. (You might be able to explore left to right, but it seems less
-intuitive to me. It would be like attempting the previous trip but without the
-(gas - cost) gas gained from the first station plus a leg at the end.)
-'''
+    gas = [11, 4, 7, 1, 0]
+    cost = [2, 5, 5, 9, 1]
+    print(can_complete_circuit(gas, cost))
 
