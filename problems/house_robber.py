@@ -43,6 +43,11 @@ def rob_memo(nums: list[int]):
 
     return _rob(nums, len(nums) - 1)
 
+
+if __name__ == '__main__':
+    nums = [2, 7, 9, 3, 1]
+    print(rob(nums))
+
 '''
 First naive thought: you either want [Y N Y N Y N] or [N Y N Y N Y].
 Second revised thought: you actually may want to skip two houses in a row, like
