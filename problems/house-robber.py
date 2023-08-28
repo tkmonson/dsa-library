@@ -1,23 +1,25 @@
 '''
-House Robber I (#198)
+House Robber (#198)
 
 There is a row of houses along a street, each with a certain amount of money
 stashed. Adjacent houses have a security system connected that will contact the
-police if both houses are robbed. Given an array nums representing the amount
-of money in each house, return the maximum amount of money you can rob without
+police if both houses are robbed. Given an array representing the amount of
+money in each house, return the maximum amount of money you can rob without
 alerting the police.
 '''
 
-'DP with only two variables, O(n) time, O(1) space'
+# Time: O(n)
+# Auxiliary space: O(1)
 def rob(nums: list[int]):
-    prev1, prev2 = 0
+    prev1, prev2 = 0, 0
     for num in nums:
         prev2, prev1 = prev1, max(prev1, prev2 + num)
     return prev1
 
 
-'DP without a recursive stack, O(n) time, O(1) space'
-def rob2(nums: list[int]):
+# Time: O(n)
+# Auxiliary space: O(1)
+def rob_tabu(nums: list[int]):
     dp = [-1] * (len(nums) + 1)
     dp[0] = 0
     dp[1] = nums[0]
@@ -26,8 +28,9 @@ def rob2(nums: list[int]):
     return dp[len(nums)]
 
 
-'Recursive solution, O(n) time, O(n) space'
-def rob3(nums: list[int]):
+# Time: O(n)
+# Auxiliary space: O(n)
+def rob_memo(nums: list[int]):
     dp = [-1] * len(nums)
 
     def _rob(nums, i):
@@ -76,7 +79,7 @@ A problem with optimal substructure and overlapping subproblems is a good
 candidate for dynamic programming.
 
 Let dp[i] be the maximum amount of money that can be robbed from houses
-nums[0:i].
+nums[:i].
 
 dp[0]: [] => 0
 dp[1]: [x] => max(x) = x
