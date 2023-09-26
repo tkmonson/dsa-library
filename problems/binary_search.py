@@ -20,7 +20,7 @@ def binary_search(nums: list[int], target: int) -> int:
 
 
 if __name__ == '__main__':
-    nums = [-1,0,3,5,9,12]
+    nums = [-1, 0, 3, 5, 9, 12]
     target = 9
     print(binary_search(nums, target))
 

@@ -1,0 +1,86 @@
+\documentclass[12pt]{article}
+\usepackage{amsmath}
+\usepackage{titling}
+\usepackage{pythonhighlight}
+
+\title{\textit{Data Structures \& Algorithms} Cheat Sheet}
+\setlength{\droptitle}{-20ex}
+\author{Thomas Monson}
+\renewcommand\maketitlehookb{\vspace{-3ex}}
+\date{}
+\renewcommand\maketitlehookd{\vspace{-2ex}}
+
+\begin{document}
+\maketitle
+
+\section{Essential Patterns}
+
+\begin{itemize}
+  \item Here's some code for a binary search:
+  \begin{python}
+def binary_search(nums: list[int], target: int) -> int:
+    left, right = 0, len(nums) - 1
+    while left <= right:
+        mid = (left + right) // 2
+        if nums[mid] < target:
+            left = mid + 1
+        elif nums[mid] > target:
+            right = mid - 1
+        else:
+            return mid
+    return -1
+  \end{python}
+  \item Optimal substructure $\implies$ divide and conquer
+  \item Optimal substructure + greedy choice $\implies$ greedy
+  \item Optimal substructure + overlapping subproblems $\implies$ dynamic programming
+  \item Helper method recursion (parameter or nonlocal)
+  \item Kadane's algorithm (maximum subarray)
+  \item Custom sorting (\texttt{functools.cmp\_to\_key} or create class and define dunder methods \texttt{\_\_lt\_\_}, \texttt{\_\_gt\_\_}, \texttt{\_\_le\_\_}, \texttt{\_\_ge\_\_}, \texttt{\_\_eq\_\_}, \texttt{\_\_ne\_\_})
+  \item Knapsack problem (combinatorial optimization)
+  \item Sweep line algorithm (convex hull)
+  \item Backtracking (DFS)
+  \item Sliding window
+  \item Topological sorting (scheduling, Kahn's algorithm)
+  \item LRU Cache (hash map + DLL, OrderedDict)
+  \item Monotonic stack
+  \item Union-find
+\end{itemize}
+
+\section{Useful Python Constructs}
+
+\begin{itemize}
+  \item Would it be helpful to count items in a collection? \\
+        \-\hspace{1em} $\implies$ \texttt{Counter} creates a dictionary of the form \texttt{\{element: count\}}
+  \item \texttt{defaultdict}
+  \item \texttt{itertools.combinations}, \texttt{itertools.permutations}
+  \item \texttt{re} (regex)
+  \item \texttt{@functools.lru\_cache}
+  \item \texttt{bisect} (binary search)
+  \item \texttt{ord(char)} (ASCII)
+  \item \texttt{enumerate} $\rightarrow$ \texttt{count, value}
+\end{itemize}
+
+\section{Other}
+
+\begin{itemize}
+  \item The fastest way to reverse a list is to use the ``Martian smiley" \texttt{[::-1]}
+  \item DFS $\rightarrow$ stack (recursion) $\rightarrow$ LIFO
+  \item BFS $\rightarrow$ queue (iteration) $\rightarrow$ FIFO
+  \item Online tests: have a Python scratchpad open, spam the ``Run Tests" button (EAFP > LBYL)
+  \item Number of subarrays of array of size $n$: $\frac{n(n+1)}{2}$
+  \item Python is pass-by-assignment
+  \begin{itemize}
+    \item Immutable objects are pass-by-value
+    \item Mutable objects are pass-by-reference
+    \item You can rebind the variable in the inner scope, but the outer scope will remain unchanged
+  \end{itemize}
+\end{itemize}
+
+\section{Potentially Useful Algorithms}
+
+\begin{itemize}
+  \item Rabin-Karp (string-searching, uses a rolling hash to make approximate comparisons between substring hash and target hash, makes exact comparison if hashes match)
+  \item Kruskal's algorithm and Prim's algorithm (minimum spanning tree)
+\end{itemize}
+\end{document}
+
