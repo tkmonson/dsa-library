@@ -1,7 +1,8 @@
 \documentclass[12pt]{article}
 \usepackage{amsmath}
-\usepackage{titling}
+\usepackage{changepage}
 \usepackage{pythonhighlight}
+\usepackage{titling}
 
 \title{\textit{Data Structures \& Algorithms} Cheat Sheet}
 \setlength{\droptitle}{-20ex}
@@ -10,14 +11,40 @@
 \date{}
 \renewcommand\maketitlehookd{\vspace{-2ex}}
 
+\setlength\parindent{0pt}
+
 \begin{document}
 \maketitle
 
-\section{Essential Patterns}
+\section*{Essential Patterns}
+\hrule\vspace{5ex}
 
-\begin{itemize}
-  \item Here's some code for a binary search:
-  \begin{python}
+\subsection*{Dynamic Programming}
+
+\begin{adjustwidth}{2em}{0pt}
+Optimal substructure $\implies$ divide and conquer \medskip\\
+Optimal substructure + greedy choice $\implies$ greedy \medskip\\
+Optimal substructure + overlapping subproblems \\
+\-\hspace{1em}$\implies$ dynamic programming \\
+
+\textbf{Would it be helpful to rephrase a problem in order to more easily define its subproblems?} \\
+
+\-\hspace{1em}\fbox{\begin{minipage}{28em}
+  Given an integer array, return the length of the longest strictly increasing subsequence (LIS). \smallskip\\
+  \-\hspace{1em}$\equiv$\hspace{0.5em} Return the length of the LIS of an array \texttt{a} of length $n$. \\
+  \-\hspace{1em}$\equiv$\hspace{0.5em} Return the length of the LIS of \texttt{a[0:n]}. \bigskip\\
+  The LIS of \texttt{a} must have some first element. If this is the $i$th element, then the LIS of \texttt{a} is equal to the LIS of \texttt{a[i:]}, where \texttt{a[i]} is the first element of the sequence. \medskip\\
+  Let \texttt{dp[i]} be the length of the LIS of \texttt{a[i:]}, where \texttt{a[i]} is the first element of the sequence. Return \texttt{max(dp)}.
+\end{minipage}} \bigskip
+
+\item \texttt{@functools.lru\_cache}
+\end{adjustwidth}
+
+\subsection*{Searching}
+
+\begin{adjustwidth}{2em}{0pt}
+Here's some code for a binary search:
+\begin{python}
 def binary_search(nums: list[int], target: int) -> int:
     left, right = 0, len(nums) - 1
     while left <= right:
@@ -29,13 +56,26 @@ def binary_search(nums: list[int], target: int) -> int:
         else:
             return mid
     return -1
-  \end{python}
-  \item Optimal substructure $\implies$ divide and conquer
-  \item Optimal substructure + greedy choice $\implies$ greedy
-  \item Optimal substructure + overlapping subproblems $\implies$ dynamic programming
+\end{python}
+
+\texttt{bisect} (binary search)
+\end{adjustwidth}
+
+\subsection*{Sorting}
+
+\begin{adjustwidth}{2em}{0pt}
+\textbf{Do you need to sort items according to a custom scheme?}
+\begin{itemize}
+  \item \texttt{functools.cmp\_to\_key} 
+  \item Create class and define dunder methods \texttt{\_\_lt\_\_}, \texttt{\_\_gt\_\_}, \texttt{\_\_le\_\_}, \texttt{\_\_ge\_\_}, \texttt{\_\_eq\_\_}, \texttt{\_\_ne\_\_}
+\end{itemize}
+\end{adjustwidth}
+
+\subsection*{Other Stuff}
+
+\begin{itemize}
   \item Helper method recursion (parameter or nonlocal)
   \item Kadane's algorithm (maximum subarray)
-  \item Custom sorting (\texttt{functools.cmp\_to\_key} or create class and define dunder methods \texttt{\_\_lt\_\_}, \texttt{\_\_gt\_\_}, \texttt{\_\_le\_\_}, \texttt{\_\_ge\_\_}, \texttt{\_\_eq\_\_}, \texttt{\_\_ne\_\_})
   \item Knapsack problem (combinatorial optimization)
   \item Sweep line algorithm (convex hull)
   \item Backtracking (DFS)
@@ -46,21 +86,21 @@ def binary_search(nums: list[int], target: int) -> int:
   \item Union-find
 \end{itemize}
 
-\section{Useful Python Constructs}
+\section*{Useful Python Constructs}
+\hrule\vspace{5ex}
 
 \begin{itemize}
   \item Would it be helpful to count items in a collection? \\
-        \-\hspace{1em} $\implies$ \texttt{Counter} creates a dictionary of the form \texttt{\{element: count\}}
+    \-\hspace{1em} $\implies$ \texttt{Counter} creates a dictionary of the form \texttt{\{element: count\}}
   \item \texttt{defaultdict}
   \item \texttt{itertools.combinations}, \texttt{itertools.permutations}
   \item \texttt{re} (regex)
-  \item \texttt{@functools.lru\_cache}
-  \item \texttt{bisect} (binary search)
   \item \texttt{ord(char)} (ASCII)
   \item \texttt{enumerate} $\rightarrow$ \texttt{count, value}
 \end{itemize}
 
-\section{Other}
+\section*{Other}
+\hrule\vspace{5ex}
 
 \begin{itemize}
   \item The fastest way to reverse a list is to use the ``Martian smiley" \texttt{[::-1]}
@@ -76,7 +116,8 @@ def binary_search(nums: list[int], target: int) -> int:
   \end{itemize}
 \end{itemize}
 
-\section{Potentially Useful Algorithms}
+\section*{Potentially Useful Algorithms}
+\hrule\vspace{5ex}
 
 \begin{itemize}
   \item Rabin-Karp (string-searching, uses a rolling hash to make approximate comparisons between substring hash and target hash, makes exact comparison if hashes match)
