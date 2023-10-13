@@ -2,7 +2,11 @@
 \usepackage{amsmath}
 \usepackage{changepage}
 \usepackage{pythonhighlight}
+\usepackage{stix}
+\usepackage{tikz}
+\usetikzlibrary{matrix, backgrounds}
 \usepackage{titling}
+\usepackage{xcolor}
 
 \title{\textit{Data Structures \& Algorithms} Cheat Sheet}
 \setlength{\droptitle}{-20ex}
@@ -39,6 +43,13 @@ Optimal substructure + overlapping subproblems \\
 
 \item \texttt{@functools.lru\_cache}
 \end{adjustwidth}
+
+\subsection*{Arrays}
+
+\begin{adjustwidth}{2em}{0pt}
+\textbf{Would it help to know the sum of elements for any subarray in O(n) time?} \\
+
+Computing the \textbf{prefix sum} of an array \texttt{a} will give you the sum of elements for subarrays \texttt{[a[:i] for i in range(1, len(a))]}. By subtracting elements of the prefix sum from each other, you can get the sum of elements for any subarray. That is, \texttt{sum(a[x:y]) = sum(a[:y]) - sum(a[:x])} for $x < y$.
 
 \subsection*{Searching}
 
@@ -124,4 +135,19 @@ def binary_search(nums: list[int], target: int) -> int:
   \item Kruskal's algorithm and Prim's algorithm (minimum spanning tree)
 \end{itemize}
 \end{document}
+
+% \begin{tikzpicture}
+% \matrix (m) [matrix of nodes,
+%              nodes={draw, minimum size=8mm, anchor=center},
+%              nodes in empty cells, minimum height=1cm,
+%              row 1/.style={nodes={draw=none}},]
+% {
+%   \texttt{0} & \texttt{1} & \texttt{2} & \texttt{3} & \texttt{4} & \texttt{5} & \texttt{6} & \texttt{7} & \texttt{8} \\
+%   2 & 4 & 4 & 5 &   &   &   &  &\\
+% };
+% \draw[semithick] (-3.66, -0.9) -- ++(0, -0.1) -- ++(0.81, 0) -- ++(0, 0.1);
+% \draw[semithick] (-3.66, -1.1) -- ++(0, -0.1) -- ++(1.62, 0) -- ++(0, 0.1);
+% \draw[semithick] (-3.66, -1.3) -- ++(0, -0.1) -- ++(2.43, 0) -- ++(0, 0.1);
+% \draw[semithick] (-3.66, -1.5) -- ++(0, -0.1) -- ++(3.24, 0) -- ++(0, 0.1);
+% \end{tikzpicture}
 
