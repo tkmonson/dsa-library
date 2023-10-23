@@ -9,27 +9,36 @@ can finish all the courses or False otherwise.
 
 from collections import deque
 
-def can_finish(num_courses: int, prerequisites: list[list[int]]) -> bool:
+'''
+Both algorithms below try to generate a topological ordering of a directed
+graph, a linear ordering of vertices such that, for every edge uv from vertex u
+to vertex v, u comes before v. In the context of this problem, a topological
+ordering is a valid scheduling of tasks.
+
+Both algorithms detect whether or not a directed graph has a cycle. A valid
+topological ordering exists only if the graph is acyclic.
+'''
+
+def can_finish_dfs(num_courses: int, prerequisites: list[list[int]]) -> bool:
+    adj_list = [[] for _ in range(num_courses)]
     visited = set()
     dfs_tree = set()
-    adj_list = [[] for _ in range(num_courses)]
     for p in prerequisites:
         adj_list[p[1]].append(p[0])
 
     def has_cycle(v):
-        if v in dfs_tree:
-            return True
-        if v in visited:
+        if v in visited:  # path already explored
             return False
+        if v in dfs_tree:  # cycle detected
+            return True
 
-        visited.add(v)
         dfs_tree.add(v)
-
         for n in adj_list[v]:
             if has_cycle(n):
                 return True
 
         dfs_tree.remove(v)
+        visited.add(v)
         return False
 
     for v in range(num_courses):
@@ -51,52 +60,46 @@ Each vertex in the graph is in one of three states:
     2. Previously visited. No need to move the search to this vertex because it
        has already been explored.
     3. Unvisited.
+
 This implies that two collections need to be maintained, one for visited
 vertices and one for the DFS tree, which adds elements as the search goes
 deeper and removes elements as it backs out.
 '''
 
-def can_finish2(num_courses: int, prerequisites: list[list[int]]) -> bool:
-    def topo_bfs(num_courses, prerequisites):
-        adj_list = [[] for _ in range(num_courses)]
-        in_degrees = [0] * num_courses
-        for p in prerequisites:
-            adj_list[p[1]].append(p[0])
-            in_degrees[p[0]] += 1
-    
-        queue = deque()
-        for v in range(num_courses):
-            if in_degrees[v] == 0:
-                queue.append(v)
-    
-        topo_order = []
-        while queue:
-            v = queue.popleft()
-            topo_order.append(v)
-    
-            for n in adj_list[v]:
-                in_degrees[n] -= 1
-                if in_degrees[n] == 0:
-                    queue.append(n)
+def can_finish_bfs(num_courses: int, prerequisites: list[list[int]]) -> bool:
+    adj_list = [[] for _ in range(num_courses)]
+    in_degrees = [0] * num_courses
+    for p in prerequisites:
+        adj_list[p[1]].append(p[0])
+        in_degrees[p[0]] += 1
 
-        return topo_order if len(topo_order) == num_courses else None
+    queue = deque()
+    for v, d in enumerate(in_degrees):
+        if d == 0:
+            queue.append(v)
 
-    return True if topo_bfs(num_courses, prerequisites) else False
+    topo_order = []
+    while queue:
+        v = queue.popleft()
+        topo_order.append(v)
+
+        for n in adj_list[v]:
+            in_degrees[n] -= 1
+            if in_degrees[n] == 0:
+                queue.append(n)
+
+    return True if len(topo_order) == num_courses else False
+
 
 '''
-This is an implementation of Kahn's algorithm, which generates a topological
-ordering of a directed graph, a linear ordering of vertices such that, for every
-edge uv from vertex u to vertex v, u comes before v. In the context of this
-problem, a topological ordering is a valid scheduling of tasks.
+This is an implementation of Kahn's algorithm.
 
 Create an adjacency list and a list of in-degrees for every vertex. Fill a
-queue with vertices of in-degree 0 ("start vertices"). Dequeue a vertex, add it
-to a topological ordering list, process it by subtracting 1 from the in-degrees
-of all of its neighbors and enqueuing any neighbors that now have in-degree 0,
-and repeat until the queue is empty. This represents completing a task and thus
-satisfying this prerequisite for neighboring tasks. If the final topological
-ordering does not contain all vertices in the graph, no valid topological
-ordering exists.
+queue with vertices of in-degree 0 ("start vertices"). Dequeue a start vertex,
+add it to the topological order. Remove any edges from that vertex to its
+neighbors, enqueue any neighbors that now have no incoming edge. This
+represents completing a task and thus satisfying this prerequisite for
+neighboring tasks. Repeat until the queue is empty.
 '''
 
 if __name__ == '__main__':
