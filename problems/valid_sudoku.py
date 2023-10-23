@@ -72,3 +72,10 @@ if __name__ == '__main__':
              [".",".",".",".","8",".",".","7","9"]]
     print(is_valid_sudoku(board))
 
+'''
+Traverse the whole board. For every integer i that you encounter, you need to
+check if i already appeared in that row, that column, and that box. If not,
+make a note of the fact that i has now appeared in that row, that column, and
+that box.
+'''
+

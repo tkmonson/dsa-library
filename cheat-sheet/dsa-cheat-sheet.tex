@@ -1,13 +1,17 @@
 \documentclass[12pt]{article}
+\usepackage{algorithm2e}
 \usepackage{amsmath}
 \usepackage{changepage}
 \usepackage{pythonhighlight}
-\usepackage{stix}
-\usepackage{tikz}
-\usetikzlibrary{matrix, backgrounds}
 \usepackage{titling}
 \usepackage{xcolor}
 
+% algorithm2e
+\RestyleAlgo{ruled}
+\SetKwProg{Fn}{Function}{}{end}
+\SetKw{Stop}{stop}
+
+% titling
 \title{\textit{Data Structures \& Algorithms} Cheat Sheet}
 \setlength{\droptitle}{-20ex}
 \author{Thomas Monson}
@@ -50,6 +54,7 @@ Optimal substructure + overlapping subproblems \\
 \textbf{Would it help to know the sum of elements for any subarray in O(n) time?} \\
 
 Computing the \textbf{prefix sum} of an array \texttt{a} will give you the sum of elements for subarrays \texttt{[a[:i] for i in range(1, len(a))]}. By subtracting elements of the prefix sum from each other, you can get the sum of elements for any subarray. That is, \texttt{sum(a[x:y]) = sum(a[:y]) - sum(a[:x])} for $x < y$.
+\end{adjustwidth}
 
 \subsection*{Searching}
 
@@ -81,6 +86,69 @@ def binary_search(nums: list[int], target: int) -> int:
   \item Create class and define dunder methods \texttt{\_\_lt\_\_}, \texttt{\_\_gt\_\_}, \texttt{\_\_le\_\_}, \texttt{\_\_ge\_\_}, \texttt{\_\_eq\_\_}, \texttt{\_\_ne\_\_}
 \end{itemize}
 \end{adjustwidth}
+\bigskip
+
+\begin{adjustwidth}{2em}{0pt}
+    \textbf{Do you need to schedule tasks based on their dependencies?} \medskip\\
+    You can apply \textbf{topological sorting} to a directed graph. This will produce a linear ordering of the vertices such that for every directed edge \textit{uv} from vertex \textit{u} to vertex \textit{v}, \textit{u} comes before \textit{v}. However, if the graph has cycles, such an ordering does not exist.\medskip\\
+    There are two main topological sorting algorithms: \textit{Kahn's algorithm} (BFS) and \textit{cycle detection via DFS}. The former cannot visit cycles and detects them by checking for unvisited nodes after traversal. The latter detects cycles by entering the first one it finds and completing a loop.\\
+
+    \begin{algorithm}[H]
+      \SetAlgoLined
+      \DontPrintSemicolon
+      \KwData{$G = (V, E)$}
+      \KwResult{$L$ (list of $v \in V$ in topological order)}
+      $L \longleftarrow$\hspace{0.5mm}\texttt{[]}\;
+      $S \longleftarrow \{v \in V \mid v \text{ has no incoming edges}\}$\;
+      \While{S is not empty}{
+        remove a node $n$ from $S$\;
+        append $n$ to $L$\;
+        \ForEach{node $m$ with an edge $e$ from $n$ to $m$}{
+          remove $e$ from $E$\;
+          \If{$m$ has no incoming edges}{
+            add $m$ to $S$\;
+          }
+        }
+      }
+      \eIf{$E$ is empty}{
+        \KwRet{$L$}
+      }{
+        \KwRet{error}\tcc*[r]{the graph has a cycle}
+      }
+      \caption{Kahn's Algorithm\hspace{13mm}\texttt{/* see A.1 for code */}}
+    \end{algorithm}
+    \bigskip
+
+    \begin{algorithm}[H]
+      \SetAlgoLined
+      \DontPrintSemicolon
+      \SetKwFunction{FnVisit}{visit}
+      \KwData{$G = (V, E)$}
+      \KwResult{$L$ (list of $v \in V$ in topological order)}
+      $L \longleftarrow$\hspace{0.5mm}\texttt{[]}\;
+      \Fn{\FnVisit{node $n$}}{
+        \If{$n$ has a permanent mark}{
+          \KwRet{}
+        }
+        \If{$n$ has a temporary mark}{
+          \Stop\tcc*[r]{the graph has a cycle}
+        }
+        mark $n$ with a temporary mark\;
+        \ForEach{node $m$ with an edge from $n$ to $m$}{
+          visit($m$)\;
+        }
+        remove temporary mark from $n$\;
+        mark $n$ with a permanent mark\;
+        prepend $n$ to $L$\;
+      }
+      \While{$\exists$ nodes without a permanent mark}{
+        select an unmarked node $n$\;
+        visit($n$)\;
+      }
+      \KwRet{$L$}\;
+      \caption{DFS Topological Sort\hspace{8mm}\texttt{/* see A.2 for code */}}
+    \end{algorithm}
+\end{adjustwidth}
 
 \subsection*{Other Stuff}
 
@@ -91,7 +159,6 @@ def binary_search(nums: list[int], target: int) -> int:
   \item Sweep line algorithm (convex hull)
   \item Backtracking (DFS)
   \item Sliding window
-  \item Topological sorting (scheduling, Kahn's algorithm)
   \item LRU Cache (hash map + DLL, OrderedDict)
   \item Monotonic stack
   \item Union-find
@@ -134,6 +201,65 @@ def binary_search(nums: list[int], target: int) -> int:
   \item Rabin-Karp (string-searching, uses a rolling hash to make approximate comparisons between substring hash and target hash, makes exact comparison if hashes match)
   \item Kruskal's algorithm and Prim's algorithm (minimum spanning tree)
 \end{itemize}
+
+\appendix
+
+\section{Python Code Samples}
+
+\subsection{Topological Sorting - Kahn's Algorithm}
+\begin{python}
+def find_order_bfs(adj_list: list[list[int]],
+                   in_degrees: list[int]) -> list[int]:
+    # 1. Create list of start nodes
+    queue = deque()
+    for n, d in enumerate(in_degrees):
+        if d == 0:
+            queue.append(n)
+
+    topo_order = []
+    while queue:
+        # 2. Add a start node n to the topological ordering
+        n = queue.popleft()
+        topo_order.append(n)
+
+        # 3. Remove edges from n to its neighbors
+        #    Add neighbors of in-degree 0 to start node list
+        for m in adj_list[n]:
+            in_degrees[m] -= 1
+            if in_degrees[m] == 0:
+                queue.append(m)
+
+    return topo_order if len(topo_order) == len(adj_list) else []
+\end{python}
+
+\subsection{Topological Sorting - DFS Cycle Detection}
+\begin{python}
+def find_order_dfs(adj_list: list[list[int]]) -> list[int]:
+    visited = set()
+    dfs_tree = set()
+    topo_order = []
+
+    def has_cycle(n):
+        if n in visited:  # path already explored
+            return False
+        if n in dfs_tree:  # cycle detected
+            return True
+
+        dfs_tree.add(n)
+        for m in adj_list[n]:
+            if has_cycle(m):
+                return True
+
+        dfs_tree.remove(n)
+        visited.add(n)
+        topo_order.append(n)
+        return False
+
+    for n in range(len(adj_list)):
+        if has_cycle(n):
+            return []
+    return topo_order
+\end{python}
 \end{document}
 
 % \begin{tikzpicture}

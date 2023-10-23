@@ -1,5 +1,5 @@
 '''
-Add Linked Lists (from Hive test 5/22)
+Add Two Numbers (#2)
 
 Given two numbers that are represented by linked lists, where each node
 contains a single digit and the digits are stored in reverse order (i.e. the
@@ -7,6 +7,10 @@ ones digit is stored at the head of the list), return the sum of the two
 numbers as a linked list, with the digits in reverse order.
 
 E.g. 617 + 295 = 912 => (7 -> 1 -> 6) + (5 -> 9 -> 2) = (2 -> 1 -> 9)
+'''
+
+'''
+IN NEED OF UPDATE
 '''
 
 class Node:
