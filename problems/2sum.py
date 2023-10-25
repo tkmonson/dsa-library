@@ -1,5 +1,5 @@
 '''
-2Sum (#1)
+Two Sum (#1)
 
 Given an array of integers `nums` and an integer `target`, return the indicies
 of the two numbers that add up to `target`. You may assume there is exactly one
