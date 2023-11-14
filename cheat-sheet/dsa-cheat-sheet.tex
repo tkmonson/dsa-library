@@ -21,6 +21,10 @@
 
 \setlength\parindent{0pt}
 
+\newcommand{\imply}[1]{
+  \-\hspace{1em}$\implies$ \parbox[t]{11.2cm}{#1}
+}
+
 \begin{document}
 \maketitle
 
@@ -51,9 +55,28 @@ Optimal substructure + overlapping subproblems \\
 \subsection*{Arrays}
 
 \begin{adjustwidth}{2em}{0pt}
-\textbf{Would it help to know the sum of elements for any subarray in O(n) time?} \\
+\textbf{Would it help to know the sum of elements for any subarray in O(n) time?} \medskip
 
-Computing the \textbf{prefix sum} of an array \texttt{a} will give you the sum of elements for subarrays \texttt{[a[:i] for i in range(1, len(a))]}. By subtracting elements of the prefix sum from each other, you can get the sum of elements for any subarray. That is, \texttt{sum(a[x:y]) = sum(a[:y]) - sum(a[:x])} for $x < y$.
+Computing the \textbf{prefix sum} of an array \texttt{a} will give you the sum of elements for subarrays \texttt{[a[:i] for i in range(1, len(a))]}. By subtracting elements of the prefix sum from each other, you can get the sum of elements for any subarray. That is, \texttt{sum(a[x:y]) = sum(a[:y]) - sum(a[:x])} for $x < y$. \\
+
+\textbf{Would it help to know if two multisets are permutations of each other?} \medskip
+
+\textit{Fundamental theorem of arithmetic: every integer greater than 1 can be represented uniquely as a product of prime numbers.} \medskip
+
+You can design a hash function that uses \textbf{prime factorization} to map multisets to unique integers. For example, you can map all permutations (anagrams) of a string to a unique integer like so: \medskip
+
+\begin{python}
+def compute_hash(s: str) -> int:
+    alphabet_primes = [2, 3, 5, 7, 11, 13, 17, 19, 23, 29,
+                       31, 37, 41, 43, 47, 53, 59, 61, 67,
+                       71, 73, 79, 83, 89, 97, 101]
+    h = 1
+    for ch in s:
+        h *= alphabet_primes[ord(ch) - ord('a')]
+    return h
+\end{python}
+
+
 \end{adjustwidth}
 
 \subsection*{Searching}
@@ -167,21 +190,27 @@ def binary_search(nums: list[int], target: int) -> int:
 \section*{Useful Python Constructs}
 \hrule\vspace{5ex}
 
+Do you need to...
 \begin{itemize}
-  \item Would it be helpful to count items in a collection? \\
-    \-\hspace{1em} $\implies$ \texttt{Counter} creates a dictionary of the form \texttt{\{element: count\}}
-  \item \texttt{defaultdict}
-  \item \texttt{itertools.combinations}, \texttt{itertools.permutations}
-  \item \texttt{re} (regex)
-  \item \texttt{ord(char)} (ASCII)
-  \item \texttt{enumerate} $\rightarrow$ \texttt{count, value}
+  \item Count items in a collection? \smallskip\\
+    \imply{\texttt{collections.Counter} creates a dictionary of the form \texttt{\{element: count\}}}
+  \item Return a default value for keys not found in a dictionary? \smallskip\\
+    \imply{\texttt{collections.defaultdict}}
+  \item Get the ASCII value of a character? \smallskip\\
+    \imply{\texttt{ord(ch)}}
+  \item Reverse a list? \smallskip\\
+    \imply{The fastest method is the ``Martian smiley" \texttt{[::-1]}}
 \end{itemize}
+
+\texttt{itertools.combinations}, \texttt{itertools.permutations} \\
+\texttt{re} (regex) \\
+\texttt{enumerate} $\rightarrow$ \texttt{count, value} \\
+\texttt{map}, \texttt{filter}, \texttt{reduce}, \texttt{zip}
 
 \section*{Other}
 \hrule\vspace{5ex}
 
 \begin{itemize}
-  \item The fastest way to reverse a list is to use the ``Martian smiley" \texttt{[::-1]}
   \item DFS $\rightarrow$ stack (recursion) $\rightarrow$ LIFO
   \item BFS $\rightarrow$ queue (iteration) $\rightarrow$ FIFO
   \item Online tests: have a Python scratchpad open, spam the ``Run Tests" button (EAFP > LBYL)
