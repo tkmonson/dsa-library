@@ -9,18 +9,39 @@ solution in any order.
 from itertools import combinations
 
 # Time: O(n*2^n)
-# Auxiliary space: O(n*2^n)
-def subsets_recur(nums: list[int]) -> list[list[int]]:
+# Auxiliary space: O(n*2^n) (n items in set, each is in 1/2 of the 2^n subsets)
+def subsets(nums: list[int]) -> list[list[int]]:
+    if len(nums) == 0:
+        return [[]]
+    else:
+        ps_n1 = subsets(nums[:-1])
+        ps_n = [s + [nums[-1]] for s in ps_n1]
+    return ps_n1 + ps_n
+
+'''
+[[]]
+[[], [1]]
+[[], [1], [2], [1, 2]]
+[[], [1], [2], [1, 2], [3], [1, 3], [2, 3], [1, 2, 3]]
+'''
+
+def subsets_backtrack(nums: list[int]) -> list[list[int]]:
     power_set = []
-    def f(subset, i):
+    curr = []
+    def backtrack(i):
         if i == len(nums):
-            power_set.append(subset)
+            power_set.append(curr[:])
             return
-        f(subset.copy(), i + 1)
-        subset.append(nums[i])
-        f(subset.copy(), i + 1)
+
+        # Take
+        curr.append(nums[i])
+        backtrack(i + 1)
+
+        # Not take
+        curr.pop()
+        backtrack(i + 1)
     
-    f([], 0)
+    backtrack(0)
     return power_set
 
 '''
@@ -48,7 +69,6 @@ def subsets_lib(nums: list[int]) -> list[list[int]]:
     return [list(s) for s in power_set]
 
 
-# Fastest
 def subsets_bit(nums: list[int]) -> list[list[int]]:
     n = len(nums)
     power_set = [[]]
@@ -78,5 +98,5 @@ not a particular element of the set is present.
 
 if __name__ == '__main__':
     nums = [1, 2, 3]
-    print(subsets2(nums))
+    print(subsets_backtrack(nums))
 
