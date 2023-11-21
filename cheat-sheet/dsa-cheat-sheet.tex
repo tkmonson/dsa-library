@@ -52,6 +52,14 @@ Optimal substructure + overlapping subproblems \\
 \item \texttt{@functools.lru\_cache}
 \end{adjustwidth}
 
+\subsection*{Sets}
+
+\begin{adjustwidth}{2em}{0pt}
+\textbf{Do you need to model the partitioning of a set? That is, given a set of items, do you need to group the items into subsets?} \medskip
+
+You should use a disjoint-set (union-find) forest (see Appendix B.2).
+\end{adjustwidth}
+
 \subsection*{Arrays}
 
 \begin{adjustwidth}{2em}{0pt}
@@ -79,10 +87,17 @@ def compute_hash(s: str) -> int:
 
 \end{adjustwidth}
 
+\subsection*{Graphs}
+\begin{adjustwidth}{2em}{0pt}
+\textbf{Do you need to detect a cycle in an undirected graph?} \medskip
+
+You should use a disjoint-set (union-find) forest (see Appendix B.2). The vertices are the elements of the subsets, and a union of subsets corresponds to an edge between vertices/components. If calling \texttt{union(x, y)} does not change the structure of the forest, then you know that \texttt{x} and \texttt{y} belong to the same component and that an edge between them would produce a cycle.
+\end{adjustwidth}
+
 \subsection*{Searching}
 
 \begin{adjustwidth}{2em}{0pt}
-Here's some code for a binary search:
+To find a given target (for duplicate targets, return index of first target found in the search):
 \begin{python}
 def binary_search(nums: list[int], target: int) -> int:
     left, right = 0, len(nums) - 1
@@ -96,8 +111,36 @@ def binary_search(nums: list[int], target: int) -> int:
             return mid
     return -1
 \end{python}
+\bigskip
 
-\texttt{bisect} (binary search)
+To find the leftmost duplicate target (if target does not exist, return number of elements less than target (rank of target)):
+\begin{python}
+def binary_search_leftmost(nums: list[int], target: int) -> int:
+    left, right = 0, len(nums)
+    while left < right:
+        mid = (left + right) // 2
+        if nums[mid] < target:
+            left = mid + 1
+        else:
+            right = mid
+    return left
+\end{python}
+\texttt{bisect.bisect\_left(nums, target)} \\
+
+To find the rightmost duplicate target (if target does not exist, \texttt{(n - right)} is the number of elements greater than target):
+\begin{python}
+def binary_search_rightmost(nums: list[int], target: int) -> int:
+    left, right = 0, len(nums)
+    while left < right:
+        mid = (left + right) // 2
+        if nums[mid] > target:
+            right = mid
+        else:
+            left = mid + 1
+    return right - 1
+\end{python}
+\texttt{bisect.bisect\_right(nums, target) - 1} \\
+\texttt{bisect.bisect(nums, target) - 1}
 \end{adjustwidth}
 
 \subsection*{Sorting}
@@ -179,12 +222,12 @@ def binary_search(nums: list[int], target: int) -> int:
   \item Helper method recursion (parameter or nonlocal)
   \item Kadane's algorithm (maximum subarray)
   \item Knapsack problem (combinatorial optimization)
+  \item Dijkstra's algorithm (shortest path in weighted graph)
   \item Sweep line algorithm (convex hull)
-  \item Backtracking (DFS)
+  \item Backtracking (DFS) ("the best solutions often model the problem in some way that allows them to quickly prune state prefixes that cannot lead to solutions")
   \item Sliding window
   \item LRU Cache (hash map + DLL, OrderedDict)
   \item Monotonic stack
-  \item Union-find
 \end{itemize}
 
 \section*{Useful Python Constructs}
@@ -205,7 +248,8 @@ Do you need to...
 \texttt{itertools.combinations}, \texttt{itertools.permutations} \\
 \texttt{re} (regex) \\
 \texttt{enumerate} $\rightarrow$ \texttt{count, value} \\
-\texttt{map}, \texttt{filter}, \texttt{reduce}, \texttt{zip}
+\texttt{map}, \texttt{filter}, \texttt{reduce}, \texttt{zip} \\
+deep copy, shallow copy
 
 \section*{Other}
 \hrule\vspace{5ex}
@@ -229,6 +273,7 @@ Do you need to...
 \begin{itemize}
   \item Rabin-Karp (string-searching, uses a rolling hash to make approximate comparisons between substring hash and target hash, makes exact comparison if hashes match)
   \item Kruskal's algorithm and Prim's algorithm (minimum spanning tree)
+  \item Sieve of Eratosthenes (find all prime numbers up to a given integer)
 \end{itemize}
 
 \appendix
@@ -288,6 +333,71 @@ def find_order_dfs(adj_list: list[list[int]]) -> list[int]:
         if has_cycle(n):
             return []
     return topo_order
+\end{python}
+
+\section{Data Structures}
+
+\subsection{Heaps}
+\begin{center}
+\begin{tabular}{|l|c|l|}
+  \hline
+  \textbf{Operation} & \textbf{Time} & \textbf{Python Function} \\
+  \hline
+  Insert & $O(logn)$ & \texttt{heapq.heappush(heap, item)} \\
+  Extract-min & $O(logn)$ & \texttt{heapq.heappop(heap, item)} \\
+  Heapify & $O(n)$ & \texttt{heapq.heapify(heap, item)} \\
+  \hline
+\end{tabular}
+\end{center}
+
+\subsection{Disjoint-Set (Union-Find) Forest}
+A disjoint-set forest models the partitioning of a set. Initially, each element of the set belongs to a subset where it is the only member. Two subsets can be united into a single subset that contains the elements of each. The union of a set with itself is itself. \\
+
+These subsets are represented as trees in the structure, and the structure has two operations on these trees: \texttt{union(x, y)} and \texttt{find(x)}, where \texttt{x} and \texttt{y} are elements of the set. When \texttt{union(x, y)} is called, the subset that \texttt{x} belongs to is united with the subset that \texttt{y} belongs to. Structurally, the root of one tree becomes the child of the other tree's root. If \texttt{x} and \texttt{y} belong to the same set, the structure does not change. When \texttt{find(x)} is called, the root of the tree that \texttt{x} belongs to is returned. This is the "representative member" of the set, a kind of "name" for the set. \\
+
+The following class arbitrarily chooses \texttt{x} to be the parent of \texttt{y} upon their union. Here, the parent of a root is itself, but $0$ would also be a fine choice.
+\medskip
+\begin{python}
+class DisjointSet:
+    def __init__(self, n):
+        self.parent = list(range(n))
+        # self.parent = [0] * n
+
+    def union(self, x, y):
+        self.parent[self.find(y)] = self.find(x)
+
+    def find(self, x):
+        return x if x == self.parent[x] else self.find(self.parent[x])
+        # while x:
+        #     x = parent[x]
+        # return x
+\end{python}
+\bigskip
+
+The following class implements two enhancements known as \textit{weighted union} and \textit{collapsing find}. The parent of a root is now a negative number whose absolute value corresponds to the tree's \textit{weight} or \textit{rank}. When \texttt{union(x, y)} is called, where \texttt{x}'s tree has greater weight than \texttt{y}'s tree, the weight of \texttt{y}'s tree will be added to the weight of \texttt{x}'s tree, and the root of \texttt{y}'s tree will point to the root of \texttt{x}'s tree. This ensures that the united tree is more balanced. \texttt{find(x)} now sets the parent of any node on the path from \texttt{x} to the representative member of the tree to the representative member. Initially, \texttt{find(x)} is $O(log(n))$, but subsequent calls are $O(1)$.
+\medskip
+\begin{python}
+class DisjointSet:
+    def __init__(self, n):
+        self.parent = [-1] * n
+
+    def union(self, x, y):
+        rx, ry = self.find(x), self.find(y)
+        if rx == ry:
+            return False
+        elif self.parent[rx] < self.parent[ry]:
+            self.parent[rx] += self.parent[ry]
+            self.parent[ry] = rx
+        else:
+            self.parent[ry] += self.parent[rx]
+            self.parent[rx] = ry
+        return True
+
+    def find(self, x):
+        if self.parent[x] < 0:
+            return x
+        self.parent[x] = self.find(self.parent[x])
+        return self.parent[x]
 \end{python}
 \end{document}
 
