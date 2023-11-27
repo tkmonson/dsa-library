@@ -1,7 +1,7 @@
 '''
 Jump Game (#55)
 
-Given an array where each element represents the maximum (forward) jump length
+Given an array where each element represents the maximum forward jump length
 (in indicies) from that position, return True if you can reach the last index
 from the first index, False otherwise.
 '''
