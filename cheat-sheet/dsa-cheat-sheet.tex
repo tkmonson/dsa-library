@@ -82,8 +82,15 @@ def compute_hash(s: str) -> int:
     for ch in s:
         h *= alphabet_primes[ord(ch) - ord('a')]
     return h
-\end{python}
+\end{python} \bigskip
 
+\textbf{Do you need to point to the middle node of a linked list?} (\texttt{slow})
+\begin{python}
+slow, fast = head, head.next
+while fast and fast.next:
+    slow = slow.next
+    fast = fast.next.next
+\end{python}
 
 \end{adjustwidth}
 
@@ -97,6 +104,7 @@ You should use a disjoint-set (union-find) forest (see Appendix B.2). The vertic
 \subsection*{Searching}
 
 \begin{adjustwidth}{2em}{0pt}
+\textbf{Binary Search}\medskip \\
 To find a given target (for duplicate targets, return index of first target found in the search):
 \begin{python}
 def binary_search(nums: list[int], target: int) -> int:
@@ -216,20 +224,6 @@ def binary_search_rightmost(nums: list[int], target: int) -> int:
     \end{algorithm}
 \end{adjustwidth}
 
-\subsection*{Other Stuff}
-
-\begin{itemize}
-  \item Helper method recursion (parameter or nonlocal)
-  \item Kadane's algorithm (maximum subarray)
-  \item Knapsack problem (combinatorial optimization)
-  \item Dijkstra's algorithm (shortest path in weighted graph)
-  \item Sweep line algorithm (convex hull)
-  \item Backtracking (DFS) ("the best solutions often model the problem in some way that allows them to quickly prune state prefixes that cannot lead to solutions")
-  \item Sliding window
-  \item LRU Cache (hash map + DLL, OrderedDict)
-  \item Monotonic stack
-\end{itemize}
-
 \section*{Useful Python Constructs}
 \hrule\vspace{5ex}
 
@@ -274,6 +268,23 @@ deep copy, shallow copy
   \item Rabin-Karp (string-searching, uses a rolling hash to make approximate comparisons between substring hash and target hash, makes exact comparison if hashes match)
   \item Kruskal's algorithm and Prim's algorithm (minimum spanning tree)
   \item Sieve of Eratosthenes (find all prime numbers up to a given integer)
+\end{itemize}
+
+\section*{To Do}
+\hrule\vspace{5ex}
+
+\begin{itemize}
+  \item {\color{red} Monotonic stack}
+  \item {\color{red} Heap Structure}
+  \item {\color{red} Intervals?}
+  \item Helper method recursion (parameter or nonlocal)
+  \item Kadane's algorithm (maximum subarray)
+  \item Knapsack problem (combinatorial optimization)
+  \item Dijkstra's algorithm (shortest path in weighted graph)
+  \item Sweep line algorithm (convex hull)
+  \item Backtracking (DFS) ("the best solutions often model the problem in some way that allows them to quickly prune state prefixes that cannot lead to solutions")
+  \item Sliding window
+  \item LRU Cache (hash map + DLL, OrderedDict)
 \end{itemize}
 
 \appendix

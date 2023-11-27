@@ -41,8 +41,10 @@ is itself (i.e. the union operation should do nothing in this case).
 class DisjointSet:
     def __init__(self, n):
         self.parent = list(range(n))
+
     def union(self, x, y):
         self.parent[self.find(y)] = self.find(x)
+
     def find(self, x):
         return x if x == self.parent[x] else self.find(self.parent[x])
 
@@ -60,15 +62,19 @@ occur).
 class DisjointSet:
     def __init__(self, n):
         self.parent = [-1] * n
+
     def union(self, x, y):
-        if self.find(x) == self.find(y):
-            return
-        elif self.parent[self.find(x)] < self.parent[self.find(y)]:
-            self.parent[self.find(x)] += self.parent[self.find(y)]
-            self.parent[self.find(y)] = self.find(x)
+        rx, ry = self.find(x), self.find(y)
+        if rx == ry:
+            return False
+        elif self.parent[rx] < self.parent[ry]:
+            self.parent[rx] += self.parent[ry]
+            self.parent[ry] = rx
         else:
-            self.parent[self.find(y)] += self.parent[self.find(x)]
-            self.parent[self.find(x)] = self.find(y)
+            self.parent[ry] += self.parent[rx]
+            self.parent[rx] = ry
+        return True
+
     def find(self, x):
         if self.parent[x] < 0:
             return x
@@ -77,15 +83,19 @@ class DisjointSet:
 
 '''
 This implementation makes two modifications known as weighted union and
-collapsing find. Initially, the root of each tree points to the value -1 (a
-weight/rank/height of 1). When sets are unioned, the tree with the smaller
-weight becomes the subtree of the tree with the larger weight, and the weight
-of the smaller tree is added to the weight of the larger tree. This makes the
-resulting tree more balanced, which reduces the time complexity of both
-operations from O(n) to O(logn), worst-case. When find(x) is called for the
-first time, the full path from x to the root is traversed, and then the path is
-collapsed so that x points directly to the root, resulting in an O(1) time
-complexity for both operations on subsequent calls.
+collapsing find:
+
+Initially, the root of each tree points to the value -1 (a weight/rank of 1).
+When sets are unioned, the tree with the smaller weight becomes the subtree of
+the tree with the larger weight, and the weight of the smaller tree is added to
+the weight of the larger tree. This makes the resulting tree more balanced,
+which reduces the time complexity of both operations from O(n) to O(logn),
+worst-case.
+
+When find(x) is called for the first time, the full path from x to the root is
+traversed, and then the path is collapsed so that x points directly to the
+root, resulting in an O(1) time complexity for both operations on subsequent
+calls.
 '''
 
 def accounts_merge(accounts: list[list[str]]) -> list[list[str]]:
