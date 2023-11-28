@@ -39,7 +39,7 @@ Optimal substructure + greedy choice $\implies$ greedy \medskip\\
 Optimal substructure + overlapping subproblems \\
 \-\hspace{1em}$\implies$ dynamic programming \\
 
-\textbf{Would it be helpful to rephrase a problem in order to more easily define its subproblems?} \\
+\textbf{Would it help to rephrase a problem in order to more easily define its subproblems?} \\
 
 \-\hspace{1em}\fbox{\begin{minipage}{28em}
   Given an integer array, return the length of the longest strictly increasing subsequence (LIS). \smallskip\\
@@ -83,6 +83,60 @@ def compute_hash(s: str) -> int:
         h *= alphabet_primes[ord(ch) - ord('a')]
     return h
 \end{python} \bigskip
+
+\textbf{Do you need to find the previous/next lesser/greater element for each element in a given array?} \medskip
+
+You should use a \textbf{monotonic stack}. There are four types of monotonic stack: \textit{increasing}, \textit{decreasing}, \textit{non-increasing}, and \textit{non-decreasing}. These stacks are used to find next greater elements, previous greater elements, next lesser elements, and previous lesser elements, and all of these problems can be solved using the template code below: \medskip
+
+\begin{python}
+def _find_indicies(arr, op, r):
+    stack = []
+    result = [-1] * len(arr)
+    for i in r:
+        while stack and op(arr[i], arr[stack[-1]]):
+            result[stack.pop()] = i
+        stack.append(i)
+    return result
+\end{python} \medskip
+
+\begin{center}
+\begin{tabular}{|l|l|c|c|}
+  \hline
+  Problem Type & Stack Type & Loop Conditional & Direction \\
+  \hline
+  Next Greater & Non-Increasing & \texttt{curr > top} & $\rightarrow$ \\
+  Previous Greater & Non-Increasing & \texttt{curr > top} & $\leftarrow$ \\
+  Next Lesser & Non-Decreasing & \texttt{curr < top} & $\rightarrow$ \\
+  Previous Lesser & Non-Decreasing & \texttt{curr < top} & $\leftarrow$ \\
+  \hline
+\end{tabular}
+\end{center} \bigskip
+
+If it is preferable to loop from left to right while looking for previous greater elements or previous lesser elements, the template code below can be used instead: \medskip
+
+\begin{python}
+def _find_indicies2(arr, op):
+    stack = []
+    result = [-1] * len(arr)
+    for i in range(len(arr)):
+        while stack and op(arr[i], arr[stack[-1]]):
+            stack.pop()
+        if stack:
+            result[i] = stack[-1]
+        stack.append(i)
+    return result
+\end{python} \medskip
+
+\begin{center}
+\begin{tabular}{|l|l|c|c|}
+  \hline
+  Problem Type & Stack Type & Loop Conditional & Direction \\
+  \hline
+  Previous Greater & Decreasing & \texttt{curr >= top} & $\rightarrow$ \\
+  Previous Lesser & Increasing & \texttt{curr <= top} & $\rightarrow$ \\
+  \hline
+\end{tabular}
+\end{center} \bigskip
 
 \textbf{Do you need to point to the middle node of a linked list?} (\texttt{slow})
 \begin{python}
@@ -222,6 +276,14 @@ def binary_search_rightmost(nums: list[int], target: int) -> int:
       \KwRet{$L$}\;
       \caption{DFS Topological Sort\hspace{8mm}\texttt{/* see A.2 for code */}}
     \end{algorithm}
+\end{adjustwidth}
+
+\subsection*{Bit Manipulation}
+
+\begin{adjustwidth}{2em}{0pt}
+\begin{itemize}
+  \item $x = y \implies x \oplus y = 0$
+\end{itemize}
 \end{adjustwidth}
 
 \section*{Useful Python Constructs}
