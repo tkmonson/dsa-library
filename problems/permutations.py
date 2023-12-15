@@ -12,17 +12,16 @@ def permute(nums: list[int]) -> list[list[int]]:
     result = []
     visited = set()
 
-    def backtracking(candidate):
-        nonlocal result, visited
+    def backtrack(candidate):
         if len(candidate) == len(nums):
             result.append(candidate)
         for i in range(len(nums)):
             if i not in visited:
                 visited.add(i)
-                backtracking(candidate + [nums[i]])
+                backtrack(candidate + [nums[i]])
                 visited.remove(i)
 
-    backtracking([])
+    backtrack([])
     return result
 
 '''
