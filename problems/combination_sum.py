@@ -6,46 +6,55 @@ return a list of all unique combinations of candidates where the chosen numbers
 sum to `target`. You may return the combinations in any order. The same number
 may be chosen from `candidates` an unlimited number of times. Two combinations
 are unique if the frequency of at least one of the chosen numbers is different.
+
+1 <= candidates.length <= 30
+2 <= candidates[i] <= 40
+1 <= target <= 40
 '''
 
 def combination_sum(candidates: list[int], target: int) -> list[list[int]]:
     result = []
-    def dfs(combination, n, target):
+    curr = []
+
+    def dfs(n, target):
         if target == 0:
-            result.append(combination)
+            result.append(curr[:])
             return
         if n == 0:
             return
 
         num = candidates[n - 1]
-        if num > target:
-            dfs(combination, n - 1, target)
-        else:
-            dfs(combination + [num], n, target - num)
-            dfs(combination, n - 1, target)
+        if num <= target:
+            curr.append(num)
+            dfs(n, target - num)  # take
+            curr.pop()
+        dfs(n - 1, target)  # not take
 
-    dfs([], len(candidates), target)
+    dfs(len(candidates), target)
     return result
 
 '''
 My initial backtracking solution. This solution shows how similar this problem
-is to the unbounded knapsack problem. If the candidate under consideration is
-greater than the current target, you must "not take" it (and the size of the
-pool of candidates decrements). Otherwise, consider both options: "take" (pool
-of candidates stays the same, target decreases by value of taken candidate) and
-"not take."
+is to the unbounded knapsack problem. You can only choose to "take" a candidate
+if it is less than or equal to the current target (pool of candidates stays the
+same, target decreases by value of taken candidate). You can always choose to
+"not take" a candidate (the size of the pool of candidates will decrement).
 '''
 
 def combination_sum2(candidates: list[int], target: int) -> list[list[int]]:
     result = []
-    def dfs(curr, curr_sum, idx):
+    curr = []
+
+    def dfs(curr_sum, idx):
         if curr_sum == target:
-            result.append(curr)
+            result.append(curr[:])
         if curr_sum < target:
             for i in range(idx, len(candidates)):
-                dfs(curr + [candidates[i]], curr_sum + candidates[i], i)
+                curr.append(candidates[i])
+                dfs(curr_sum + candidates[i], i)
+                curr.pop()
 
-    dfs([], 0, 0)
+    dfs(0, 0)
     return result
 
 '''
@@ -54,6 +63,7 @@ A slightly more refined backtracking solution. Here there is only one explicit
 will increment, which represents a "not take."
 '''
 
+# Slower
 def combination_sum3(candidates: list[int], target: int) -> list[list[int]]:
     idx_d = {val: idx for idx, val in enumerate(candidates)}
     n = len(candidates)
