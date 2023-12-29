@@ -80,7 +80,7 @@ across the same subproblem.
 
 # Time: O(N * W)
 # Auxiliary Space: O(N * W) (2D array)
-def knapsack_tab(wt: list[int], val: list[int], W: int) -> int:
+def knapsack_tab_2d(wt: list[int], val: list[int], W: int) -> int:
     N = len(wt)
     dp = [[0 for _ in range(W + 1)] for _ in range(N + 1)]
 
@@ -118,7 +118,7 @@ knapsack with capacity w, given an item set of (A).
 
 # Time: O(N * W)
 # Auxiliary Space: O(W) (1D array)
-def knapsack(wt: list[int], val: list[int], W: int) -> int:
+def knapsack_tab_1d(wt: list[int], val: list[int], W: int) -> int:
     N = len(wt)
     dp = [0] * (W + 1)
 
@@ -145,5 +145,5 @@ if __name__ == '__main__':
     wt = [95, 4, 60, 32, 23, 72, 80, 62, 65, 46]
     val = [55, 10, 47, 5, 4, 50, 8, 61, 85, 87]
     W = 269
-    print(knapsack(wt, val, W))
+    print(knapsack_tab_1d(wt, val, W))
 

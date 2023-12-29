@@ -36,21 +36,21 @@ def unbounded_knapsack_memo(wt: list[int], val: list[int], W: int) -> int:
         if n == 0 or w == 0:
             return 0
 
-        if dp[n][w] != -1:
-            return dp[n][w]
+        if dp[n][w] == -1:
+            if (wt[n - 1] > w):
+                dp[n][w] = knapsack(n - 1, w)
+            else:
+                dp[n][w] = max(
+                    val[n - 1] + knapsack(n, w - wt[n - 1]),
+                    knapsack(n - 1, w)
+                )
 
-        if (wt[n - 1] > w):
-            return knapsack(n - 1, w)
-        else:
-            return max(
-                val[n - 1] + knapsack(n, w - wt[n - 1]),
-                knapsack(n - 1, w)
-            )
+        return dp[n][w]
 
     return knapsack(N, W)
 
 
-def unbounded_knapsack_tab(wt: list[int], val: list[int], W: int) -> int:
+def unbounded_knapsack_tab_2d(wt: list[int], val: list[int], W: int) -> int:
     N = len(wt)
     dp = [[0 for _ in range(W + 1)] for _ in range(N + 1)]
 
@@ -78,7 +78,7 @@ additional instances of the nth item. The set of items under consideration only
 shrinks when you decide not to take an item (K(n - 1, w)).
 '''
 
-def unbounded_knapsack(wt: list[int], val: list[int], W: int) -> int:
+def unbounded_knapsack_tab_1d(wt: list[int], val: list[int], W: int) -> int:
     N = len(wt)
     dp = [0] * (W + 1)
  
@@ -104,5 +104,5 @@ if __name__ == '__main__':
     wt = [4, 2, 1, 10, 2]
     val = [12, 2, 1, 4, 1]
     W = 15
-    print(unbounded_knapsack(wt, val, W))
+    print(unbounded_knapsack_tab_1d(wt, val, W))
 

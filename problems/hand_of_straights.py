@@ -59,7 +59,8 @@ element has its count reduced to 0, the cards cannot be grouped according to
 the constraints of the problem.
 '''
 
-
+# Time: O(nlogn) (but way slower than above)
+# Auxiliary space: O(n)
 def is_n_straight_hand2(hand: list[int], group_size: int) -> bool:
     if len(hand) % group_size:
         return False
@@ -81,6 +82,7 @@ def is_n_straight_hand2(hand: list[int], group_size: int) -> bool:
         j = i
 
     return True
+
 
 if __name__ == '__main__':
     hand = [1, 2, 3, 6, 2, 3, 4, 7, 8]
