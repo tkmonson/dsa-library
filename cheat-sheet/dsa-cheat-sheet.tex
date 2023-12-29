@@ -128,24 +128,27 @@ def knapsack_tab_1d(wt: list[int], val: list[int], W: int) -> int:
     return dp[W]
 \end{python}
 
+(combinatorial optimization)
+
 \vspace{2cm}\texttt{@functools.lru\_cache}
+
+\subsection*{Backtracking}
+
+Blah, blah, blah
 
 \subsection*{Sets}
 
-\begin{adjustwidth}{2em}{0pt}
-\textbf{Do you need to model the partitioning of a set? That is, given a set of items, do you need to group the items into subsets?} \medskip
+\subsubsection*{Do you need to model the partitioning of a set? That is, given a set of items, do you need to group the items into subsets?}
 
 You should use a disjoint-set (union-find) forest (see Appendix B.2).
-\end{adjustwidth}
 
 \subsection*{Arrays}
 
-\begin{adjustwidth}{2em}{0pt}
-\textbf{Would it help to know the sum of elements for any subarray in O(n) time?} \medskip
+\subsubsection*{Would it help to know the sum of elements for any subarray in O(n) time?}
 
 Computing the \textbf{prefix sum} of an array \texttt{a} will give you the sum of elements for subarrays \texttt{[a[:i] for i in range(1, len(a))]}. By subtracting elements of the prefix sum from each other, you can get the sum of elements for any subarray. That is, \texttt{sum(a[x:y]) = sum(a[:y]) - sum(a[:x])} for $x < y$. \\
 
-\textbf{Would it help to know if two multisets are permutations of each other?} \medskip
+\subsubsection*{Would it help to know if two multisets are permutations of each other?}
 
 \textit{Fundamental theorem of arithmetic: every integer greater than 1 can be represented uniquely as a product of prime numbers.} \medskip
 
@@ -162,7 +165,7 @@ def compute_hash(s: str) -> int:
     return h
 \end{python} \bigskip
 
-\textbf{Do you need to find the previous/next lesser/greater element for each element in a given array?} \medskip
+\subsubsection*{Do you need to find the previous/next lesser/greater element for each element in a given array?}
 
 You should use a \textbf{monotonic stack}. There are four types of monotonic stack: \textit{increasing}, \textit{decreasing}, \textit{non-increasing}, and \textit{non-decreasing}. These stacks are used to find next greater elements, previous greater elements, next lesser elements, and previous lesser elements, and all of these problems can be solved using the template code below: \medskip
 
@@ -216,27 +219,25 @@ def _find_indicies2(arr, op):
 \end{tabular}
 \end{center} \bigskip
 
-\textbf{Do you need to point to the middle node of a linked list?} (\texttt{slow})
+\subsubsection*{Do you need to point to the middle node of a linked list?}
+
 \begin{python}
-slow, fast = head, head.next
-while fast and fast.next:
-    slow = slow.next
-    fast = fast.next.next
+def find_mid(head):
+    slow, fast = head, head.next
+    while fast and fast.next:
+        slow = slow.next
+        fast = fast.next.next
+    return slow
 \end{python}
 
-\end{adjustwidth}
-
 \subsection*{Graphs}
-\begin{adjustwidth}{2em}{0pt}
-\textbf{Do you need to detect a cycle in an undirected graph?} \medskip
+\subsubsection*{Do you need to detect a cycle in an undirected graph?}
 
 You should use a disjoint-set (union-find) forest (see Appendix B.2). The vertices are the elements of the subsets, and a union of subsets corresponds to an edge between vertices/components. If calling \texttt{union(x, y)} does not change the structure of the forest, then you know that \texttt{x} and \texttt{y} belong to the same component and that an edge between them would produce a cycle.
-\end{adjustwidth}
 
 \subsection*{Searching}
 
-\begin{adjustwidth}{2em}{0pt}
-\textbf{Binary Search}\medskip \\
+\subsubsection*{Binary Search}
 To find a given target (for duplicate targets, return index of first target found in the search):
 \begin{python}
 def binary_search(nums: list[int], target: int) -> int:
@@ -281,88 +282,83 @@ def binary_search_rightmost(nums: list[int], target: int) -> int:
 \end{python}
 \texttt{bisect.bisect\_right(nums, target) - 1} \\
 \texttt{bisect.bisect(nums, target) - 1}
-\end{adjustwidth}
 
 \subsection*{Sorting}
 
-\begin{adjustwidth}{2em}{0pt}
-\textbf{Do you need to sort items according to a custom scheme?}
+\subsubsection*{Do you need to sort items according to a custom scheme?}
 \begin{itemize}
   \item \texttt{functools.cmp\_to\_key} 
   \item Create class and define dunder methods \texttt{\_\_lt\_\_}, \texttt{\_\_gt\_\_}, \texttt{\_\_le\_\_}, \texttt{\_\_ge\_\_}, \texttt{\_\_eq\_\_}, \texttt{\_\_ne\_\_}
 \end{itemize}
-\end{adjustwidth}
 \bigskip
 
-\begin{adjustwidth}{2em}{0pt}
-    \textbf{Do you need to schedule tasks based on their dependencies?} \medskip\\
-    You can apply \textbf{topological sorting} to a directed graph. This will produce a linear ordering of the vertices such that for every directed edge \textit{uv} from vertex \textit{u} to vertex \textit{v}, \textit{u} comes before \textit{v}. However, if the graph has cycles, such an ordering does not exist.\medskip\\
-    There are two main topological sorting algorithms: \textit{Kahn's algorithm} (BFS) and \textit{cycle detection via DFS}. The former cannot visit cycles and detects them by checking for unvisited nodes after traversal. The latter detects cycles by entering the first one it finds and completing a loop.\\
+\subsubsection*{Do you need to schedule tasks based on their dependencies?}
 
-    \begin{algorithm}[H]
-      \SetAlgoLined
-      \DontPrintSemicolon
-      \KwData{$G = (V, E)$}
-      \KwResult{$L$ (list of $v \in V$ in topological order)}
-      $L \longleftarrow$\hspace{0.5mm}\texttt{[]}\;
-      $S \longleftarrow \{v \in V \mid v \text{ has no incoming edges}\}$\;
-      \While{S is not empty}{
-        remove a node $n$ from $S$\;
-        append $n$ to $L$\;
-        \ForEach{node $m$ with an edge $e$ from $n$ to $m$}{
-          remove $e$ from $E$\;
-          \If{$m$ has no incoming edges}{
-            add $m$ to $S$\;
-          }
-        }
-      }
-      \eIf{$E$ is empty}{
-        \KwRet{$L$}
-      }{
-        \KwRet{error}\tcc*[r]{the graph has a cycle}
-      }
-      \caption{Kahn's Algorithm\hspace{13mm}\texttt{/* see A.1 for code */}}
-    \end{algorithm}
-    \bigskip
+You can apply \textbf{topological sorting} to a directed graph. This will produce a linear ordering of the vertices such that for every directed edge \textit{uv} from vertex \textit{u} to vertex \textit{v}, \textit{u} comes before \textit{v}. However, if the graph has cycles, such an ordering does not exist.\medskip\\
 
-    \begin{algorithm}[H]
-      \SetAlgoLined
-      \DontPrintSemicolon
-      \SetKwFunction{FnVisit}{visit}
-      \KwData{$G = (V, E)$}
-      \KwResult{$L$ (list of $v \in V$ in topological order)}
-      $L \longleftarrow$\hspace{0.5mm}\texttt{[]}\;
-      \Fn{\FnVisit{node $n$}}{
-        \If{$n$ has a permanent mark}{
-          \KwRet{}
-        }
-        \If{$n$ has a temporary mark}{
-          \Stop\tcc*[r]{the graph has a cycle}
-        }
-        mark $n$ with a temporary mark\;
-        \ForEach{node $m$ with an edge from $n$ to $m$}{
-          visit($m$)\;
-        }
-        remove temporary mark from $n$\;
-        mark $n$ with a permanent mark\;
-        prepend $n$ to $L$\;
+There are two main topological sorting algorithms: \textit{Kahn's algorithm} (BFS) and \textit{cycle detection via DFS}. The former cannot visit cycles and detects them by checking for unvisited nodes after traversal. The latter detects cycles by entering the first one it finds and completing a loop.\\
+
+\begin{algorithm}[H]
+  \SetAlgoLined
+  \DontPrintSemicolon
+  \KwData{$G = (V, E)$}
+  \KwResult{$L$ (list of $v \in V$ in topological order)}
+  $L \longleftarrow$\hspace{0.5mm}\texttt{[]}\;
+  $S \longleftarrow \{v \in V \mid v \text{ has no incoming edges}\}$\;
+  \While{S is not empty}{
+    remove a node $n$ from $S$\;
+    append $n$ to $L$\;
+    \ForEach{node $m$ with an edge $e$ from $n$ to $m$}{
+      remove $e$ from $E$\;
+      \If{$m$ has no incoming edges}{
+        add $m$ to $S$\;
       }
-      \While{$\exists$ nodes without a permanent mark}{
-        select an unmarked node $n$\;
-        visit($n$)\;
-      }
-      \KwRet{$L$}\;
-      \caption{DFS Topological Sort\hspace{8mm}\texttt{/* see A.2 for code */}}
-    \end{algorithm}
-\end{adjustwidth}
+    }
+  }
+  \eIf{$E$ is empty}{
+    \KwRet{$L$}
+  }{
+    \KwRet{error}\tcc*[r]{the graph has a cycle}
+  }
+  \caption{Kahn's Algorithm\hspace{13mm}\texttt{/* see A.1 for code */}}
+\end{algorithm}
+\bigskip
+
+\begin{algorithm}[H]
+  \SetAlgoLined
+  \DontPrintSemicolon
+  \SetKwFunction{FnVisit}{visit}
+  \KwData{$G = (V, E)$}
+  \KwResult{$L$ (list of $v \in V$ in topological order)}
+  $L \longleftarrow$\hspace{0.5mm}\texttt{[]}\;
+  \Fn{\FnVisit{node $n$}}{
+    \If{$n$ has a permanent mark}{
+      \KwRet{}
+    }
+    \If{$n$ has a temporary mark}{
+      \Stop\tcc*[r]{the graph has a cycle}
+    }
+    mark $n$ with a temporary mark\;
+    \ForEach{node $m$ with an edge from $n$ to $m$}{
+      visit($m$)\;
+    }
+    remove temporary mark from $n$\;
+    mark $n$ with a permanent mark\;
+    prepend $n$ to $L$\;
+  }
+  \While{$\exists$ nodes without a permanent mark}{
+    select an unmarked node $n$\;
+    visit($n$)\;
+  }
+  \KwRet{$L$}\;
+  \caption{DFS Topological Sort\hspace{8mm}\texttt{/* see A.2 for code */}}
+\end{algorithm}
 
 \subsection*{Bit Manipulation}
 
-\begin{adjustwidth}{2em}{0pt}
 \begin{itemize}
   \item $x = y \implies x \oplus y = 0$
 \end{itemize}
-\end{adjustwidth}
 
 \section*{Useful Python Constructs}
 \hrule\vspace{5ex}
@@ -417,7 +413,6 @@ deep copy, shallow copy \\
 
 \subsection*{Essential Topics}
 \begin{itemize}
-  \item {\color{red} Knapsack problem (combinatorial optimization)}
   \item {\color{red} Heap Structure} % https://stackoverflow.com/questions/9755721/how-can-building-a-heap-be-on-time-complexity, https://docs.python.org/3/library/heapq.html
   \item {\color{red} Intervals?}
   \item Floyd's Tortoise and Hare Cycle Detection Algorithm
