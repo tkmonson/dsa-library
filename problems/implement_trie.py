@@ -74,7 +74,7 @@ class BTrie:
 class KNode:
     def __init__(self, value):
         self.value = value
-        self.children = []
+        self.children = {}
 
 
 class KTrie:
@@ -85,49 +85,29 @@ class KTrie:
     def insert(self, word: str) -> None:
         curr = self.head
         for ch in word:
-            ch_found = False
-            for node in curr.children:
-                if node.value == ch:
-                    ch_found = True
-                    curr = node
-                    break
-            if not ch_found:
-                curr.children.append(KNode(ch))
-                curr = curr.children[-1]
-
-        end_found = False
-        for node in curr.children:
-            if not node.value:
-                end_found = True
-        if not end_found:
-            curr.children.append(KNode(None))
+            if ch not in curr.children:
+                curr.children[ch] = KNode(ch)
+            curr = curr.children[ch]
+        if None not in curr.children:
+            curr.children[None] = KNode(None)
 
 
     def _search(self, word: str) -> KNode | None:
         curr = self.head
         for ch in word:
-            ch_found = False
-            for node in curr.children:
-                if node.value == ch:
-                    ch_found = True
-                    curr = node
-                    break
-            if not ch_found:
+            if ch not in curr.children:
                 return None
+            curr = curr.children[ch]
         return curr
 
 
     def search(self, word: str) -> bool:
         curr = self._search(word)
-        if curr:
-            for node in curr.children:
-                if not node.value:
-                    return True
-        return False
+        return curr and None in curr.children
 
 
     def starts_with(self, prefix: str) -> bool:
-        return bool(self._search(prefix))
+        return self._search(prefix) is not None
 
 
 # Nested dictionary representation
