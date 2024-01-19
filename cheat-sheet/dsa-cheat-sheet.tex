@@ -34,7 +34,64 @@
 \section{Essential Patterns}
 \hrule\vspace{5ex}
 
+\subsection{Backtracking}
+
+Backtracking is a strategy for solving \textit{combinatorial search} problems, where the goal is to find groupings or arrangements of elements that satisfy certain conditions. Backtracking searches the space of all possible solution states, and this space can be represented by a tree known as a \textit{state-space tree} or \textit{potential search tree}. The nodes of this tree are \textit{partial candidates}. Each partial candidate is the parent of the candidates that differ from it by a single \textit{extension step}, and the leaves of the tree are the partial candidates that cannot be extended further. The tree is searched in depth-first order. \\
+
+An efficient backtracking algorithm will prune the subtree rooted at a partial candidate that cannot be extended to a valid solution (i.e. it will not bother exploring such a subtree). At each node $c$, it will check whether $c$ can be extended to a valid solution. If it cannot, it will prune the subtree rooted at $c$ and backtrack from $c$. Otherwise, it will check whether $c$ itself is a valid solution, and then it will explore the subtree rooted at $c$. \\
+
+A backtracking algorithm that does no pruning is equivalent to a \textit{brute-force} or \textit{exhaustive} search of the state-space. The \textit{actual search tree} of a backtracking algorithm is the pruned version of its potential search tree. \\
+
+In general, backtracking solutions can be implemented with the following template, where \texttt{reject(c)} returns whether \texttt{c} can be extended to a valid solution, \texttt{accept(c)} returns whether \texttt{c} is a valid solution, and \texttt{get\_steps(c)} returns a list of the elements that can be appended to $c$ to extend it to a child partial candidate: \medskip
+
+\begin{python}
+result = []
+def backtrack(c):
+    if reject(c):
+        return
+    if accept(c):
+        result.append(c[:])
+
+    for step in get_steps(c):
+        c.append(candidate)
+        backtrack(c)
+        c.pop()
+
+backtrack([])
+\end{python} \medskip
+
+Note that this template assumes that a valid solution can be extended to another valid solution. If, on the other hand, valid solutions must be leaves, the \texttt{accept} conditional should return after appending \texttt{c} to \texttt{result}. \\
+
+Sometimes a \texttt{reject} conditional is unnecessary because an exhaustive search is required. For example, for a backtracking algorithm that finds all possible combinations of \texttt{k} numbers in the range \texttt{[1, n]}, valid solutions must be leaves and every leaf is a valid solution: \medskip
+
+\begin{python}
+def combine(n: int, k: int) -> list[list[int]]:
+    result = []
+
+    def backtrack(state, start):
+        if len(state) == k:
+            result.append(state[:])
+            return
+       
+        need = k - len(state)
+        remain = n - start + 1
+        available = remain - need
+
+        for step in range(start, start + available + 1):
+            state.append(step)
+            start += 1
+            backtrack(state, start)  # Take
+            state.pop()  # Not take
+
+    backtrack([], 1)
+    return result
+\end{python}
+
 \subsection{Dynamic Programming}
+
+(combinatorial optimization) \\
+\texttt{@functools.cache}
+
 \subsubsection{Would it help to rephrase the problem in order to more easily define its subproblems?}
 
 \begin{center}
@@ -128,67 +185,6 @@ def knapsack_tab_1d(wt: list[int], val: list[int], W: int) -> int:
             dp[w] = max(val[n - 1] + dp[w - wt[n - 1]], dp[w])
 
     return dp[W]
-\end{python}
-
-(combinatorial optimization)
-
-\vspace{2cm}\texttt{@functools.lru\_cache}
-
-\subsection{Backtracking}
-
-(combinatorial search) \\
-
-Backtracking solutions can be implemented with the following template: \medskip
-
-\begin{python}
-result = []
-
-def is_valid_state(state):
-    return True
-
-def get_candidates(state):
-    return []
-
-def backtrack(state):
-    if is_valid_state(state):
-        result.append(state[:])
-        return
-
-    for candidate in get_candidates(state):
-        state.append(candidate)
-        backtrack(state)
-        state.pop()
-
-backtrack([])
-\end{python}
-
-\begin{python}
-result = []
-
-def is_valid_state(state):
-    if len(state) == k:
-        return True
-
-def get_candidates(state, start):
-    need = k - len(state)
-    remain = n - start + 1
-    available = remain - need
-
-    return list(range(start, start + available + 1))
-
-def backtrack(state, start):
-    if is_valid_state(state):
-        result.append(state[:])
-        return
-   
-    for candidate in get_candidates(state, start):
-        state.append(candidate)
-        start += 1
-        backtrack(state, start)
-        state.pop()
-
-backtrack([], 1)
-return result
 \end{python}
 
 \subsection{Sets}
@@ -515,17 +511,16 @@ deep copy, shallow copy \\
   \item Kadane's algorithm (maximum subarray)
   \item Dijkstra's algorithm (shortest path in weighted graph)
   \item Sweep line algorithm (convex hull)
-  \item Backtracking (DFS) ("the best solutions often model the problem in some way that allows them to quickly prune state prefixes that cannot lead to solutions") % https://guides.codepath.com/compsci/Backtracking
   \item Sliding window
   \item LRU Cache (hash map + DLL, OrderedDict)
   \item Monotonic queue/deque (max/min element in sliding window) % https://www.youtube.com/watch?v=J1rJ3IcwhKI
   \item Tries
+  \item Kruskal's algorithm and Prim's algorithm (minimum spanning tree)
 \end{itemize}
 
 \subsection{Stretch Topics}
 \begin{itemize}
   \item Rabin-Karp (string-searching, uses a rolling hash to make approximate comparisons between substring hash and target hash, makes exact comparison if hashes match)
-  \item Kruskal's algorithm and Prim's algorithm (minimum spanning tree)
   \item Sieve of Eratosthenes (find all prime numbers up to a given integer)
   \item Segment trees and interval trees
 \end{itemize}
