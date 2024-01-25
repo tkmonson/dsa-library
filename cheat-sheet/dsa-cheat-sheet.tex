@@ -25,6 +25,7 @@
 \newcommand{\imply}[1]{
   \-\hspace{1em}$\implies$ \parbox[t]{11.2cm}{#1}
 }
+\newcommand{\floor}[1]{\lfloor #1 \rfloor}
 
 \begin{document}
 \maketitle
@@ -504,8 +505,7 @@ deep copy, shallow copy \\
 
 \subsection{Essential Topics}
 \begin{itemize}
-  \item {\color{red} Heap Structure} % https://stackoverflow.com/questions/9755721/how-can-building-a-heap-be-on-time-complexity, https://docs.python.org/3/library/heapq.html
-  \item {\color{red} Intervals?}
+  \item Intervals?
   \item Floyd's Tortoise and Hare Cycle Detection Algorithm
   \item Helper method recursion (parameter or nonlocal)
   \item Kadane's algorithm (maximum subarray)
@@ -619,18 +619,125 @@ def find_order_dfs(adj_list: list[list[int]]) -> list[int]:
 
 \section{Data Structures}
 
-\subsection{Heaps}
+\subsection{Heaps and Priority Queues}
+
+A \textbf{heap} is a tree-based data structure that satisfies the heap property:
+\begin{itemize}
+  \item For a min-heap, every parent is less than or equal to its children.
+  \item For a max-heap, every parent is greater than or equal to its children.
+\end{itemize}
+
+Heaps are useful when you need direct access to the smallest or largest element in a mutable or dynamic collection. \\
+
+Heaps are usually implemented with arrays. For a binary heap, the node stored at index $0$ is the root, and a node stored at index $i$ has children at indicies $2i + 1$ and $2i + 2$ and a parent at $\floor{(i - 1)/2}$. \\
+
+A min-heap has three essential operations:
 \begin{center}
 \begin{tabular}{|l|c|l|}
   \hline
   \textbf{Operation} & \textbf{Time} & \textbf{Python Function} \\
   \hline
-  Insert & $O(logn)$ & \texttt{heapq.heappush(heap, item)} \\
-  Extract-min & $O(logn)$ & \texttt{heapq.heappop(heap, item)} \\
-  Heapify & $O(n)$ & \texttt{heapq.heapify(heap, item)} \\
+  Heapify & $O(n)$ & \texttt{heapq.heapify(heap)} \\
+  Insert & $O(\log n)$ & \texttt{heapq.heappush(heap, item)} \\
+  Extract-min & $O(\log n)$ & \texttt{heapq.heappop(heap)} \\
   \hline
 \end{tabular}
 \end{center}
+
+\begin{itemize}
+  \item \textit{Heapify}: for all non-leaf nodes, from the last ($i = \floor{n/2} - 1$) to the root, sift the node down (for a max of one swap)
+  \item \textit{Insert}: append the new item to the array, sift it up
+  \item \textit{Extract-min}: swap the root $r$ with the last element of the array $x$, pop $r$ from the end of the array, sift $x$ down, return $r$
+\end{itemize}
+
+The Python \texttt{heapq} module provides two more heap operations that improve efficiency when you push-then-pop or pop-then-push. The amount of sift operations required is reduced from two to one:
+\begin{center}
+\begin{tabular}{|l|c|l|}
+  \hline
+  \textbf{Operation} & \textbf{Time} & \textbf{Python Function} \\
+  \hline
+  Push-pop & $O(\log n)$ & \texttt{heapq.heappushpop(heap, item)} \\
+  Replace & $O(\log n)$ & \texttt{heapq.heapreplace(heap, item)} \\
+  \hline
+\end{tabular}
+\end{center}
+
+\begin{itemize}
+  \item \textit{Push-pop}: if the new item $x$ is less than the root $r$, return $x$; else, save $r$, overwrite the first element of the array with $x$, sift $x$ down, return $r$
+  \item \textit{Replace}: append the new item to the array, call \textit{extract-min}
+\end{itemize}
+
+Heaps are often used to implement \textbf{priority queues}. A priority queue is an abstract data type similar to a queue or stack. Each element in a priority queue has an associated \textit{priority}, and elements with high priority are dequeued before elements with low priority. A priority queue has two essential operations: \textit{insert with priority} and \textit{extract element with highest priority}. \\
+
+There are other operations that a priority queue could have. For example, if a priority queue is being used to organize a set of tasks, it might be useful to increase the priority of a task as circumstances change. To do this, the priority queue (or, technically, the underlying heap) would need a \textit{decrease-key} operation (assuming that smaller keys correspond to higher priorities). The \texttt{heapq} module does not provide this operation; see the code below for a priority queue implementation that has \textit{decrease-key}:
+\medskip
+\begin{python}
+class PriorityQueue:
+    def __init__(self, items=[]):
+        self.pq = items
+        self.index = {t: i for (i, [_, t]) in enumerate(items)}
+        self._heapify()
+
+    def __len__(self):
+        return len(self.pq)
+
+    def __contains__(self, task):
+        return task in self.index
+
+    def insert(self, task, priority=0):
+        self.pq.append([priority, task])
+        self._sift_up(len(self.pq) - 1)
+
+    def pop(self):
+        if len(self.pq):
+            self.pq[0], self.pq[-1] = self.pq[-1], self.pq[0]
+            self.index[self.pq[0][1]] = 0
+            _, task = self.pq.pop()
+            del self.index[task]
+            self._sift_down(0)
+            return task
+        raise KeyError('Pop from empty priority queue')
+
+    def decrease_key(self, task, priority=0):
+        if self.get_priority(task) <= priority:
+            raise ValueError('New priority is not less than old priority')
+        c = self.index[task]
+        self.pq[c][0] = priority
+        self._sift_up(c)
+
+    def get_priority(self, task):
+        if task not in self.index:
+            raise KeyError('Task not in priority queue')
+        return self.pq[self.index[task]][0]
+
+    def _heapify(self):
+        for p in range(len(self.pq) // 2 - 1, -1, -1):
+            self._sift_down(p)
+
+    def _sift_up(self, c):
+        p = (c - 1) // 2
+        if c > 0 and self.pq[c] < self.pq[p]:
+            self._swap(c, p)
+            self._sift_up(p)
+
+    def _sift_down(self, p):
+        n = len(self.pq)
+        cl, cr = 2 * p + 1, 2 * p + 2
+        if cl >= n:
+            return
+        if cr >= n:
+            cr = cl
+        c = cl if self.pq[cl] < self.pq[cr] else cr
+
+        if self.pq[c] < self.pq[p]:
+            self._swap(c, p)
+            self._sift_down(c)
+
+    def _swap(self, i, j):
+        self.index[self.pq[i][1]] = j
+        self.index[self.pq[j][1]] = i
+        self.pq[i], self.pq[j] = self.pq[j], self.pq[i]
+\end{python}
 
 \subsection{Disjoint-Set (Union-Find) Forest}
 A disjoint-set forest models the partitioning of a set. Initially, each element of the set belongs to a subset where it is the only member. Two subsets can be united into a single subset that contains the elements of each. The union of a set with itself is itself. \\
@@ -656,7 +763,7 @@ class DisjointSet:
 \end{python}
 \bigskip
 
-The following class implements two enhancements known as \textit{weighted union} and \textit{collapsing find}. The parent of a root is now a negative number whose absolute value corresponds to the tree's \textit{weight} or \textit{rank}. When \texttt{union(x, y)} is called, where \texttt{x}'s tree has greater weight than \texttt{y}'s tree, the weight of \texttt{y}'s tree will be added to the weight of \texttt{x}'s tree, and the root of \texttt{y}'s tree will point to the root of \texttt{x}'s tree. This ensures that the united tree is more balanced. \texttt{find(x)} now sets the parent of any node on the path from \texttt{x} to the representative member of the tree to the representative member. Initially, \texttt{find(x)} is $O(log(n))$, but subsequent calls are $O(1)$.
+The following class implements two enhancements known as \textit{weighted union} and \textit{collapsing find}. The parent of a root is now a negative number whose absolute value corresponds to the tree's \textit{weight} or \textit{rank}. When \texttt{union(x, y)} is called, where \texttt{x}'s tree has greater weight than \texttt{y}'s tree, the weight of \texttt{y}'s tree will be added to the weight of \texttt{x}'s tree, and the root of \texttt{y}'s tree will point to the root of \texttt{x}'s tree. This ensures that the united tree is more balanced. \texttt{find(x)} now sets the parent of any node on the path from \texttt{x} to the representative member of the tree to the representative member. Initially, \texttt{find(x)} is $O(\log n)$, but subsequent calls are $O(1)$.
 \medskip
 \begin{python}
 class DisjointSet:
@@ -681,6 +788,9 @@ class DisjointSet:
         self.parent[x] = self.find(self.parent[x])
         return self.parent[x]
 \end{python}
+\bigskip
+
+Note that the elements of a disjoint set could be represented with something other than integers (so \texttt{self.parent} would be a dictionary), but weighted union would not be able to be implemented as it is above.
 
 \section{Glossary}
 
