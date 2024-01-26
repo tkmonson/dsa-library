@@ -2,6 +2,7 @@
 \usepackage{algorithm2e}
 \usepackage{amsmath}
 \usepackage{changepage}
+\usepackage{mathtools}
 \usepackage{pythonhighlight}
 \usepackage{titling}
 \usepackage{varwidth}
@@ -43,7 +44,7 @@ An efficient backtracking algorithm will prune the subtree rooted at a partial c
 
 A backtracking algorithm that does no pruning is equivalent to a \textit{brute-force} or \textit{exhaustive} search of the state-space. The \textit{actual search tree} of a backtracking algorithm is the pruned version of its potential search tree. \\
 
-In general, backtracking solutions can be implemented with the following template, where \texttt{reject(c)} returns whether \texttt{c} can be extended to a valid solution, \texttt{accept(c)} returns whether \texttt{c} is a valid solution, and \texttt{get\_steps(c)} returns a list of the elements that can be appended to $c$ to extend it to a child partial candidate: \medskip
+In general, backtracking solutions can be implemented with the following template, where \texttt{reject(c)} returns whether \texttt{c} can be extended to a valid solution, \texttt{accept(c)} returns whether \texttt{c} is a valid solution, and \texttt{get\_steps(c)} returns a list of the elements that can be appended to \texttt{c} to extend it to a child partial candidate: \medskip
 
 \begin{python}
 result = []
@@ -54,14 +55,14 @@ def backtrack(c):
         result.append(c[:])
 
     for step in get_steps(c):
-        c.append(candidate)
+        c.append(step)
         backtrack(c)
         c.pop()
 
 backtrack([])
 \end{python} \medskip
 
-Note that this template assumes that a valid solution can be extended to another valid solution. If, on the other hand, valid solutions must be leaves, the \texttt{accept} conditional should return after appending \texttt{c} to \texttt{result}. \\
+Note that this template assumes that a valid solution can be extended to another valid solution. If this is not the case, the \texttt{accept} conditional should return after appending \texttt{c} to \texttt{result} (i.e. when valid solutions must be leaves of the potential or actual search tree). \\
 
 Sometimes a \texttt{reject} conditional is unnecessary because an exhaustive search is required. For example, for a backtracking algorithm that finds all possible combinations of \texttt{k} numbers in the range \texttt{[1, n]}, valid solutions must be leaves and every leaf is a valid solution: \medskip
 
@@ -287,6 +288,10 @@ def find_mid(head):
 
 You should use a disjoint-set (union-find) forest (see Appendix B.2). The vertices are the elements of the subsets, and a union of subsets corresponds to an edge between vertices/components. If calling \texttt{union(x, y)} does not change the structure of the forest, then you know that \texttt{x} and \texttt{y} belong to the same component and that an edge between them would produce a cycle.
 
+\subsubsection{Do you need to connect verticies together without cycles while minimizing total edge-weight?}
+
+Such a set of edges is known as the \textbf{minimum spanning tree} (MST) of a graph. You should use \textit{Kruskal's algorithm} (see Appendix A.1) or \textit{Prim's algorithm} (see Appendix A.2). The former is slightly preferred for sparse graphs, the latter for dense graphs.
+
 \subsubsection{Do you need to traverse every edge of a graph exactly once?}
 
 Such a sequence of edges is known as an \textbf{Eulerian trail} and finding such a trail was the goal of the famous \textit{Seven Bridges of K\"onigsberg} problem. Similarly, an \textbf{Eulerian cycle} is an Eulerian trail that starts and ends at the same vertex. \\
@@ -320,7 +325,7 @@ To find an Eulerian cycle in a graph, you should use Hierholzer's algorithm: \me
       Insert $D$ into $C$ before some edge leaving $u$\;
   }
   \KwRet{$C$}\;
-  \caption{Hierholzer's Algorithm\hspace{5mm}\texttt{/* see A.1 for code */}}
+  \caption{Hierholzer's Algorithm\hspace{5mm}\texttt{/* see A.3 for code */}}
 \end{algorithm} \medskip
 
 \texttt{N1:} The trail will not get stuck and fail to return to $s$ because all $v \in V$ have even degree $\implies$ when the trail enters another vertex $w$, $w$ must have an unused edge leaving $w$.
@@ -410,7 +415,7 @@ There are two main topological sorting algorithms: \textit{Kahn's algorithm} (BF
   }{
     \KwRet{error}\tcc*[r]{the graph has a cycle}
   }
-  \caption{Kahn's Algorithm\hspace{13mm}\texttt{/* see A.2 for code */}}
+  \caption{Kahn's Algorithm\hspace{13mm}\texttt{/* see A.4 for code */}}
 \end{algorithm}
 \bigskip
 
@@ -441,7 +446,7 @@ There are two main topological sorting algorithms: \textit{Kahn's algorithm} (BF
     visit($n$)\;
   }
   \KwRet{$L$}\;
-  \caption{DFS Topological Sort\hspace{8mm}\texttt{/* see A.3 for code */}}
+  \caption{DFS Topological Sort\hspace{8mm}\texttt{/* see A.5 for code */}}
 \end{algorithm}
 
 \subsection{Bit Manipulation}
@@ -528,6 +533,139 @@ deep copy, shallow copy \\
 \appendix
 
 \section{Algorithm Code}
+
+\subsection{Minimum Spanning Trees - Kruskal's Algorithm}
+
+\begin{python}
+def kruskal(edges, weight):
+    edges.sort(key=weight)
+
+    verticies = set()
+    for u, v in edges:
+        verticies.add(u)
+        verticies.add(v)
+    verticies = list(verticies)
+
+    n = len(verticies)
+    uf = DisjointSet(n)
+
+    vertex_to_index = {}
+    for i in range(n):
+        vertex_to_index[verticies[i]] = i
+
+    mst = []
+    for u, v in edges:
+        i, j = vertex_to_index[u], vertex_to_index[v]
+        if uf.union(i, j):
+            mst.append((u, v))
+
+    return mst
+\end{python}
+
+\subsection{Minimum Spanning Trees - Prim's Algorithm}
+Prim's algorithm can be described at a high level by the following three steps:
+\begin{enumerate}
+  \item Initialize a tree with a single vertex, chosen arbitrarily from the graph.
+  \item Grow the tree by one edge; of the edges that connect the tree to verticies not yet in the tree, find the minimum-weight edge and transfer it to the tree.
+  \item Repeat step 2 until all verticies are in the tree.
+\end{enumerate}
+
+To find the minimum-weight edge from a tree vertex to a non-tree vertex, it would help to have a heap or priority queue. The heap could contain every non-tree vertex (initially, every vertex) and prioritize them based on the minimum cost to connect them to the tree (weight of lightest edge connecting to tree). Cost would be finite for adjacent verticies, infinite otherwise. As long as we keep track of which tree vertex provides that min-cost connection for each non-tree vertex, we will know which edges to add to the MST. \\
+
+\begin{algorithm}[H]
+  \SetAlgoLined
+  \DontPrintSemicolon
+  \KwData{$G = (V, E)$ with edge weights $w(e)$ for $e\in E$}
+  \KwResult{$T$ (a set of edges that represents an MST)}
+  \ForEach{$v \in V$}{
+    $C(v) \coloneqq \infty$ (cost of cheapest connection to $v$)\;
+    $P(v) \coloneqq$ \texttt{null} (vertex that provides cheapest connection to $v$)\;
+  }
+  $H \longleftarrow$\hspace{0.5mm} priority queue of $V$, using $C$ as priorities\;
+  \hspace{13mm}(contains the verticies not yet in the tree)\;
+  \While{$H$ is not empty}{
+    Pop $u$ from $H$ (the cheapest vertex to connect to the tree)
+    \ForEach{$e = (u, v)$ where $v$ is not yet in the tree}{
+      \If{$e$ is the cheapest path to $v$ found so far ($w(e) < C(v)$)}{
+        Increase the priority of $v$ in $H$\hspace{16mm} ($C(v)\coloneqq w(e)$)\;
+        Let $v$ connect to $u$ when $v$ is popped\hspace{4mm} ($P(v)\coloneqq u$)\;
+      }
+    }
+  }
+    $T \longleftarrow$\hspace{0.5mm} \{$(P(v), v)\;\forall\,v\in V\mid P(v)$ is not \texttt{null}\}\;
+  \KwRet{$T$}\;
+    \caption{Prim's Algorithm (heap with \textit{decrease-key})}
+\end{algorithm} \medskip
+
+Note this line from the above pseudocode:
+\begin{center}
+Increase the priority of $v$ in $H$\hspace{4mm} ($C(v)\coloneqq w(e)$)
+\end{center}
+Increasing the priority of an arbitrary entry in a priority queue requires a heap with a \textit{decrease-key} operation. The Python \texttt{heapq} does not provide this operation, so the pseudocode above must be implemented with a custom heap. With the priority queue implementation given in Appendix B.1, the algorithm can be written as follows: \medskip
+
+\begin{python}
+def prim(adj_list, weight):
+    prev = {}
+    pq = PriorityQueue([[inf, v] for v in adj_list])
+    while pq:
+        u = pq.pop()
+        for v in adj_list[u]:
+            if v in pq and (w := weight((u, v))) < pq.get_priority(v):
+                pq.decrease_key(v, priority=w)
+                prev[v] = u
+
+    return [(prev[v], v) for v in prev]
+\end{python}
+
+However, the code required to implement a heap with \textit{decrease-key} is cumbersome, and the algorithm can be written without modifying entries in the priority queue. Instead of initializing the heap with all of the verticies, verticies can be added when they become adjacent to the tree. And when costs to connect are lowered, duplicate entries can be inserted with higher priority. The priority queue will contain stale data, but if we keep track of which verticies have been added to the tree, then duplicate entries of lower priority can be discarded when popped. \\
+
+\begin{algorithm}[H]
+  \SetAlgoLined
+  \DontPrintSemicolon
+  \KwData{$G = (V, E)$ with edge weights $w(e)$ for $e\in E$}
+  \KwResult{$T$ (a set of edges that represents an MST)}
+  \ForEach{$v \in V$}{
+    $C(v) \coloneqq \infty$ (cost of cheapest connection to $v$)\;
+    $P(v) \coloneqq$ \texttt{null} (vertex that provides cheapest connection to $v$)\;
+  }
+  $H \longleftarrow$\hspace{0.5mm} priority queue containing arbitrary $v\in V$, highest priority\;
+  \hspace{13mm}(contains the verticies adjacent to but not yet in the tree and\;
+  \hspace{13mm}also possibly stale duplicates of verticies in the tree)\;
+  \While{there are verticies that are not in the tree}{
+    Pop $u$ from $H$ until $u$ is not in the tree (discard duplicates)\;
+    Add $u$ to the tree\;
+    \ForEach{$e = (u, v)$ where $v$ is not yet in the tree}{
+      Increase the priority of $v$, insert $v$ into $H$\hspace{4mm} ($C(v)\coloneqq w(e)$)\;
+      Let $v$ connect to $u$ when $v$ is popped\hspace{12mm} ($P(v)\coloneqq u$)\;
+    }
+  }
+  $T \longleftarrow$\hspace{0.5mm} \{$(P(v), v)\;\forall\,v\in V\mid P(v)$ is not \texttt{null}\}\;
+  \KwRet{$T$}\;
+    \caption{Prim's Algorithm (heap with duplicate entries)}
+\end{algorithm} \medskip
+
+Because the heap no longer requires \textit{decrease-key}, the \texttt{heapq} module is sufficient: \medskip
+
+\begin{python}
+def prim(adj_list, weight):
+    cost = {v: inf for v in adj_list}
+    prev = {}
+    tree = set()
+    pq = [(0, next(iter(adj_list)))]
+
+    while len(tree) < len(adj_list):
+        while (u := heapq.heappop(pq)[1]) in tree: pass
+        tree.add(u)
+        for v in adj_list[u]:
+            if v not in tree and (w := weight((u, v))) < cost[v]:
+                heapq.heappush(pq, (w, v))
+                cost[v] = w
+                prev[v] = u
+        
+    return [(prev[v], v) for v in prev]
+\end{python}
+
+Note that the first implementation of Prim's algorithm will find the minimum spanning forest for a disconnected graph. The second implementation will only find the minimum spanning tree of the connected component that it starts in, but the function could be called on each connected component in order to find the minimum spanning forest.
 
 \subsection{Eulerian Cycle Detection - Hierholzer's Algorithm}
 
@@ -669,7 +807,9 @@ The Python \texttt{heapq} module provides two more heap operations that improve 
 
 Heaps are often used to implement \textbf{priority queues}. A priority queue is an abstract data type similar to a queue or stack. Each element in a priority queue has an associated \textit{priority}, and elements with high priority are dequeued before elements with low priority. A priority queue has two essential operations: \textit{insert with priority} and \textit{extract element with highest priority}. \\
 
-There are other operations that a priority queue could have. For example, if a priority queue is being used to organize a set of tasks, it might be useful to increase the priority of a task as circumstances change. To do this, the priority queue (or, technically, the underlying heap) would need a \textit{decrease-key} operation (assuming that smaller keys correspond to higher priorities). The \texttt{heapq} module does not provide this operation; see the code below for a priority queue implementation that has \textit{decrease-key}:
+There are other operations that a priority queue could have. For example, if a priority queue is being used to organize a set of tasks, it might be useful to increase the priority of a task as circumstances change. To do this, the priority queue (or, technically, the underlying heap) would need a \textit{decrease-key} operation (assuming that smaller keys correspond to higher priorities). \\
+
+The \texttt{heapq} module does not provide this operation; see the code below for a priority queue implementation that has \textit{decrease-key}:
 \medskip
 \begin{python}
 class PriorityQueue:
