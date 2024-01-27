@@ -532,26 +532,47 @@ deep copy, shallow copy \\
 
 \appendix
 
-\section{Algorithm Code}
+\section{Algorithms}
 
 \subsection{Minimum Spanning Trees - Kruskal's Algorithm}
 
+Kruskal's algorithm is a greedy algorithm that, in each step, adds to the MST the lightest edge that will not form a cycle. It uses a disjoint-set forest to detect whether adding an edge will form a cycle. \\
+
+\begin{algorithm}[H]
+  \SetAlgoLined
+  \DontPrintSemicolon
+  \KwData{$G = (V, E)$ with edge weights $w(e)$ for $e\in E$}
+  \KwResult{$T$ (a set of edges that represents an MST)}
+  $T \longleftarrow$\hspace{0.5mm}\texttt{[]}\;
+  $D \longleftarrow$\hspace{0.5mm} disjoint-set forest of $V$\;
+  Sort $E$ by weight, increasing\;
+  \ForEach{$(u, v)\in E$}{
+    \If{$u$ and $v$ do not belong to the same disjoint set in $D$}{
+        Add $(u, v)$ to $T$\;
+        Union $u$ and $v$ in $D$\;
+    }
+  }
+  \KwRet{$T$}\;
+  \caption{Kruskal's Algorithm}
+\end{algorithm} \medskip
+
+See Appendix B.2 for an implementation of a disjoint-set forest with weighted union and collapsing find. Given an edge list representing a graph and a weight function, Kruskal's algorithm can be implemented as follows: \medskip
+
 \begin{python}
 def kruskal(edges, weight):
-    edges.sort(key=weight)
-
     verticies = set()
     for u, v in edges:
         verticies.add(u)
         verticies.add(v)
     verticies = list(verticies)
-
     n = len(verticies)
-    uf = DisjointSet(n)
 
     vertex_to_index = {}
     for i in range(n):
         vertex_to_index[verticies[i]] = i
+
+    edges.sort(key=weight)
+    uf = DisjointSet(n)
 
     mst = []
     for u, v in edges:
@@ -562,8 +583,11 @@ def kruskal(edges, weight):
     return mst
 \end{python}
 
+Note that the values in the disjoint-set forest correspond to the indicies of the vertex list, but the disjoint sets in the forest represent groupings of the verticies themselves. Kruskal's algorithm can also find the minimum spanning forest of a disconnected graph.
+
 \subsection{Minimum Spanning Trees - Prim's Algorithm}
-Prim's algorithm can be described at a high level by the following three steps:
+Prim's algorithm is a greedy algorithm that, in each step, adds to the MST the lightest edge that will connect a vertex in the MST to a vertex not in the MST. It can be described at a high level by the following three steps:
+
 \begin{enumerate}
   \item Initialize a tree with a single vertex, chosen arbitrarily from the graph.
   \item Grow the tree by one edge; of the edges that connect the tree to verticies not yet in the tree, find the minimum-weight edge and transfer it to the tree.
@@ -601,7 +625,7 @@ Note this line from the above pseudocode:
 \begin{center}
 Increase the priority of $v$ in $H$\hspace{4mm} ($C(v)\coloneqq w(e)$)
 \end{center}
-Increasing the priority of an arbitrary entry in a priority queue requires a heap with a \textit{decrease-key} operation. The Python \texttt{heapq} does not provide this operation, so the pseudocode above must be implemented with a custom heap. With the priority queue implementation given in Appendix B.1, the algorithm can be written as follows: \medskip
+Increasing the priority of an arbitrary entry in a priority queue requires a heap with a \textit{decrease-key} operation. The Python \texttt{heapq} module does not provide this operation, so the pseudocode above must be implemented with a custom heap. With the priority queue implementation given in Appendix B.1, the algorithm can be written as follows: \medskip
 
 \begin{python}
 def prim(adj_list, weight):
@@ -665,7 +689,7 @@ def prim(adj_list, weight):
     return [(prev[v], v) for v in prev]
 \end{python}
 
-Note that the first implementation of Prim's algorithm will find the minimum spanning forest for a disconnected graph. The second implementation will only find the minimum spanning tree of the connected component that it starts in, but the function could be called on each connected component in order to find the minimum spanning forest.
+Note that the first implementation of Prim's algorithm will find the minimum spanning forest for a disconnected graph. The second implementation will only find the minimum spanning tree of the connected component that it starts in, but the function could be called on every connected component in order to find the minimum spanning forest.
 
 \subsection{Eulerian Cycle Detection - Hierholzer's Algorithm}
 

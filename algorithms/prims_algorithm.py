@@ -8,8 +8,9 @@ a minimum spanning tree of G.
 import heapq
 from math import inf
 
-# Time: O(ElogV)
-# Auxiliary space: O(E)
+# Time: O(|E|log|V|)
+# Auxiliary space: O(|E|^2) (max amount of stale duplicates would be
+#                            (E - 1) + (E - 2) + ... + 1)
 def prim(adj_list, weight):
     cost = {v: inf for v in adj_list}
     prev = {}
@@ -35,8 +36,8 @@ duplicates, but these can be discarded when popped by checking if the vertex is
 already in the tree.
 '''
 
-# Time: O(ElogV)
-# Auxiliary space: O(V)
+# Time: O(|E|log|V|)
+# Auxiliary space: O(|V|)
 def prim2(adj_list, weight):
     prev = {}
     pq = PriorityQueue([[inf, v] for v in adj_list])
