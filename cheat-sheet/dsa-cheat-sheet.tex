@@ -520,7 +520,6 @@ deep copy, shallow copy \\
   \item LRU Cache (hash map + DLL, OrderedDict)
   \item Monotonic queue/deque (max/min element in sliding window) % https://www.youtube.com/watch?v=J1rJ3IcwhKI
   \item Tries
-  \item Kruskal's algorithm and Prim's algorithm (minimum spanning tree)
 \end{itemize}
 
 \subsection{Stretch Topics}
@@ -530,6 +529,7 @@ deep copy, shallow copy \\
   \item Segment trees and interval trees
 \end{itemize}
 
+\newpage
 \appendix
 
 \section{Algorithms}
@@ -906,7 +906,7 @@ class PriorityQueue:
 \subsection{Disjoint-Set (Union-Find) Forest}
 A disjoint-set forest models the partitioning of a set. Initially, each element of the set belongs to a subset where it is the only member. Two subsets can be united into a single subset that contains the elements of each. The union of a set with itself is itself. \\
 
-These subsets are represented as trees in the structure, and the structure has two operations on these trees: \texttt{union(x, y)} and \texttt{find(x)}, where \texttt{x} and \texttt{y} are elements of the set. When \texttt{union(x, y)} is called, the subset that \texttt{x} belongs to is united with the subset that \texttt{y} belongs to. Structurally, the root of one tree becomes the child of the other tree's root. If \texttt{x} and \texttt{y} belong to the same set, the structure does not change. When \texttt{find(x)} is called, the root of the tree that \texttt{x} belongs to is returned. This is the "representative member" of the set, a kind of "name" for the set. \\
+These subsets are represented as trees in the structure, and the structure has two operations on these trees: \texttt{union(x, y)} and \texttt{find(x)}, where \texttt{x} and \texttt{y} are elements of the set. When \texttt{union(x, y)} is called, the subset that \texttt{x} belongs to is united with the subset that \texttt{y} belongs to. Structurally, the root of one tree becomes the child of the other tree's root. If \texttt{x} and \texttt{y} belong to the same set, the structure does not change. When \texttt{find(x)} is called, the root of the tree that \texttt{x} belongs to is returned. This is the ``representative member" of the set, a kind of ``name" for the set. \\
 
 The following class arbitrarily chooses \texttt{x} to be the parent of \texttt{y} upon their union. Here, the parent of a root is itself, but $0$ would also be a fine choice.
 \medskip
@@ -921,8 +921,8 @@ class DisjointSet:
 
     def find(self, x):
         return x if x == self.parent[x] else self.find(self.parent[x])
-        # while x:
-        #     x = parent[x]
+        # while self.parent[x]:
+        #     x = self.parent[x]
         # return x
 \end{python}
 \bigskip
