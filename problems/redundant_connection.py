@@ -10,28 +10,8 @@ would make the graph acyclic if removed.
 
 from collections import defaultdict
 
-class DisjointSet:
-    def __init__(self, n):
-        self.parent = [-1] * n
-
-    def union(self, x, y):
-        rx, ry = self.find(x), self.find(y)
-        if rx == ry:
-            return False
-        elif self.parent[rx] < self.parent[ry]:
-            self.parent[rx] += self.parent[ry]
-            self.parent[ry] = rx
-        else:
-            self.parent[ry] += self.parent[rx]
-            self.parent[rx] = ry
-        return True
-
-    def find(self, x):
-        if self.parent[x] < 0:
-            return x
-        self.parent[x] = self.find(self.parent[x])
-        return self.parent[x]
-
+exec(open('_parent_import.py').read())
+from structures.disjoint_set import DisjointSet
 
 def find_redundant_connection(edges: list[list[int]]) -> list[int]:
     uf = DisjointSet(len(edges) + 1)

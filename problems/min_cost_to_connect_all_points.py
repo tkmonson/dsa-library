@@ -13,28 +13,8 @@ if there is exactly one simple path between any two points.
 
 import heapq
 
-class DisjointSet:
-    def __init__(self, n):
-        self.parent = [-1] * n
-
-    def union(self, x, y):
-        rx, ry = self.find(x), self.find(y)
-        if rx == ry:
-            return False
-        elif self.parent[rx] < self.parent[ry]:
-            self.parent[rx] += self.parent[ry]
-            self.parent[ry] = rx
-        else:
-            self.parent[ry] += self.parent[rx]
-            self.parent[rx] = ry
-        return True
-
-    def find(self, x):
-        if self.parent[x] < 0:
-            return x
-        self.parent[x] = self.find(self.parent[x])
-        return self.parent[x]
-
+exec(open('_parent_import.py').read())
+from structures.disjoint_set import DisjointSet
 
 # Time: O(|E|log|V|)
 # Auxiliary space: O(|V|)
@@ -89,7 +69,7 @@ some point (worst-case space complexity every time).
 
 if __name__ == '__main__':
     points = [[0, 0], [2, 2], [3, 10], [5, 2], [7, 0]]
-    print(min_cost_connect_points2(points))
+    print(min_cost_connect_points_kruskal(points))
 
 '''
 This problem is asking for the total cost of a minimum spanning tree of the

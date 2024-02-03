@@ -12,7 +12,8 @@ Time complexity: O((|V|+|E|) * log(|V|))
 Space complexity: O(|V|) (using a binary heap)
 '''
 
-from adts.priority_queue import PriorityQueue
+exec(open('_parent_import.py').read())
+from structures.priority_queue import PriorityQueue
 
 def dijkstra(graph, edge_length, source):
     pq = PriorityQueue()

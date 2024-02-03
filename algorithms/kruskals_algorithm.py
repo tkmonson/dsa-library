@@ -5,6 +5,9 @@ Given an undirected, connected graph G = (V, E) and a set of edge weights, find
 a minimum spanning tree of G.
 '''
 
+exec(open('_parent_import.py').read())
+from structures.disjoint_set import DisjointSet
+
 # Time: O(|E|log|V|)
 # Auxiliary space: O(|V|)
 def kruskal(edges, weight):
@@ -29,27 +32,4 @@ def kruskal(edges, weight):
             mst.append((u, v))
 
     return mst
-
-
-class DisjointSet:
-    def __init__(self, n):
-        self.parent = [-1] * n
-
-    def union(self, x, y):
-        rx, ry = self.find(x), self.find(y)
-        if rx == ry:
-            return False
-        elif self.parent[rx] < self.parent[ry]:
-            self.parent[rx] += self.parent[ry]
-            self.parent[ry] = rx
-        else:
-            self.parent[ry] += self.parent[rx]
-            self.parent[rx] = ry
-        return True
-
-    def find(self, x):
-        if self.parent[x] < 0:
-            return x
-        self.parent[x] = self.find(self.parent[x])
-        return self.parent[x]
 

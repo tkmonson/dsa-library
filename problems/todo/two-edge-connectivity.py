@@ -25,7 +25,3 @@ Examples:
     Output: True (no bridges)
 '''
 
-from structures.graph import Graph
-
-def two_edge_connectivity(graph):
-    
