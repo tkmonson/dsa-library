@@ -193,7 +193,7 @@ def knapsack_tab_1d(wt: list[int], val: list[int], W: int) -> int:
 
 \subsubsection{Do you need to model the partitioning of a set? That is, given a set of items, do you need to group the items into subsets?}
 
-You should use a disjoint-set (union-find) forest (see Appendix B.2).
+You should use a disjoint-set (union-find) forest (see Appendix \ref{disjoint-set}).
 
 \subsection{Arrays}
 
@@ -288,13 +288,18 @@ def find_mid(head):
 Consider sorting the array and turning the left half into a max-heap and/or the right half into a min-heap.
 
 \subsection{Graphs}
+
+\subsubsection{Would it help to know the shortest path (or distance) between any two nodes in a graph with non-negative edge weights?}
+
+You should use Dijkstra's algorithm (see Appendix \ref{dijkstra}).
+
 \subsubsection{Do you need to detect a cycle in an undirected graph?}
 
-You should use a disjoint-set (union-find) forest (see Appendix B.2). The vertices are the elements of the subsets, and a union of subsets corresponds to an edge between vertices/components. If calling \texttt{union(x, y)} does not change the structure of the forest, then you know that \texttt{x} and \texttt{y} belong to the same component and that an edge between them would produce a cycle.
+You should use a disjoint-set (union-find) forest (see Appendix \ref{disjoint-set}). The vertices are the elements of the subsets, and a union of subsets corresponds to an edge between vertices/components. If calling \texttt{union(x, y)} does not change the structure of the forest, then you know that \texttt{x} and \texttt{y} belong to the same component and that an edge between them would produce a cycle.
 
-\subsubsection{Do you need to connect verticies together without cycles while minimizing total edge-weight?}
+\subsubsection{Do you need to connect verticies together without cycles while minimizing total edge weight?}
 
-Such a set of edges is known as the \textbf{minimum spanning tree} (MST) of a graph. You should use \textit{Kruskal's algorithm} (see Appendix A.1) or \textit{Prim's algorithm} (see Appendix A.2). The former is slightly preferred for sparse graphs, the latter for dense graphs.
+Such a set of edges is known as the \textbf{minimum spanning tree} (MST) of a graph. You should use \textit{Kruskal's algorithm} (see Appendix \ref{kruskal}) or \textit{Prim's algorithm} (see Appendix \ref{prim}). The former is slightly preferred for sparse graphs, the latter for dense graphs.
 
 \subsubsection{Do you need to traverse every edge of a graph exactly once?}
 
@@ -329,7 +334,7 @@ To find an Eulerian cycle in a graph, you should use Hierholzer's algorithm: \me
       Insert $D$ into $C$ before some edge leaving $u$\;
   }
   \KwRet{$C$}\;
-  \caption{Hierholzer's Algorithm\hspace{5mm}\texttt{/* see A.3 for code */}}
+  \caption{Hierholzer's Algorithm\hspace{5mm}\texttt{/* see \ref{hierholzer} for code */}}
 \end{algorithm} \medskip
 
 \texttt{N1:} The trail will not get stuck and fail to return to $s$ because all $v \in V$ have even degree $\implies$ when the trail enters another vertex $w$, $w$ must have an unused edge leaving $w$.
@@ -419,7 +424,7 @@ There are two main topological sorting algorithms: \textit{Kahn's algorithm} (BF
   }{
     \KwRet{error}\tcc*[r]{the graph has a cycle}
   }
-  \caption{Kahn's Algorithm\hspace{13mm}\texttt{/* see A.4 for code */}}
+  \caption{Kahn's Algorithm\hspace{13mm}\texttt{/* see \ref{kahn} for code */}}
 \end{algorithm}
 \bigskip
 
@@ -450,7 +455,7 @@ There are two main topological sorting algorithms: \textit{Kahn's algorithm} (BF
     visit($n$)\;
   }
   \KwRet{$L$}\;
-  \caption{DFS Topological Sort\hspace{8mm}\texttt{/* see A.5 for code */}}
+  \caption{DFS Topological Sort\hspace{8mm}\texttt{/* see \ref{dfs-topo} for code */}}
 \end{algorithm}
 
 \subsection{Bit Manipulation}
@@ -476,6 +481,9 @@ Do you need to...
     \imply{The fastest method is the ``Martian smiley" \texttt{[::-1]}}
   \item Determine if a string is a palindrome? \smallskip\\
     \imply{\texttt{s == s[::-1]}}
+  \item Find the first occurrence of an item in a list? \smallskip\\
+      \imply{\texttt{next(x for x in lst if ...)} \\
+      (returns \texttt{StopIteration} if item is not found)}
 \end{itemize}
 
 \texttt{itertools.combinations}, \texttt{itertools.permutations} \\
@@ -531,6 +539,7 @@ deep copy, shallow copy \\
   \item Rabin-Karp (string-searching, uses a rolling hash to make approximate comparisons between substring hash and target hash, makes exact comparison if hashes match)
   \item Sieve of Eratosthenes (find all prime numbers up to a given integer)
   \item Segment trees and interval trees
+  \item Shortest path problem for graphs with negative edge weights (Bellman-Ford algorithm, Johnson's algorithm)
 \end{itemize}
 
 \newpage
@@ -538,9 +547,132 @@ deep copy, shallow copy \\
 
 \section{Algorithms}
 
-\subsection{Minimum Spanning Trees - Kruskal's Algorithm}
+\subsection{Shortest Paths - Dijkstra's Algorithm} \label{dijkstra}
 
-Kruskal's algorithm is a greedy algorithm that, in each step, adds to the MST the lightest edge that will not form a cycle. It uses a disjoint-set forest to detect whether adding an edge will form a cycle. \\
+Dijkstra's algorithm finds the shortest path from a source vertex to every other vertex in a directed graph with non-negative edge weights. It is a greedy algorithm that, in each step, chooses to visit the unvisited node $u$ that is closest to the source $s$. From $u$, it will update the distance between $s$ and each neighbor of $u$, if the path from $s$ to $u$ and the edge from $u$ to the neighbor forms the shortest path found so far from $s$ to that neighbor. If only the shortest path between $s$ and some particular $v \in V$ is needed, the algorithm can terminate after visting $v$. \\
+
+\begin{algorithm}[H]
+  \SetAlgoLined
+  \DontPrintSemicolon
+  \KwData{$G = (V, E)$, edge weights $w(e)$ for $e\in E$, source $s \in V$}
+  \KwResult{$D$ (distances from $s$ to every other vertex in $V$),\;
+            \hspace{16mm}$P$ (the predecessor of every $v \in V$ on the shortest path\;
+            \hspace{22mm}from $s$ to $v$)}
+  \ForEach{$v \in V$}{
+      $D(v) \coloneqq \left\{ \begin{array}{cl} 0 & \textrm{if } v = s, \\ \infty & \textrm{otherwise}\end{array} \right.$\;
+    $P(v) \coloneqq$ \texttt{null}\;
+  }
+  $H \longleftarrow$\hspace{0.5mm} priority queue of $V$, using D as priorities\;
+  \hspace{13mm}(contains unvisited verticies)\;
+  \While{$H$ is not empty}{
+    Pop $u$ from $H$ (the unvisited vertex closest to $s$)\;
+    \ForEach{$e = (u, v)$ where $v$ is unvisted}{
+        \If{$(s \rightarrow u \rightarrow v)$ is the shortest path $(s \rightarrow v)$ found so far}{
+        Increase the priority of $v$ in $H$\hspace{9mm} ($D(v)\coloneqq D(u) + w(e)$)\;
+        Let $v$ connect to $u$ when $v$ is popped\hspace{17mm} ($P(v)\coloneqq u$)\;
+      }
+    }
+  }
+  \KwRet{$D, P$}\;
+    \caption{Dijkstra's Algorithm (heap with \textit{decrease-key})}
+\end{algorithm} \medskip
+
+Note this line from the above pseudocode:
+\begin{center}
+    Increase the priority of $v$ in $H$\hspace{4mm} ($D(v)\coloneqq D(u) + w(e)$)
+\end{center}
+Increasing the priority of an arbitrary entry in a priority queue requires a heap with a \textit{decrease-key} operation. The Python \texttt{heapq} module does not provide this operation, so the pseudocode above must be implemented with a custom heap. With the priority queue implementation given in Appendix \ref{heap}, the algorithm can be written as follows: \medskip
+
+\begin{python}
+def dijkstra(adj_list, weight, source):
+    distance = {source: 0}
+    predecessor = {}
+    pq = PriorityQueue()
+    for v in adj_list:
+        if v != source:
+            distance[v] = inf
+            predecessor[v] = None
+        pq.insert(v, priority=distance[v])
+
+    while pq:
+        u = pq.pop()
+        for v in adj_list[u]:
+            alt = distance[u] + weight[(u, v)]
+            if v in pq and alt < distance[v]:
+                pq.decrease_key(v, priority=alt)
+                distance[v] = alt
+                predecessor[v] = u
+
+    return distance, predecessor
+\end{python}
+
+However, the code required to implement a heap with \textit{decrease-key} is cumbersome, and the algorithm can be written without modifying entries in the priority queue. Instead of initializing the heap with all of the verticies, verticies can be added when they become adjacent to the vertex currently being visited. And when a shorter alternate path to a vertex is found, duplicate entries can be inserted with higher priority. The priority queue will contain stale data, but if we keep track of which verticies have been visited already, then duplicate entries of lower priority can be discarded when popped. \\
+
+\begin{algorithm}[H]
+  \SetAlgoLined
+  \DontPrintSemicolon
+  \KwData{$G = (V, E)$, edge weights $w(e)$ for $e\in E$, source $s \in V$}
+  \KwResult{$D$ (distances from $s$ to every other vertex in $V$),\;
+            \hspace{16mm}$P$ (the predecessor of every $v \in V$ on the shortest path\;
+            \hspace{22mm}from $s$ to $v$)}
+
+  \ForEach{$v \in V$}{
+      $D(v) \coloneqq \left\{ \begin{array}{cl} 0 & \textrm{if } v = s, \\ \infty & \textrm{otherwise}\end{array} \right.$\;
+    $P(v) \coloneqq$ \texttt{null}\;
+  }
+  $H \longleftarrow$\hspace{0.5mm} priority queue containing $s$, highest priority\;
+  \hspace{13mm}(contains unvisited verticies adjacent to visited verticies)\;
+
+  \While{there are unvisited verticies}{
+    Pop $u$ from $H$ until $u$ is unvisited (discard duplicates)\;
+    \hspace{4mm} (break if $H$ is empty)\;
+    Mark $u$ as visited\;
+    \ForEach{$e = (u, v)$ where $v$ is unvisited}{
+      \If{$(s \rightarrow u \rightarrow v)$ is the shortest path $(s \rightarrow v)$ found so far}{
+        Insert $v$ into $H$ with priority $D(u) + w(e)$\;
+        \hspace{64mm}$(D(v)\coloneqq D(u) + w(e))$\;
+        Let $v$ connect to $u$ when $v$ is popped\hspace{17mm} ($P(v)\coloneqq u$)\;
+      }
+    }
+  }
+  \KwRet{$D, P$}\;
+    \caption{Dijkstra's Algorithm (heap with duplicate entries)}
+\end{algorithm} \medskip
+
+Because the heap no longer requires \textit{decrease-key}, the \texttt{heapq} module is sufficient: \medskip
+
+\begin{python}
+def dijkstra(adj_list, weight, source):
+    distance = {v: inf for v in adj_list}; distance[source] = 0
+    predecessor = {}
+    pq = [(0, source)]
+    visited = set()
+
+    while len(visited) < len(adj_list):
+        try:
+            while (u := heapq.heappop(pq)[1]) in visited: pass
+        except IndexError:
+            break  # graph is not strongly connected
+        visited.add(u)
+        for v in adj_list[u]:
+            alt = distance[u] + weight[(u, v)]
+            if v not in visited and alt < distance[v]:
+                heapq.heappush(pq, (alt, v))
+                distance[v] = alt
+                predecessor[v] = u
+
+    return distance, predecessor
+\end{python}
+
+If a graph is not strongly connected, then there may not be a path from the source vertex to every other vertex in the graph. In this case, the algorithm will return a distance of $\infty$ for any vertex not reachable from the source. \\
+
+Dijkstra's algorithm is designed for directed graphs with non-negative edge weights. For graphs with negative edge weights, one should use the Bellman-Ford algorithm or Johnson's algorithm instead. \\
+
+Dijkstra's algorithm uses the same core procedure as Prim's algorithm.
+
+\subsection{Minimum Spanning Trees - Kruskal's Algorithm} \label{kruskal}
+
+Kruskal's algorithm finds a minimum spanning forest (MSF) of an undirected, weighted graph. If the graph is connected, the MSF is a minimum spanning tree (MST). It is a greedy algorithm that, in each step, adds to a tree the lightest edge that will not form a cycle. It uses a disjoint-set forest to detect whether adding an edge will form a cycle. \\
 
 \begin{algorithm}[H]
   \SetAlgoLined
@@ -560,7 +692,7 @@ Kruskal's algorithm is a greedy algorithm that, in each step, adds to the MST th
   \caption{Kruskal's Algorithm}
 \end{algorithm} \medskip
 
-See Appendix B.2 for an implementation of a disjoint-set forest with weighted union and collapsing find. Given an edge list representing a graph and a weight function, Kruskal's algorithm can be implemented as follows: \medskip
+See Appendix \ref{disjoint-set} for an implementation of a disjoint-set forest with weighted union and collapsing find. Given an edge list representing a graph and a weight function, Kruskal's algorithm can be implemented as follows: \medskip
 
 \begin{python}
 def kruskal(edges, weight):
@@ -587,10 +719,11 @@ def kruskal(edges, weight):
     return mst
 \end{python}
 
-Note that the values in the disjoint-set forest correspond to the indicies of the vertex list, but the disjoint sets in the forest represent groupings of the verticies themselves. Kruskal's algorithm can also find the minimum spanning forest of a disconnected graph.
+Note that the values in the disjoint-set forest correspond to the indicies of the vertex list, but the disjoint sets in the forest represent groupings of the verticies themselves.
 
-\subsection{Minimum Spanning Trees - Prim's Algorithm}
-Prim's algorithm is a greedy algorithm that, in each step, adds to the MST the lightest edge that will connect a vertex in the MST to a vertex not in the MST. It can be described at a high level by the following three steps:
+\subsection{Minimum Spanning Trees - Prim's Algorithm} \label{prim}
+
+Prim's algorithm finds a minimum spanning tree (MST) of an undirected, weighted, connected graph. Some variants can find the minimum spanning forest (MSF) of a disconnected graph (more on this below). It is a greedy algorithm that, in each step, adds to a tree the lightest edge that will connect a vertex in the tree to a vertex not in the tree. It can be described at a high level by the following three steps:
 
 \begin{enumerate}
   \item Initialize a tree with a single vertex, chosen arbitrarily from the graph.
@@ -598,7 +731,7 @@ Prim's algorithm is a greedy algorithm that, in each step, adds to the MST the l
   \item Repeat step 2 until all verticies are in the tree.
 \end{enumerate}
 
-To find the minimum-weight edge from a tree vertex to a non-tree vertex, it would help to have a heap or priority queue. The heap could contain every non-tree vertex (initially, every vertex) and prioritize them based on the minimum cost to connect them to the tree (weight of lightest edge connecting to tree). Cost would be finite for adjacent verticies, infinite otherwise. As long as we keep track of which tree vertex provides that min-cost connection for each non-tree vertex, we will know which edges to add to the MST. \\
+To find the minimum-weight edge from a tree vertex to a non-tree vertex, it would help to have a heap or priority queue. The heap could contain every non-tree vertex (initially, every vertex) and prioritize them based on the minimum cost to connect them to the tree (weight of lightest edge connecting to tree). Cost would be finite for adjacent verticies, infinite otherwise. As long as we keep track of which tree vertex provides that min-cost connection for each non-tree vertex, we will know which edges to add to the tree. \\
 
 \begin{algorithm}[H]
   \SetAlgoLined
@@ -614,22 +747,22 @@ To find the minimum-weight edge from a tree vertex to a non-tree vertex, it woul
   \While{$H$ is not empty}{
     Pop $u$ from $H$ (the cheapest vertex to connect to the tree)
     \ForEach{$e = (u, v)$ where $v$ is not yet in the tree}{
-      \If{$e$ is the cheapest path to $v$ found so far ($w(e) < C(v)$)}{
+      \If{$e$ is the cheapest path to $v$ found so far}{
         Increase the priority of $v$ in $H$\hspace{16mm} ($C(v)\coloneqq w(e)$)\;
         Let $v$ connect to $u$ when $v$ is popped\hspace{4mm} ($P(v)\coloneqq u$)\;
       }
     }
   }
-    $T \longleftarrow$\hspace{0.5mm} \{$(P(v), v)\;\forall\,v\in V\mid P(v)$ is not \texttt{null}\}\;
+  $T \longleftarrow$\hspace{0.5mm} \{$(P(v), v)\;\forall\,v\in V\mid P(v)$ is not \texttt{null}\}\;
   \KwRet{$T$}\;
-    \caption{Prim's Algorithm (heap with \textit{decrease-key})}
+  \caption{Prim's Algorithm (heap with \textit{decrease-key})}
 \end{algorithm} \medskip
 
 Note this line from the above pseudocode:
 \begin{center}
 Increase the priority of $v$ in $H$\hspace{4mm} ($C(v)\coloneqq w(e)$)
 \end{center}
-Increasing the priority of an arbitrary entry in a priority queue requires a heap with a \textit{decrease-key} operation. The Python \texttt{heapq} module does not provide this operation, so the pseudocode above must be implemented with a custom heap. With the priority queue implementation given in Appendix B.1, the algorithm can be written as follows: \medskip
+Increasing the priority of an arbitrary entry in a priority queue requires a heap with a \textit{decrease-key} operation. The Python \texttt{heapq} module does not provide this operation, so the pseudocode above must be implemented with a custom heap. With the priority queue implementation given in Appendix \ref{heap}, the algorithm can be written as follows: \medskip
 
 \begin{python}
 def prim(adj_list, weight):
@@ -638,7 +771,7 @@ def prim(adj_list, weight):
     while pq:
         u = pq.pop()
         for v in adj_list[u]:
-            if v in pq and (w := weight((u, v))) < pq.get_priority(v):
+            if v in pq and (w := weight[(u, v)]) < pq.get_priority(v):
                 pq.decrease_key(v, priority=w)
                 prev[v] = u
 
@@ -663,8 +796,10 @@ However, the code required to implement a heap with \textit{decrease-key} is cum
     Pop $u$ from $H$ until $u$ is not in the tree (discard duplicates)\;
     Add $u$ to the tree\;
     \ForEach{$e = (u, v)$ where $v$ is not yet in the tree}{
-      Increase the priority of $v$, insert $v$ into $H$\hspace{4mm} ($C(v)\coloneqq w(e)$)\;
-      Let $v$ connect to $u$ when $v$ is popped\hspace{12mm} ($P(v)\coloneqq u$)\;
+      \If{$e$ is the cheapest path to $v$ found so far}{
+        Insert $v$ into $H$ with priority $w(e)$\hspace{9mm} ($C(v)\coloneqq w(e)$)\;
+        Let $v$ connect to $u$ when $v$ is popped\hspace{4mm} ($P(v)\coloneqq u$)\;
+      }
     }
   }
   $T \longleftarrow$\hspace{0.5mm} \{$(P(v), v)\;\forall\,v\in V\mid P(v)$ is not \texttt{null}\}\;
@@ -678,14 +813,14 @@ Because the heap no longer requires \textit{decrease-key}, the \texttt{heapq} mo
 def prim(adj_list, weight):
     cost = {v: inf for v in adj_list}
     prev = {}
-    tree = set()
     pq = [(0, next(iter(adj_list)))]
+    tree = set()  # visited
 
     while len(tree) < len(adj_list):
         while (u := heapq.heappop(pq)[1]) in tree: pass
         tree.add(u)
         for v in adj_list[u]:
-            if v not in tree and (w := weight((u, v))) < cost[v]:
+            if v not in tree and (w := weight[(u, v)]) < cost[v]:
                 heapq.heappush(pq, (w, v))
                 cost[v] = w
                 prev[v] = u
@@ -693,11 +828,13 @@ def prim(adj_list, weight):
     return [(prev[v], v) for v in prev]
 \end{python}
 
-Note that the first implementation of Prim's algorithm will find the minimum spanning forest for a disconnected graph. The second implementation will only find the minimum spanning tree of the connected component that it starts in, but the function could be called on every connected component in order to find the minimum spanning forest.
+Note that the first implementation of Prim's algorithm will find the MSF for a disconnected graph. The second implementation will only find the MST of the connected component that it starts in, but the function could be called on every connected component in order to find the MSF. \\
 
-\subsection{Eulerian Cycle Detection - Hierholzer's Algorithm}
+Prim's algorithm uses the same core procedure as Dijkstra's algorithm.
 
-Below are two functions that find the Eulerian cycle in a directed graph where such a cycle is assumed to exist. The former returns a list of verticies, the latter returns a list of edges. These functions can also be used to find an Eulerian trail, provided that \texttt{s} is set to the vertex with \texttt{out-degree - in-degree = 1}, if such a vertex exists. \medskip
+\subsection{Eulerian Cycle Detection - Hierholzer's Algorithm} \label{hierholzer}
+
+Hierholzer's algorithm finds an Eulerian cycle in a directed graph where such a cycle is assumed to exist. Below are two variants: the former returns a list of verticies, the latter returns a list of edges. These functions can also be used to find an Eulerian trail, provided that \texttt{s} is set to the vertex with \texttt{out-degree - in-degree = 1}, if such a vertex exists. \medskip
 
 \begin{python}
 from collections import deque
@@ -728,7 +865,7 @@ def hierholzer_edges(graph: dict[str, set[str]], s: str) -> list[str]:
     return cycle
 \end{python}
 
-\subsection{Topological Sorting - Kahn's Algorithm}
+\subsection{Topological Sorting - Kahn's Algorithm} \label{kahn}
 \begin{python}
 def find_order_bfs(adj_list: list[list[int]],
                    in_degrees: list[int]) -> list[int]:
@@ -754,7 +891,7 @@ def find_order_bfs(adj_list: list[list[int]],
     return topo_order if len(topo_order) == len(adj_list) else []
 \end{python}
 
-\subsection{Topological Sorting - DFS Cycle Detection}
+\subsection{Topological Sorting - DFS Cycle Detection} \label{dfs-topo}
 \begin{python}
 def find_order_dfs(adj_list: list[list[int]]) -> list[int]:
     visited = set()
@@ -785,7 +922,7 @@ def find_order_dfs(adj_list: list[list[int]]) -> list[int]:
 
 \section{Data Structures}
 
-\subsection{Heaps and Priority Queues}
+\subsection{Heaps and Priority Queues} \label{heap}
 
 A \textbf{heap} is a tree-based data structure that satisfies the heap property:
 \begin{itemize}
@@ -854,6 +991,7 @@ class PriorityQueue:
 
     def insert(self, task, priority=0):
         self.pq.append([priority, task])
+        self.index[task] = len(self.pq) - 1
         self._sift_up(len(self.pq) - 1)
 
     def pop(self):
@@ -907,7 +1045,7 @@ class PriorityQueue:
         self.pq[i], self.pq[j] = self.pq[j], self.pq[i]
 \end{python}
 
-\subsection{Disjoint-Set (Union-Find) Forest}
+\subsection{Disjoint-Set (Union-Find) Forest} \label{disjoint-set}
 A disjoint-set forest models the partitioning of a set. Initially, each element of the set belongs to a subset where it is the only member. Two subsets can be united into a single subset that contains the elements of each. The union of a set with itself is itself. \\
 
 These subsets are represented as trees in the structure, and the structure has two operations on these trees: \texttt{union(x, y)} and \texttt{find(x)}, where \texttt{x} and \texttt{y} are elements of the set. When \texttt{union(x, y)} is called, the subset that \texttt{x} belongs to is united with the subset that \texttt{y} belongs to. Structurally, the root of one tree becomes the child of the other tree's root. If \texttt{x} and \texttt{y} belong to the same set, the structure does not change. When \texttt{find(x)} is called, the root of the tree that \texttt{x} belongs to is returned. This is the ``representative member" of the set, a kind of ``name" for the set. \\
@@ -968,6 +1106,7 @@ Note that the elements of a disjoint set could be represented with something oth
   \item \textit{Trail}: a walk in which all edges are distinct
   \item \textit{Cycle}: a trail that begins and ends at the same vertex
   \item \textit{Path}: a trail in which all verticies are distinct
+  \item A graph is \textit{strongly connected} if every vertex is reachable from every other vertex
 \end{itemize}
 \end{document}
 

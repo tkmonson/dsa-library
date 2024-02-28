@@ -12,6 +12,7 @@ class PriorityQueue:
 
     def insert(self, task, priority=0):
         self.pq.append([priority, task])
+        self.index[task] = len(self.pq) - 1
         self._sift_up(len(self.pq) - 1)
 
     def pop(self):

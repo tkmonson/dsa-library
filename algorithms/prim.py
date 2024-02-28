@@ -12,19 +12,19 @@ exec(open('_parent_import.py').read())
 from structures.priority_queue import PriorityQueue
 
 # Time: O(|E|log|V|)
-# Auxiliary space: O(|E|^2) (max amount of stale duplicates would be
-#                            (E - 1) + (E - 2) + ... + 1)
+# Auxiliary space: O(|V|^2) (max amount of heap entries would be
+#                            (V - 1) + (V - 2) + ... + 1)
 def prim(adj_list, weight):
     cost = {v: inf for v in adj_list}
     prev = {}
-    tree = set()
     pq = [(0, next(iter(adj_list)))]
+    tree = set()  # visited
 
     while len(tree) < len(adj_list):
         while (u := heapq.heappop(pq)[1]) in tree: pass
         tree.add(u)
         for v in adj_list[u]:
-            if v not in tree and (w := weight((u, v))) < cost[v]:
+            if v not in tree and (w := weight[(u, v)]) < cost[v]:
                 heapq.heappush(pq, (w, v))
                 cost[v] = w
                 prev[v] = u
@@ -47,7 +47,7 @@ def prim2(adj_list, weight):
     while pq:
         u = pq.pop()
         for v in adj_list[u]:
-            if v in pq and (w := weight((u, v))) < pq.get_priority(v):
+            if v in pq and (w := weight[(u, v)]) < pq.get_priority(v):
                 pq.decrease_key(v, priority=w)
                 prev[v] = u
 
@@ -73,13 +73,13 @@ if __name__ == '__main__':
         8: [6, 7, 9],
         9: [5, 7, 8]
     }
-    def weight(edge):
-        w = {(1, 2): 10, (1, 3): 9,  (1, 4): 6,  (1, 5): 12, (2, 5): 8,
-             (3, 4): 7,  (3, 6): 5,  (4, 5): 8,  (4, 6): 8,  (4, 7): 7,
-             (5, 7): 4,  (5, 9): 13, (6, 7): 14, (6, 8): 6,  (7, 8): 8,
-             (7, 9): 8,  (8, 9): 10
-        }
-        return w[edge] if edge in w else w[edge[::-1]]
+    weight = {
+        (1, 2): 10, (1, 3): 9, (1, 4): 6, (1, 5): 12, (2, 5): 8, (3, 4): 7,
+        (3, 6): 5,  (4, 5): 8, (4, 6): 8, (4, 7): 7,  (5, 7): 4, (5, 9): 13,
+        (6, 7): 14, (6, 8): 6, (7, 8): 8, (7, 9): 8,  (8, 9): 10
+    }
+    for edge in dict(weight):
+        weight[edge[::-1]] = weight[edge]  # the graph is undirected
 
     print(prim2(adj_list, weight))
 
