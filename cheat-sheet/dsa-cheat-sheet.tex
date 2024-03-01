@@ -549,7 +549,17 @@ deep copy, shallow copy \\
 
 \subsection{Shortest Paths - Dijkstra's Algorithm} \label{dijkstra}
 
-Dijkstra's algorithm finds the shortest path from a source vertex to every other vertex in a directed graph with non-negative edge weights. It is a greedy algorithm that, in each step, chooses to visit the unvisited node $u$ that is closest to the source $s$. From $u$, it will update the distance between $s$ and each neighbor of $u$, if the path from $s$ to $u$ and the edge from $u$ to the neighbor forms the shortest path found so far from $s$ to that neighbor. If only the shortest path between $s$ and some particular $v \in V$ is needed, the algorithm can terminate after visting $v$. \\
+Dijkstra's algorithm finds the shortest path from a source vertex to every other vertex in a directed graph with non-negative edge weights. It is a greedy algorithm that, in each step, chooses to visit the unvisited vertex that is closest to the source. This vertex is necessarily adjacent to a visited vertex, as unvisited verticies that are not adjacent to a visited vertex are at least one additional edge away from the source. \\
+
+Let there be a set $U$ of verticies that are both unvisited and adjacent to a visited vertex. The algorithm can be described at a high level as follows:
+
+\begin{enumerate}
+  \item Visit the vertex in $U$ that is closest to the source.
+  \item Add any unvisited neighbors of that vertex to $U$.
+  \item Repeat until $U$ is empty.
+\end{enumerate}
+
+From an arbitrary vertex $u$, the algorithm will update the distance between the source $s$ and each neighbor of $u$, if the path from $s$ to $u$ and the edge from $u$ to the neighbor form the shortest path found so far from $s$ to that neighbor. If only the shortest path between $s$ and some particular $v \in V$ is needed, the algorithm can terminate after visting $v$. \\
 
 \begin{algorithm}[H]
   \SetAlgoLined
