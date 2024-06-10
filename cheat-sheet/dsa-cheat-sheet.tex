@@ -1,7 +1,10 @@
 \documentclass[12pt, titlepage]{article}
+
 \usepackage{algorithm2e}
+
 \usepackage{amsmath}
 \usepackage{changepage}
+\usepackage{geometry}
 \usepackage{mathtools}
 \usepackage{pythonhighlight}
 \usepackage{titling}
@@ -32,6 +35,7 @@
 \maketitle
 
 \tableofcontents
+\newpage
 
 \section{Essential Patterns}
 \hrule\vspace{5ex}
@@ -195,7 +199,7 @@ def knapsack_tab_1d(wt: list[int], val: list[int], W: int) -> int:
 
 You should use a disjoint-set (union-find) forest (see Appendix \ref{disjoint-set}).
 
-\subsection{Arrays}
+\subsection{Lists}
 
 \subsubsection{Would it help to know the sum of elements for any subarray in O(n) time?}
 
@@ -283,9 +287,77 @@ def find_mid(head):
     return slow
 \end{python}
 
+\subsubsection{Do you need to merge $k$ sorted lists?}
+
+\begin{python}
+import heapq
+
+class ListNode:
+    def __init__(self, val=0, next=None):
+        self.val = val
+        self.next = next
+
+    def __lt__(self, other):
+        return self.val < other.val
+
+def merge_k_lists(lists: list[ListNode] | None) -> ListNode | None:
+    head = curr = ListNode()
+    heap = []
+
+    for lst in lists:
+        if lst:
+            heapq.heappush(heap, lst)
+
+    while heap:
+        if heap[0].next:
+            curr.next = heapq.heapreplace(heap, heap[0].next)
+        else:
+            curr.next = heapq.heappop(heap)
+        curr = curr.next
+
+    return head.next
+\end{python}
+
 \subsubsection{Does the problem involve a changing median?}
 
 Consider sorting the array and turning the left half into a max-heap and/or the right half into a min-heap.
+
+\subsection{Trees}
+
+\subsubsection{Do you need to traverse a tree in depth-first or breadth-first order?}
+
+\begin{python}
+def dfs(root):
+    if not root:
+        return None
+    print(root.val)
+    dfs(root.left)
+    dfs(root.right)
+\end{python}
+
+\begin{python}
+def dfs(root):
+    stack = [root]
+    while stack:
+    curr = stack.pop()
+    print(curr.val)
+    if curr.right != None:
+        stack.append(curr.right)
+    if curr.left != None:
+        stack.append(curr.left)
+\end{python}
+
+\begin{python}
+def bfs(root):
+    queue = deque([root])
+    while queue:
+    curr = queue.popleft()
+    print(curr.val)
+    if curr.left != None:
+        queue.append(curr.left)
+    if curr.right != None:
+        queue.append(curr.right)
+\end{python}
 
 \subsection{Graphs}
 
@@ -492,16 +564,16 @@ Do you need to...
 \texttt{map}, \texttt{filter}, \texttt{reduce}, \texttt{zip} \\
 deep copy, shallow copy \\
 \texttt{id} \\
-\texttt{contextlib.suppress}?
+\texttt{contextlib.suppress}? \\
+\texttt{set.discard}
 
 \section{Unorganized}
 \hrule\vspace{5ex}
 
 \begin{itemize}
-  \item DFS $\rightarrow$ stack (recursion) $\rightarrow$ LIFO
-  \item BFS $\rightarrow$ queue (iteration) $\rightarrow$ FIFO
   \item Online tests: have a Python scratchpad open, spam the ``Run Tests" button (EAFP > LBYL)
-  \item Number of subarrays of array of size $n$ (also, the sum of an arithmetic progression, $\sum_{i=0}^{n}i$): $\frac{n(n+1)}{2}$
+  \item Number of subarrays of array of size $n$ (also, the sum of an arithmetic progression, $\sum_{i=0}^{n}i$): $\frac{n(n+1)}{2} = O(n^2)$
+  \item Number of subsequences of array of size $n$: $2^n$
   \item Python is pass-by-assignment
   \begin{itemize}
     \item Immutable objects are pass-by-value
@@ -515,6 +587,7 @@ deep copy, shallow copy \\
     \item Optimal substructure + overlapping subproblems \\
           \-\hspace{1em}$\implies$ dynamic programming
   \end{itemize}
+  \item You cannot modify elements of an array in a for-each loop that is iterating over that array. Use a regular for loop instead.
 \end{itemize}
 
 \section{To Do}
@@ -522,16 +595,17 @@ deep copy, shallow copy \\
 
 \subsection{Essential Topics}
 \begin{itemize}
-  \item Intervals?
+  \item Subarrays and Subsequences
+  \item Permutations and Combinations
+  \item Intervals (overlapping, sweep line)
   \item Floyd's Tortoise and Hare Cycle Detection Algorithm
   \item Helper method recursion (parameter or nonlocal)
   \item Kadane's algorithm (maximum subarray)
-  \item Dijkstra's algorithm (shortest path in weighted graph)
-  \item Sweep line algorithm (convex hull)
   \item Sliding window
   \item LRU Cache (hash map + DLL, OrderedDict)
   \item Monotonic queue/deque (max/min element in sliding window) % https://www.youtube.com/watch?v=J1rJ3IcwhKI
   \item Tries
+  \item Merge k sorted lists (arrays and linked lists)
 \end{itemize}
 
 \subsection{Stretch Topics}
@@ -539,7 +613,8 @@ deep copy, shallow copy \\
   \item Rabin-Karp (string-searching, uses a rolling hash to make approximate comparisons between substring hash and target hash, makes exact comparison if hashes match)
   \item Sieve of Eratosthenes (find all prime numbers up to a given integer)
   \item Segment trees and interval trees
-  \item Shortest path problem for graphs with negative edge weights (Bellman-Ford algorithm, Johnson's algorithm)
+  \item Shortest path problem for graphs with negative edge weights (Floyd-Warshall algorithm, Bellman-Ford algorithm, Johnson's algorithm)
+  \item Convex hull algorithms
 \end{itemize}
 
 \newpage
@@ -547,7 +622,7 @@ deep copy, shallow copy \\
 
 \section{Algorithms}
 
-\subsection{Shortest Paths - Dijkstra's Algorithm} \label{dijkstra}
+\subsection{Shortest Path -- Dijkstra's Algorithm} \label{dijkstra}
 
 Dijkstra's algorithm finds the shortest path from a source vertex to every other vertex in a directed graph with non-negative edge weights. It is a greedy algorithm that, in each step, chooses to visit the unvisited vertex that is closest to the source. This vertex is necessarily adjacent to a visited vertex, as unvisited verticies that are not adjacent to a visited vertex are at least one additional edge away from the source. \\
 
@@ -676,11 +751,21 @@ def dijkstra(adj_list, weight, source):
 
 If a graph is not strongly connected, then there may not be a path from the source vertex to every other vertex in the graph. In this case, the algorithm will return a distance of $\infty$ for any vertex not reachable from the source. \\
 
-Dijkstra's algorithm is designed for directed graphs with non-negative edge weights. For graphs with negative edge weights, one should use the Bellman-Ford algorithm or Johnson's algorithm instead. \\
+Dijkstra's algorithm is designed for directed graphs with non-negative edge weights. For graphs with negative edge weights, one should use the Floyd-Warshall algorithm, the Bellman-Ford algorithm, or Johnson's algorithm instead. \\
 
-Dijkstra's algorithm uses the same core procedure as Prim's algorithm.
+Dijkstra's algorithm uses the same core procedure as Prim's algorithm. \\
 
-\subsection{Minimum Spanning Trees - Kruskal's Algorithm} \label{kruskal}
+Dijkstra's algorithm can be modified to find paths that minimize some other quantity. This is done by prepending each entry in the heap with the quantity to be minimized. For example, in Problem \#778, vertex values represent height and the goal is to find the minimum height of a path from source to destination. If entries in the heap are of the form $(h, v)$ where $h$ is the height of vertex $v$, then verticies will be visited in order of increasing height.
+
+\subsection{Shortest Path -- Bellman-Ford Algorithm} \label{bellman-ford}
+
+Bellman-Ford finds the shortest path from a source vertex to every other vertex in a directed graph that may have negative edge weights. It does this by... \\
+
+A graph that may have negative edge weights may have a \textit{negative cycle}, a cycle whose sum of edge weights is negative. If such a cycle is present, there is no shortest path between the source vertex and any other vertex, as a path can always be made shorter by traveling along the cycle one more time. \\
+
+Distances between s and each v in V' are updated in ascending order of path length
+
+\subsection{Minimum Spanning Trees -- Kruskal's Algorithm} \label{kruskal}
 
 Kruskal's algorithm finds a minimum spanning forest (MSF) of an undirected, weighted graph. If the graph is connected, the MSF is a minimum spanning tree (MST). It is a greedy algorithm that, in each step, adds to a tree the lightest edge that will not form a cycle. It uses a disjoint-set forest to detect whether adding an edge will form a cycle. \\
 
@@ -731,7 +816,7 @@ def kruskal(edges, weight):
 
 Note that the values in the disjoint-set forest correspond to the indicies of the vertex list, but the disjoint sets in the forest represent groupings of the verticies themselves.
 
-\subsection{Minimum Spanning Trees - Prim's Algorithm} \label{prim}
+\subsection{Minimum Spanning Trees -- Prim's Algorithm} \label{prim}
 
 Prim's algorithm finds a minimum spanning tree (MST) of an undirected, weighted, connected graph. Some variants can find the minimum spanning forest (MSF) of a disconnected graph (more on this below). It is a greedy algorithm that, in each step, adds to a tree the lightest edge that will connect a vertex in the tree to a vertex not in the tree. It can be described at a high level by the following three steps:
 
@@ -842,7 +927,7 @@ Note that the first implementation of Prim's algorithm will find the MSF for a d
 
 Prim's algorithm uses the same core procedure as Dijkstra's algorithm.
 
-\subsection{Eulerian Cycle Detection - Hierholzer's Algorithm} \label{hierholzer}
+\subsection{Eulerian Cycle Detection -- Hierholzer's Algorithm} \label{hierholzer}
 
 Hierholzer's algorithm finds an Eulerian cycle in a directed graph where such a cycle is assumed to exist. Below are two variants: the former returns a list of verticies, the latter returns a list of edges. These functions can also be used to find an Eulerian trail, provided that \texttt{s} is set to the vertex with \texttt{out-degree - in-degree = 1}, if such a vertex exists. \medskip
 
@@ -875,7 +960,7 @@ def hierholzer_edges(graph: dict[str, set[str]], s: str) -> list[str]:
     return cycle
 \end{python}
 
-\subsection{Topological Sorting - Kahn's Algorithm} \label{kahn}
+\subsection{Topological Sorting -- Kahn's Algorithm} \label{kahn}
 \begin{python}
 def find_order_bfs(adj_list: list[list[int]],
                    in_degrees: list[int]) -> list[int]:
@@ -1117,6 +1202,53 @@ Note that the elements of a disjoint set could be represented with something oth
   \item \textit{Cycle}: a trail that begins and ends at the same vertex
   \item \textit{Path}: a trail in which all verticies are distinct
   \item A graph is \textit{strongly connected} if every vertex is reachable from every other vertex
+\end{itemize}
+
+\newpage
+\newgeometry{top=3cm,bottom=0.1cm}
+
+\begin{center}
+  \Large \textbf{What pattern do you see in the problem?}
+\end{center} \medskip
+\begin{itemize}
+  \item Two Pointers
+  \item Sliding Window
+  \begin{itemize}
+    \item Is there an $O(n^2)$ naive solution?
+    \item Fixed or variable size?
+  \end{itemize}
+  \item Stacks and Queues
+  \item Heaps
+  \begin{itemize}
+    \item Do you need direct access to the smallest/largest element in a collection?
+  \end{itemize}
+  \item Binary Search
+  \item Recursion
+  \begin{itemize}
+    \item Can you identify a base case?
+    \item Can you define a recurrence relation?
+  \end{itemize}
+  \item Backtracking
+  \item Dynamic Programming
+  \begin{itemize}
+      \item Does the problem have \textit{optimal substructure}? Can you write a recurrence relation between the problem and its subproblems?
+      \item Does the problem have \textit{overlapping subproblems}? Would you ever have to solve the same subproblem twice?
+      \item Do you need to choose whether to \textit{take} or \textit{not take} items in order to optimize some value (knapsack)?
+    \begin{verbatim}
+    K(n, w) = max(val[n - 1] + K(n - 1, w - wt[n - 1]),
+                               K(n - 1, w))
+    K(n, w) = max(val[n - 1] + K(n, w - wt[n - 1]),
+                               K(n - 1, w))\end{verbatim}
+  \end{itemize}
+  \item Trees
+  \begin{itemize}
+    \item DFS or BFS?
+  \end{itemize}
+  \item Graphs
+  \begin{itemize}
+    \item Shortest Path
+    \item Minimum Spanning Tree
+  \end{itemize}
 \end{itemize}
 \end{document}
 
