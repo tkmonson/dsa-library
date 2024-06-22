@@ -59,5 +59,10 @@ sum, then it is worth doing. Otherwise, just take the current month as a gain.
 
 An optimal swap would be made with the greatest previous loss. To have direct
 access to the greatest previous loss, store losses in a heap.
+
+Technically, this solution is not purely greedy. When you make a swap, you
+are reevaluating a past decision, which a purely greedy solution would never
+do. However, you are making a locally optimal choice at each step by
+incrementing the negative month count whenever possible.
 '''
 
