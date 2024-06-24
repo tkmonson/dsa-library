@@ -37,61 +37,18 @@
 \tableofcontents
 \newpage
 
-\section{Essential Patterns}
-\hrule\vspace{5ex}
+\section{Mathematical Optimization}
 
-\subsection{Backtracking}
+\begin{itemize}
+  \item Optimal substructure $\implies$ divide and conquer
+  \item Optimal substructure + greedy choice $\implies$ greedy
+  \item Optimal substructure + overlapping subproblems \\
+        \-\hspace{1em}$\implies$ dynamic programming
+\end{itemize}
 
-Backtracking is a strategy for solving \textit{combinatorial search} problems, where the goal is to find groupings or arrangements of elements that satisfy certain conditions. Backtracking searches the space of all possible solution states, and this space can be represented by a tree known as a \textit{state-space tree} or \textit{potential search tree}. The nodes of this tree are \textit{partial candidates}. Each partial candidate is the parent of the candidates that differ from it by a single \textit{extension step}, and the leaves of the tree are the partial candidates that cannot be extended further. The tree is searched in depth-first order. \\
+\subsection{Greedy Algorithms}
 
-An efficient backtracking algorithm will prune the subtree rooted at a partial candidate that cannot be extended to a valid solution (i.e. it will not bother exploring such a subtree). At each node $c$, it will check whether $c$ can be extended to a valid solution. If it cannot, it will prune the subtree rooted at $c$ and backtrack from $c$. Otherwise, it will check whether $c$ itself is a valid solution, and then it will explore the subtree rooted at $c$. \\
-
-A backtracking algorithm that does no pruning is equivalent to a \textit{brute-force} or \textit{exhaustive} search of the state-space. The \textit{actual search tree} of a backtracking algorithm is the pruned version of its potential search tree. \\
-
-In general, backtracking solutions can be implemented with the following template, where \texttt{reject(c)} returns whether \texttt{c} can be extended to a valid solution, \texttt{accept(c)} returns whether \texttt{c} is a valid solution, and \texttt{get\_steps(c)} returns a list of the elements that can be appended to \texttt{c} to extend it to a child partial candidate: \medskip
-
-\begin{python}
-result = []
-def backtrack(c):
-    if reject(c):
-        return
-    if accept(c):
-        result.append(c[:])
-
-    for step in get_steps(c):
-        c.append(step)
-        backtrack(c)
-        c.pop()
-
-backtrack([])
-\end{python} \medskip
-
-Note that this template assumes that a valid solution can be extended to another valid solution. If this is not the case, the \texttt{accept} conditional should return after appending \texttt{c} to \texttt{result} (i.e. when valid solutions must be leaves of the potential or actual search tree). \\
-
-Sometimes a \texttt{reject} conditional is unnecessary because an exhaustive search is required. For example, for a backtracking algorithm that finds all possible combinations of \texttt{k} numbers in the range \texttt{[1, n]}, valid solutions must be leaves and every leaf is a valid solution: \medskip
-
-\begin{python}
-def combine(n: int, k: int) -> list[list[int]]:
-    result = []
-
-    def backtrack(state, start):
-        if len(state) == k:
-            result.append(state[:])
-            return
-       
-        need = k - len(state)
-        remain = n - start + 1
-        available = remain - need
-
-        for step in range(start, start + available + 1):
-            state.append(step)
-            start += 1
-            backtrack(state, start)  # Take
-            state.pop()  # Not take
-
-    backtrack([], 1)
-    return result
-\end{python}
+Greed is good.
 
 \subsection{Dynamic Programming}
 
@@ -193,19 +150,79 @@ def knapsack_tab_1d(wt: list[int], val: list[int], W: int) -> int:
     return dp[W]
 \end{python}
 
-\subsection{Sets}
+\section{Backtracking}
 
-\subsubsection{Do you need to model the partitioning of a set? That is, given a set of items, do you need to group the items into subsets?}
+Backtracking is a strategy for solving \textit{combinatorial search} problems, where the goal is to find groupings or arrangements of elements that satisfy certain conditions. Backtracking searches the space of all possible solution states, and this space can be represented by a tree known as a \textit{state-space tree} or \textit{potential search tree}. The nodes of this tree are \textit{partial candidates}. Each partial candidate is the parent of the candidates that differ from it by a single \textit{extension step}, and the leaves of the tree are the partial candidates that cannot be extended further. The tree is searched in depth-first order. \\
+
+An efficient backtracking algorithm will prune the subtree rooted at a partial candidate that cannot be extended to a valid solution (i.e. it will not bother exploring such a subtree). At each node $c$, it will check whether $c$ can be extended to a valid solution. If it cannot, it will prune the subtree rooted at $c$ and backtrack from $c$. Otherwise, it will check whether $c$ itself is a valid solution, and then it will explore the subtree rooted at $c$. \\
+
+A backtracking algorithm that does no pruning is equivalent to a \textit{brute-force} or \textit{exhaustive} search of the state-space. The \textit{actual search tree} of a backtracking algorithm is the pruned version of its potential search tree. \\
+
+In general, backtracking solutions can be implemented with the following template, where \texttt{reject(c)} returns whether \texttt{c} can be extended to a valid solution, \texttt{accept(c)} returns whether \texttt{c} is a valid solution, and \texttt{get\_steps(c)} returns a list of the elements that can be appended to \texttt{c} to extend it to a child partial candidate: \medskip
+
+\begin{python}
+result = []
+def backtrack(c):
+    if reject(c):
+        return
+    if accept(c):
+        result.append(c[:])
+
+    for step in get_steps(c):
+        c.append(step)
+        backtrack(c)
+        c.pop()
+
+backtrack([])
+\end{python} \medskip
+
+Note that this template assumes that a valid solution can be extended to another valid solution. If this is not the case, the \texttt{accept} conditional should return after appending \texttt{c} to \texttt{result} (i.e. when valid solutions must be leaves of the potential or actual search tree). \\
+
+Sometimes a \texttt{reject} conditional is unnecessary because an exhaustive search is required. For example, for a backtracking algorithm that finds all possible combinations of \texttt{k} numbers in the range \texttt{[1, n]}, valid solutions must be leaves and every leaf is a valid solution: \medskip
+
+\begin{python}
+def combine(n: int, k: int) -> list[list[int]]:
+    result = []
+
+    def backtrack(state, start):
+        if len(state) == k:
+            result.append(state[:])
+            return
+       
+        need = k - len(state)
+        remain = n - start + 1
+        available = remain - need
+
+        for step in range(start, start + available + 1):
+            state.append(step)
+            start += 1
+            backtrack(state, start)  # Take
+            state.pop()  # Not take
+
+    backtrack([], 1)
+    return result
+\end{python}
+
+\section{Sets}
+
+\subsection{Do you need to model the partitioning of a set? That is, given a set of items, do you need to group the items into subsets?}
 
 You should use a disjoint-set (union-find) forest (see Appendix \ref{disjoint-set}).
 
-\subsection{Lists}
+\section{Lists}
 
-\subsubsection{Would it help to know the sum of elements for any subarray in O(n) time?}
+\subsection{Subarrays and Subsequences (To Do)}
+
+\begin{itemize}
+  \item Number of subarrays of array of size $n$ (also, the sum of an arithmetic progression, $\sum_{i=0}^{n}i$): $\frac{n(n+1)}{2} = O(n^2)$
+  \item Number of subsequences of array of size $n$: $2^n$
+\end{itemize}
+
+\subsection{Would it help to know the sum of elements for any subarray in O(n) time?}
 
 Computing the \textbf{prefix sum} of an array \texttt{a} will give you the sum of elements for subarrays \texttt{[a[:i] for i in range(1, len(a))]}. By subtracting elements of the prefix sum from each other, you can get the sum of elements for any subarray. That is, \texttt{sum(a[x:y]) = sum(a[:y]) - sum(a[:x])} for $x < y$. \\
 
-\subsubsection{Would it help to know if two multisets are permutations of each other?}
+\subsection{Would it help to know if two multisets are permutations of each other?}
 
 \textit{Fundamental theorem of arithmetic: every integer greater than 1 can be represented uniquely as a product of prime numbers.} \medskip
 
@@ -222,7 +239,7 @@ def compute_hash(s: str) -> int:
     return h
 \end{python} \bigskip
 
-\subsubsection{Do you need to find the previous/next lesser/greater element for each element in a given array?}
+\subsection{Do you need to find the previous/next lesser/greater element for each element in a given array?}
 
 You should use a \textbf{monotonic stack}. There are four types of monotonic stack: \textit{increasing}, \textit{decreasing}, \textit{non-increasing}, and \textit{non-decreasing}. These stacks are used to find next greater elements, previous greater elements, next lesser elements, and previous lesser elements, and all of these problems can be solved using the template code below: \medskip
 
@@ -276,7 +293,7 @@ def _find_indicies2(arr, op):
 \end{tabular}
 \end{center} \bigskip
 
-\subsubsection{Do you need to point to the middle node of a linked list?}
+\subsection{Do you need to point to the middle node of a linked list?}
 
 \begin{python}
 def find_mid(head):
@@ -287,7 +304,7 @@ def find_mid(head):
     return slow
 \end{python}
 
-\subsubsection{Do you need to merge $k$ sorted lists?}
+\subsection{Do you need to merge $k$ sorted lists?}
 
 \begin{python}
 import heapq
@@ -318,13 +335,13 @@ def merge_k_lists(lists: list[ListNode] | None) -> ListNode | None:
     return head.next
 \end{python}
 
-\subsubsection{Does the problem involve a changing median?}
+\subsection{Does the problem involve a changing median?}
 
 Consider sorting the array and turning the left half into a max-heap and/or the right half into a min-heap.
 
-\subsection{Trees}
+\section{Trees}
 
-\subsubsection{Do you need to traverse a tree in depth-first or breadth-first order?}
+\subsection{Do you need to traverse a tree in depth-first or breadth-first order?}
 
 \begin{python}
 def dfs(root):
@@ -359,21 +376,21 @@ def bfs(root):
         queue.append(curr.right)
 \end{python}
 
-\subsection{Graphs}
+\section{Graphs}
 
-\subsubsection{Would it help to know the shortest path (or distance) between any two nodes in a graph with non-negative edge weights?}
+\subsection{Would it help to know the shortest path (or distance) between any two nodes in a graph with non-negative edge weights?}
 
 You should use Dijkstra's algorithm (see Appendix \ref{dijkstra}).
 
-\subsubsection{Do you need to detect a cycle in an undirected graph?}
+\subsection{Do you need to detect a cycle in an undirected graph?}
 
 You should use a disjoint-set (union-find) forest (see Appendix \ref{disjoint-set}). The vertices are the elements of the subsets, and a union of subsets corresponds to an edge between vertices/components. If calling \texttt{union(x, y)} does not change the structure of the forest, then you know that \texttt{x} and \texttt{y} belong to the same component and that an edge between them would produce a cycle.
 
-\subsubsection{Do you need to connect verticies together without cycles while minimizing total edge weight?}
+\subsection{Do you need to connect verticies together without cycles while minimizing total edge weight?}
 
 Such a set of edges is known as the \textbf{minimum spanning tree} (MST) of a graph. You should use \textit{Kruskal's algorithm} (see Appendix \ref{kruskal}) or \textit{Prim's algorithm} (see Appendix \ref{prim}). The former is slightly preferred for sparse graphs, the latter for dense graphs.
 
-\subsubsection{Do you need to traverse every edge of a graph exactly once?}
+\subsection{Do you need to traverse every edge of a graph exactly once?}
 
 Such a sequence of edges is known as an \textbf{Eulerian trail} and finding such a trail was the goal of the famous \textit{Seven Bridges of K\"onigsberg} problem. Similarly, an \textbf{Eulerian cycle} is an Eulerian trail that starts and ends at the same vertex. \\
 
@@ -411,9 +428,9 @@ To find an Eulerian cycle in a graph, you should use Hierholzer's algorithm: \me
 
 \texttt{N1:} The trail will not get stuck and fail to return to $s$ because all $v \in V$ have even degree $\implies$ when the trail enters another vertex $w$, $w$ must have an unused edge leaving $w$.
 
-\subsection{Searching}
+\section{Searching}
 
-\subsubsection{Binary Search}
+\subsection{Binary Search}
 To find a given target (for duplicate targets, return index of first target found in the search):
 \begin{python}
 def binary_search(nums: list[int], target: int) -> int:
@@ -459,16 +476,16 @@ def binary_search_rightmost(nums: list[int], target: int) -> int:
 \texttt{bisect.bisect\_right(nums, target) - 1} \\
 \texttt{bisect.bisect(nums, target) - 1}
 
-\subsection{Sorting}
+\section{Sorting}
 
-\subsubsection{Do you need to sort items according to a custom scheme?}
+\subsection{Do you need to sort items according to a custom scheme?}
 \begin{itemize}
   \item \texttt{functools.cmp\_to\_key} 
   \item Create class and define dunder methods \texttt{\_\_lt\_\_}, \texttt{\_\_gt\_\_}, \texttt{\_\_le\_\_}, \texttt{\_\_ge\_\_}, \texttt{\_\_eq\_\_}, \texttt{\_\_ne\_\_}
 \end{itemize}
 \bigskip
 
-\subsubsection{Do you need to schedule tasks based on their dependencies?}
+\subsection{Do you need to schedule tasks based on their dependencies?}
 
 You can apply \textbf{topological sorting} to a directed graph. This will produce a linear ordering of the vertices such that for every directed edge \textit{uv} from vertex \textit{u} to vertex \textit{v}, \textit{u} comes before \textit{v}. However, if the graph has cycles, such an ordering does not exist.\medskip\\
 
@@ -530,7 +547,7 @@ There are two main topological sorting algorithms: \textit{Kahn's algorithm} (BF
   \caption{DFS Topological Sort\hspace{8mm}\texttt{/* see \ref{dfs-topo} for code */}}
 \end{algorithm}
 
-\subsection{Bit Manipulation}
+\section{Bit Manipulation}
 
 \begin{itemize}
   \item $x = y \implies x \oplus y = 0$
@@ -538,7 +555,7 @@ There are two main topological sorting algorithms: \textit{Kahn's algorithm} (BF
   \item Two's complement...
 \end{itemize}
 
-\section{Useful Python Constructs}
+\section{Python}
 \hrule\vspace{5ex}
 
 Do you need to...
@@ -565,56 +582,13 @@ Do you need to...
 deep copy, shallow copy \\
 \texttt{id} \\
 \texttt{contextlib.suppress}? \\
-\texttt{set.discard}
-
-\section{Unorganized}
-\hrule\vspace{5ex}
-
+\texttt{set.discard} \\
+You cannot modify elements of an array in a for-each loop that is iterating over that array. Use a regular for loop instead. \\
+Python is pass-by-assignment: \\
 \begin{itemize}
-  \item Online tests: have a Python scratchpad open, spam the ``Run Tests" button (EAFP > LBYL)
-  \item Number of subarrays of array of size $n$ (also, the sum of an arithmetic progression, $\sum_{i=0}^{n}i$): $\frac{n(n+1)}{2} = O(n^2)$
-  \item Number of subsequences of array of size $n$: $2^n$
-  \item Python is pass-by-assignment
-  \begin{itemize}
-    \item Immutable objects are pass-by-value
-    \item Mutable objects are pass-by-reference
-    \item You can rebind the variable in the inner scope, but the outer scope will remain unchanged
-  \end{itemize}
-  \item Some DP notes
-  \begin{itemize}
-    \item Optimal substructure $\implies$ divide and conquer
-    \item Optimal substructure + greedy choice $\implies$ greedy
-    \item Optimal substructure + overlapping subproblems \\
-          \-\hspace{1em}$\implies$ dynamic programming
-  \end{itemize}
-  \item You cannot modify elements of an array in a for-each loop that is iterating over that array. Use a regular for loop instead.
-\end{itemize}
-
-\section{To Do}
-\hrule\vspace{5ex}
-
-\subsection{Essential Topics}
-\begin{itemize}
-  \item Subarrays and Subsequences
-  \item Permutations and Combinations
-  \item Intervals (overlapping, sweep line)
-  \item Floyd's Tortoise and Hare Cycle Detection Algorithm
-  \item Helper method recursion (parameter or nonlocal)
-  \item Kadane's algorithm (maximum subarray)
-  \item Sliding window
-  \item LRU Cache (hash map + DLL, OrderedDict)
-  \item Monotonic queue/deque (max/min element in sliding window) % https://www.youtube.com/watch?v=J1rJ3IcwhKI
-  \item Tries
-  \item Merge k sorted lists (arrays and linked lists)
-\end{itemize}
-
-\subsection{Stretch Topics}
-\begin{itemize}
-  \item Rabin-Karp (string-searching, uses a rolling hash to make approximate comparisons between substring hash and target hash, makes exact comparison if hashes match)
-  \item Sieve of Eratosthenes (find all prime numbers up to a given integer)
-  \item Segment trees and interval trees
-  \item Shortest path problem for graphs with negative edge weights (Floyd-Warshall algorithm, Bellman-Ford algorithm, Johnson's algorithm)
-  \item Convex hull algorithms
+  \item Immutable objects are pass-by-value
+  \item Mutable objects are pass-by-reference
+  \item You can rebind the variable in the inner scope, but the outer scope will remain unchanged
 \end{itemize}
 
 \newpage
@@ -1202,6 +1176,36 @@ Note that the elements of a disjoint set could be represented with something oth
   \item \textit{Cycle}: a trail that begins and ends at the same vertex
   \item \textit{Path}: a trail in which all verticies are distinct
   \item A graph is \textit{strongly connected} if every vertex is reachable from every other vertex
+\end{itemize}
+
+\section{To Do}
+\hrule\vspace{5ex}
+
+\subsection{Essential Topics}
+\begin{itemize}
+  \item Greedy vs DP
+  \item Subarrays and Subsequences
+  \item Permutations and Combinations
+  \item Sliding window
+  \item Intervals (overlapping, sweep line)
+  \item Floyd's Tortoise and Hare Cycle Detection Algorithm
+  \item Helper method recursion (parameter or nonlocal)
+  \item Kadane's algorithm (maximum subarray)
+  \item LRU Cache (hash map + DLL, OrderedDict)
+  \item Monotonic queue/deque (max/min element in sliding window) % https://www.youtube.com/watch?v=J1rJ3IcwhKI
+  \item Tries
+  \item Merge k sorted lists (arrays and linked lists)
+\end{itemize}
+
+\subsection{Stretch Topics}
+\begin{itemize}
+  \item Rabin-Karp (string-searching, uses a rolling hash to make approximate comparisons between substring hash and target hash, makes exact comparison if hashes match)
+  \item Sieve of Eratosthenes (find all prime numbers up to a given integer)
+  \item Segment trees and interval trees
+  \item Shortest path problem for graphs with negative edge weights (Floyd-Warshall algorithm, Bellman-Ford algorithm, Johnson's algorithm)
+  \item Convex hull algorithms
+  \item Graph coloring
+  \item Abstract syntax trees
 \end{itemize}
 
 \newpage
