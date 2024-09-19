@@ -573,6 +573,8 @@ Do you need to...
   \item Find the first occurrence of an item in a list? \smallskip\\
       \imply{\texttt{next(x for x in lst if ...)} \\
       (returns \texttt{StopIteration} if item is not found)}
+  \item Generate a random identifier? \\
+      \imply{\texttt{uuid.uuid1()}}
 \end{itemize}
 
 \texttt{itertools.combinations}, \texttt{itertools.permutations} \\
@@ -583,6 +585,7 @@ deep copy, shallow copy \\
 \texttt{id} \\
 \texttt{contextlib.suppress}? \\
 \texttt{set.discard} \\
+\texttt{OrderedDict} (linked hash map for LRU cache) \\
 You cannot modify elements of an array in a for-each loop that is iterating over that array. Use a regular for loop instead. \\
 Python is pass-by-assignment: \\
 \begin{itemize}
@@ -590,6 +593,15 @@ Python is pass-by-assignment: \\
   \item Mutable objects are pass-by-reference
   \item You can rebind the variable in the inner scope, but the outer scope will remain unchanged
 \end{itemize}
+
+\begin{python}
+from enum import Enum
+
+class Color(Enum):
+    RED = 1
+    GREEN = 2
+    BLUE = 3
+\end{python}
 
 \newpage
 \appendix

@@ -96,6 +96,19 @@ class LRUCache2:
             self._cache.pop(key)
         self._cache[key] = value
 
+
+if __name__ == '__main__':
+    lru = LRUCache2(5)
+    lru.put(3, 'dog')
+    lru.put(4, 'cat')
+    lru.put(5, 'bird')
+    lru.put(6, 'goat')
+    lru.put(3, 'dog')
+    lru.put(7, 'mouse')
+    print(lru._cache)
+    lru.put(8, 'horse')
+    print(lru._cache)
+
 '''
 The need for access via key in O(1) time implies the need for a hash map
 structure. The need to keep track of a least recently used element implies the
