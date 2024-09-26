@@ -76,7 +76,7 @@ previous position), it is an example of dynamic programming.
              5 |________|
              6 |___________|
              1 |_______________|
-                              5 |_|  => the largest sum is 6.
+             5 |__________________|  => the largest sum is 6.
 
 This problem can also be solved by a divide-and-conquer algorithm:
     1. Divide the given array in two halves

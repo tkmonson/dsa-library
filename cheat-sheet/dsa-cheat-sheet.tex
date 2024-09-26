@@ -239,6 +239,30 @@ def compute_hash(s: str) -> int:
     return h
 \end{python} \bigskip
 
+\subsection{Do you need to find an optimal subarray in O(n) time?}
+
+If the problem exhibits optimal substructure and has overlapping subproblems, you can use \textit{Kadane's algorithm} or some variation of it. Kadane's algorithm finds the maximum subarray sum (or the subarray with the maximum sum) in O(n) time: \medskip
+
+\begin{python}
+def max_subarray(numbers):
+    best_sum = float('-inf')
+    current_sum = 0
+    for x in numbers:
+        current_sum = max(x, current_sum + x)
+        best_sum = max(best_sum, current_sum)
+    return best_sum
+\end{python}
+
+Sum the elements from left to right. If the sum ever becomes negative,
+then it is better to remove all elements from the current sum. Start the sum over at the next element.
+
+\begin{center}
+\texttt{M(i)} = maximum sum of a subarray ending at index \texttt{i} \\
+\texttt{M(i) = M(i - 1) + a[i] if M(i - 1) > 0 else a[i]}
+\end{center}
+
+The pattern in Kadane's algorithm of expanding the window to the right and contracting it from the left can be applied to other problems, such as finding the longest subarray whose most common element appears at most \textit{k} times.
+
 \subsection{Do you need to find the previous/next lesser/greater element for each element in a given array?}
 
 You should use a \textbf{monotonic stack}. There are four types of monotonic stack: \textit{increasing}, \textit{decreasing}, \textit{non-increasing}, and \textit{non-decreasing}. These stacks are used to find next greater elements, previous greater elements, next lesser elements, and previous lesser elements, and all of these problems can be solved using the template code below: \medskip
@@ -1202,7 +1226,6 @@ Note that the elements of a disjoint set could be represented with something oth
   \item Intervals (overlapping, sweep line)
   \item Floyd's Tortoise and Hare Cycle Detection Algorithm
   \item Helper method recursion (parameter or nonlocal)
-  \item Kadane's algorithm (maximum subarray)
   \item LRU Cache (hash map + DLL, OrderedDict)
   \item Monotonic queue/deque (max/min element in sliding window) % https://www.youtube.com/watch?v=J1rJ3IcwhKI
   \item Tries
