@@ -6,6 +6,8 @@ Given `n` nodes labeled from `0` to `n - 1` and a list of undirected edges
 connected components in an undirected graph.
 '''
 
+# Time: O(V + E)
+# Auxiliary space: O(V)
 def num_components(n: int, edges: list[list[int]]) -> int:
     count = 0
     visited = set()

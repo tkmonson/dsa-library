@@ -7,6 +7,8 @@ elements. You may return the answer in any order.
 
 from collections import Counter
 
+# Time: O(n)
+# Auxiliary space: O(n)
 def top_k_frequent_elements(nums: list[int], k: int) -> list[int]:
     c = Counter(nums)
     buckets = [[] for _ in range(len(nums))]
