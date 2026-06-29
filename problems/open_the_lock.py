@@ -20,6 +20,8 @@ is impossible.
 
 from collections import deque
 
+# Time: O(1) (not dependent on input)
+# Auxiliary space: O(d) (set with deadends)
 def open_lock(deadends: list[str], target: str):
     rot = {
         '0': ('9', '1'),
