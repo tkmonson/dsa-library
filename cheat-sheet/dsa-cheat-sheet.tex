@@ -408,7 +408,9 @@ You should use Dijkstra's algorithm (see Appendix \ref{dijkstra}).
 
 \subsection{Do you need to detect a cycle in an undirected graph?}
 
-You should use a disjoint-set (union-find) forest (see Appendix \ref{disjoint-set}). The vertices are the elements of the subsets, and a union of subsets corresponds to an edge between vertices/components. If calling \texttt{union(x, y)} does not change the structure of the forest, then you know that \texttt{x} and \texttt{y} belong to the same component and that an edge between them would produce a cycle.
+You can do a DFS or BFS of the graph's adjacency list with a visited set. If you traverse to a vertex that has already been visited, the graph has a cycle. Do not traverse to the vertex you just came from because that is not a cycle in an undirected graph. \\
+
+You could also use a disjoint-set (union-find) forest (see Appendix \ref{disjoint-set}). The vertices are the elements of the subsets, and a union of subsets corresponds to an edge between vertices/components. If calling \texttt{union(x, y)} does not change the structure of the forest, then you know that \texttt{x} and \texttt{y} belong to the same component and that an edge between them would produce a cycle.
 
 \subsection{Do you need to connect verticies together without cycles while minimizing total edge weight?}
 
