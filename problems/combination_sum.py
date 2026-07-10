@@ -48,7 +48,7 @@ def combination_sum2(candidates: list[int], target: int) -> list[list[int]]:
     def dfs(curr_sum, idx):
         if curr_sum == target:
             result.append(curr[:])
-        if curr_sum < target:
+        elif curr_sum < target:
             for i in range(idx, len(candidates)):
                 curr.append(candidates[i])
                 dfs(curr_sum + candidates[i], i)

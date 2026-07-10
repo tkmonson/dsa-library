@@ -43,6 +43,27 @@ candidate, skip over any upcoming candidates of the same value (once you decide
 to "not take," you must not "take" any of the same item in the future).
 '''
 
+def combination_sum2(candidates: list[int], target: int) -> list[list[int]]:
+    result = []
+    curr = []
+    candidates.sort()
+
+    def dfs(curr_sum, idx):
+        if curr_sum == target:
+            result.append(curr[:])
+        elif curr_sum < target:
+            i = idx
+            while i < len(candidates):
+                candidate = candidates[i]
+                curr.append(candidate)
+                dfs(curr_sum + candidate, i + 1)
+                curr.pop()
+                while i < len(candidates) and candidates[i] == candidate:
+                    i += 1
+
+    dfs(0, 0)
+    return result
+
 if __name__ == '__main__':
     candidates = [10, 1, 2, 7, 6, 1, 5]
     target = 8
