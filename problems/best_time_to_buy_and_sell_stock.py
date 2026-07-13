@@ -6,6 +6,8 @@ Given an array `prices` where `prices[i]` is the price of a given stock on the
 day and selling it on a different day in the future.
 '''
 
+# Time: O(n)
+# Auxiliary space: O(1)
 def max_profit(prices: list[int]) -> int:
     ans = 0
     max_price = 0
@@ -18,4 +20,3 @@ def max_profit(prices: list[int]) -> int:
 if __name__ == '__main__':
     prices = [7, 1, 5, 3, 6, 4]
     print(max_profit(prices))
-

@@ -8,6 +8,8 @@ cooldown for one day before buying again. Find the maximum profit that you can
 achieve.
 '''
 
+# Time: O(n)
+# Auxiliary space: O(n) (stack)
 def max_profit(prices: list[int]) -> int:
     dp = {}
 
@@ -81,4 +83,3 @@ would be ready to buy because you have already cooled down. When accessing
 cached values, we can return max(lp, rp) or rp based on whether a cooldown is
 required.
 '''
-
