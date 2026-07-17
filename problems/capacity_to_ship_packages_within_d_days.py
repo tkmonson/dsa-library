@@ -99,3 +99,14 @@ if __name__ == '__main__':
     weights = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
     days = 5
     print(ship_within_days(weights, days))
+
+'''
+This problem can be thought of more generally as "split an array into k
+subarrays such that the maximum sum is minimized."
+
+This is an instance of the bin packing problem, which is NP-hard. The optimal
+solution here avoids this by defining a monotonic function over the variable to
+be minimized and doing a binary search over it. The monotonic property of
+can_ship(c): if capacity c can ship all packages within d days, then any
+capacity greater than c can also ship them within d days.
+'''
