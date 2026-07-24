@@ -21,6 +21,8 @@ so the answer cannot be determined for them.
 
 from collections import defaultdict, deque
 
+# Time: O(q * e)
+# Auxiliary space: O(q + e)
 def calc_equation_dfs(
         equations: list[list[str]],
         values: list[float],
@@ -69,6 +71,8 @@ there isn't really a special value you can return from the DFS to signify that
 the target was not found. This is why I use a nonlocal found variable.
 '''
 
+# Time: O(q * e)
+# Auxiliary space: O(q + e)
 def calc_equation_bfs(
         equations: list[list[str]],
         values: list[float],

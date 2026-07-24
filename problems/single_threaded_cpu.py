@@ -27,6 +27,8 @@ Return the order in which the CPU will process the tasks.
 
 import heapq
 
+# Time: O(nlogn)
+# Auxiliary space: O(n)
 def get_order(tasks: list[list[int]]) -> list[int]:
     ans = []
     heap = []
@@ -57,6 +59,8 @@ def get_order(tasks: list[list[int]]) -> list[int]:
 
 '''
 CPU will choose available task with shortest processing time => use a heap.
+Using a heap that may contain all tasks implies a time complexity of O(nlogn),
+which means sorting the tasks is free.
 
 At first, I thought about time incrementing by one click. At any click, you can
 add available tasks to the heap, begin a task, or end a task.

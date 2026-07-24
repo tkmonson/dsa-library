@@ -18,6 +18,8 @@ A substring is a contiguous sequence of characters within a string.
 
 from contextlib import suppress
 
+# Time: O(a + b + c)
+# Auxiliary space: O(a + b + c)
 def longest_happy_string(a: int, b: int, c: int) -> str:
     ans = []
     while True:

@@ -36,6 +36,10 @@ some to be stationary and the rest to move in one direction. Let the positive
 asteroids be stationary and let the negative asteroids move left. Then, every
 positive asteroid to the left of a negative asteroid is a potential collision.
 
+Consider one negative asteroid, preceded by positive asteroids: [2, 3, 4, -5].
+If you are traversing left-to-right, it makes sense that you would want to put
+the positive asteroids in a stack, to make comparisons in right-to-left order.
+
 Loop through the asteroids. If you come across a positive asteroid, add it to a
 stack of asteroids that a negative asteroid could collide with. If you come
 across a negative asteroid and there are positive asteroids in the stack, there
