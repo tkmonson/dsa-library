@@ -30,8 +30,12 @@ def majority_element2(nums: list[int]) -> int:
         count += (1 if num == ans else -1)
     return ans
 
+'''
+This is the Boyer-Moore Voting Algorithm. Every vote for a non-leading
+candidate cancels a vote for the leading candidate. If count is 0, the
+next vote determines the next leading candidate.
+'''
 
 if __name__ == '__main__':
     nums = [1, 1, 1, 4, 4, 4, 4]
     print(majority_element(nums))
-
