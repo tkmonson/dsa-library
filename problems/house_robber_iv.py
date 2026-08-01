@@ -26,7 +26,7 @@ def min_capability(nums: list[int], k: int) -> int:
 
     left, right = min(nums), max(nums)
     while left <= right:
-        mid = (left + right) // 2
+        mid = left + (right - left) // 2
         if possible(mid):
             res = mid
             right = mid - 1

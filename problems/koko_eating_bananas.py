@@ -19,7 +19,7 @@ def min_eating_speed(piles: list[int], h: int) -> int:
 
     left, right = 1, max(piles)
     while left < right:
-        k = (left + right) // 2
+        k = left + (right - left) // 2
         hours = hours_required(k)
         if hours > h:
             left = k + 1  # Taking too long, eat faster

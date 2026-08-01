@@ -11,7 +11,7 @@ array in O(logn) time. The array contains unique elements.
 def find_min(nums: list[int]) -> int:
     left, right = 0, len(nums) - 1
     while nums[left] > nums[left - 1]:
-        mid = (left + right) // 2
+        mid = left + (right - left) // 2
         if nums[left] <= nums[mid]:  # = for the case where left == mid
             left = mid + 1
         else:

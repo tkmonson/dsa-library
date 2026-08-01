@@ -62,7 +62,7 @@ def num_rescue_boats2(people: list[int], limit: int) -> int:
     left = (n + n % 2) // 2
     right = n
     while left <= right:
-        mid = (left + right) // 2
+        mid = left + (right - left) // 2
         if can_fit(mid):
             result = mid
             right = mid - 1

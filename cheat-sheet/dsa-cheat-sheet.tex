@@ -462,7 +462,7 @@ To find a given target (for duplicate targets, return index of first target foun
 def binary_search(nums: list[int], target: int) -> int:
     left, right = 0, len(nums) - 1
     while left <= right:
-        mid = (left + right) // 2
+        mid = left + (right - left) // 2  # protects against integer overflow
         if nums[mid] < target:
             left = mid + 1
         elif nums[mid] > target:
@@ -478,7 +478,7 @@ To find the leftmost duplicate target (if target does not exist, return number o
 def binary_search_leftmost(nums: list[int], target: int) -> int:
     left, right = 0, len(nums)
     while left < right:
-        mid = (left + right) // 2
+        mid = left + (right - left) // 2
         if nums[mid] < target:
             left = mid + 1
         else:
@@ -492,7 +492,7 @@ To find the rightmost duplicate target (if target does not exist, \texttt{(n - r
 def binary_search_rightmost(nums: list[int], target: int) -> int:
     left, right = 0, len(nums)
     while left < right:
-        mid = (left + right) // 2
+        mid = left + (right - left) // 2
         if nums[mid] > target:
             right = mid
         else:

@@ -38,7 +38,7 @@ class Solution2:  # binary search in prefix sum array
         target = random.uniform(0, self.prefix[-1])
         left, right = 0, len(self.prefix) - 1
         while left <= right:
-            mid = (left + right) // 2
+            mid = left + (right - left) // 2
             if self.prefix[mid] < target:
                 left = mid + 1
             else:

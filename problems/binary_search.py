@@ -9,7 +9,7 @@ time. If target exists, return its index. Otherwise, return -1.
 def binary_search(nums: list[int], target: int) -> int:
     left, right = 0, len(nums) - 1
     while left <= right:
-        mid = (left + right) // 2
+        mid = left + (right - left) // 2  # protects against integer overflow
         if nums[mid] < target:
             left = mid + 1
         elif nums[mid] > target:
@@ -21,7 +21,7 @@ def binary_search(nums: list[int], target: int) -> int:
 def binary_search_leftmost(nums: list[int], target: int) -> int:
     left, right = 0, len(nums)
     while left < right:
-        mid = (left + right) // 2
+        mid = left + (right - left) // 2
         if nums[mid] < target:
             left = mid + 1
         else:
@@ -39,7 +39,7 @@ bisect.bisect_left(nums, target)
 def binary_search_rightmost(nums: list[int], target: int) -> int:
     left, right = 0, len(nums)
     while left < right:
-        mid = (left + right) // 2
+        mid = left + (right - left) // 2
         if nums[mid] > target:
             right = mid
         else:

@@ -17,7 +17,7 @@ def find_median(a: list[int], b: list[int]) -> int:
     
     L, R = 0, len(a) - 1
     while True:
-        i = (L + R) // 2
+        i = L + (R - L) // 2
         j = half - i - 2
         
         a_left = a[i] if i >= 0 else -inf
@@ -29,7 +29,7 @@ def find_median(a: list[int], b: list[int]) -> int:
             if total % 2:
                 return min(a_right, b_right)
             else:
-                return (max(a_left, b_left) + min(a_right, b_right)) // 2
+                return (max(a_left, b_left) + min(a_right, b_right)) / 2
         elif a_left > b_right:
             R = i - 1
         else:

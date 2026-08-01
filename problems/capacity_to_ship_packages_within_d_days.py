@@ -29,7 +29,7 @@ def ship_within_days(weights: list[int], days: int) -> int:
         return ships <= days
 
     while left <= right:
-        cap = (left + right) // 2
+        cap = left + (right - left) // 2
         if can_ship(cap):
             result = cap
             right = cap - 1

@@ -3,7 +3,7 @@ def binary_search(arr, target):
     right = len(arr) - 1
 
     while left <= right:
-        mid = (left + right) // 2
+        mid = left + (right - left) // 2  # protects against integer overflow
         if arr[mid] < target:
             left = mid + 1
         elif arr[mid] > target:

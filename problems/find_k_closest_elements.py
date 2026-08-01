@@ -40,7 +40,7 @@ def find_k_closest_integers2(arr: list[int], k: int, x: int) -> list[int]:
     left, right = 0, len(arr) - k
 
     while left < right:
-        m = (left + right) // 2
+        m = left + (right - left) // 2
         if x - arr[m] > arr[m + k] - x:
             left = m + 1
         else:

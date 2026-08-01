@@ -23,7 +23,7 @@ def max_subarray_sum_daq(nums: list[int]) -> int:
     def daq(left, right):
         if left == right:
             return nums[left]
-        mid = (left + right) // 2
+        mid = left + (right - left) // 2
         left_max = daq(left, mid)
         right_max = daq(mid + 1, right)
         cross_max = cross(left, right, mid)

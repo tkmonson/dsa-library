@@ -11,7 +11,7 @@ def search_matrix(matrix: list[list[int]], target: int) -> bool:
     mxn = len(matrix) * len(matrix[0])
     left, right = 0, mxn - 1
     while left <= right:
-        mid = (left + right) // 2
+        mid = left + (right - left) // 2
         row = mid // len(matrix[0])
         col = mid % len(matrix[0])
         if matrix[row][col] < target:

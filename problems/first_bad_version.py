@@ -17,7 +17,7 @@ def f(n: int, bad: int) -> int:
     def first_bad_version(n: int) -> int:
         left, right = 1, n
         while left <= right:
-            mid = (left + right) // 2
+            mid = left + (right - left) // 2
             if is_bad_version(mid):
                 if not is_bad_version(mid - 1):
                     return mid
