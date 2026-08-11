@@ -10,7 +10,7 @@ bottom-right corner.
 from math import factorial
 
 def unique_paths(m, n):
-    dp = [[1 for c in range(n)] for r in range(m)]
+    dp = [[1 for _ in range(n)] for _ in range(m)]
     for r in range(1, m):
         for c in range(1, n):
             dp[r][c] = dp[r-1][c] + dp[r][c-1]

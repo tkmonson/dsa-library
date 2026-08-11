@@ -5,7 +5,11 @@ Given an undirected, connected graph G = (V, E) and a set of edge weights, find
 a minimum spanning tree of G.
 '''
 
-exec(open('_parent_import.py').read())
+import os
+
+script_dir = os.path.dirname(os.path.abspath(__file__))
+exec(open(os.path.join(script_dir, '_parent_import.py')).read())
+
 from structures.disjoint_set import DisjointSet
 
 # Time: O(|E|log|V|)

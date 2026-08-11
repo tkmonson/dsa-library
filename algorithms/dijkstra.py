@@ -14,8 +14,11 @@ Space complexity: O(|V|) (using a binary heap)
 
 import heapq
 from math import inf
+import os
 
-exec(open('_parent_import.py').read())
+script_dir = os.path.dirname(os.path.abspath(__file__))
+exec(open(os.path.join(script_dir, '_parent_import.py')).read())
+
 from structures.priority_queue import PriorityQueue
 
 # Time: O(|E|log|V|)
