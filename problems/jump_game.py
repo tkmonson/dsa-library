@@ -6,6 +6,8 @@ Given an array where each element represents the maximum forward jump length
 from the first index, False otherwise.
 '''
 
+from functools import cache
+
 # Time: O(n)
 # Auxiliary space: O(1)
 def can_jump(nums: list[int]) -> bool:
