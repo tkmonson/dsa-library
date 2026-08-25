@@ -14,44 +14,15 @@ all of the MHTs.
 
 from collections import deque
 
-def find_minimum_height_trees_naive(n: int,
-                                    edges: list[list[int]]) -> list[int]:
-    adj_list = [[] for _ in range(n)]
-    for edge in edges:
-        adj_list[edge[0]].append(edge[1])
-        adj_list[edge[1]].append(edge[0])
-
-    def height(i):
-        seen.add(i)
-        unseen_children = [c for c in adj_list[i] if c not in seen]
-        if not unseen_children:
-            return 1
-        return 1 + max([height(c) for c in unseen_children])
-
-    min_height = float('inf')
-    roots = []
-    for i in range(n):
-        seen = set()
-        if (h := height(i)) < min_height:
-            min_height = h
-            roots = []
-        if h == min_height:
-            roots.append(i)
-
-    return roots
-
-'''
-This solution simply finds the height of each possible tree using recursion and
-keeps track of the minimum height trees and their roots.
-'''
-
+# Time: O(n)
+# Auxiliary space: O(n)
 def find_minimum_height_trees(n: int, edges: list[list[int]]) -> list[int]:
-    adj_list = [[] for _ in range(n)]
+    adj_list = [set() for _ in range(n)]
     for edge in edges:
-        adj_list[edge[0]].append(edge[1])
-        adj_list[edge[1]].append(edge[0])
+        adj_list[edge[0]].add(edge[1])
+        adj_list[edge[1]].add(edge[0])
 
-    leaves = deque([i for i in range(n) if len(adj_list[i]) == 1])
+    leaves = deque([i for i in range(n) if len(adj_list[i]) <= 1])
 
     while n > 2:
         n -= len(leaves)
@@ -63,9 +34,14 @@ def find_minimum_height_trees(n: int, edges: list[list[int]]) -> list[int]:
             if len(adj_list[neighbor]) == 1:
                 leaves.append(neighbor)
 
-    return leaves
+    return list(leaves)
 
 '''
+This solution repeatedly prunes the tree, from the outside nodes to the inside
+nodes, until only the innermost nodes remain. It is like peeling the layers of
+an onion until you get to its core or eating the grapes on the outside of the
+bunch before eating the grapes closer to the center.
+
 Consider a path graph (which is a tree). The MHT of this graph is rooted at the
 middle vertex (or at one of the two middle vertices if the graph contains an
 even number of vertices). We can isolate these vertices by sequentially
@@ -84,3 +60,19 @@ if __name__ == '__main__':
     edges = [[3, 0], [3, 1], [3, 2], [3, 4], [5, 4]]
     print(find_minimum_height_trees(n, edges))
 
+'''
+The naive solution is to do a DFS or BFS on each possible tree rooted at each
+node. This would be O(n^2).
+
+There is another possible O(n) solution:
+
+1. Choose a node at random (A)
+2. Do a DFS (or BFS) to find the longest path starting at A
+3. The node at the end of this path (B) must be on the longest path globally
+   (Longest path from R will go through center and then out to a leaf)
+4. Do a DFS (or BFS) to find the longest path starting at B (ends at C)
+   (It will also go through center and then out to a leaf)
+5. The path from B to C is the longest path globally. Its innermost node(s) is
+   the root of the MHT.
+6. Prune the ends of this path until only 1 or 2 nodes remain.
+'''
