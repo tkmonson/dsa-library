@@ -1,6 +1,9 @@
+import sys, os
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
 import unittest
 
-from structures import binarytree as bt
+from adts.structures import binarytree as bt
 
 class TestBinaryTree(unittest.TestCase):
     my_preorder      = [4,7,2,1,8,3,5]

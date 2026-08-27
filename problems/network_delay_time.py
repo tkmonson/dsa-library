@@ -14,8 +14,11 @@ to receive the signal, return -1.
 from collections import defaultdict
 import heapq
 from math import inf
+import os
 
-exec(open('_parent_import.py').read())
+script_dir = os.path.dirname(os.path.abspath(__file__))
+exec(open(os.path.join(script_dir, '_parent_import.py')).read())
+
 from algorithms.dijkstra import dijkstra, dijkstra2
 
 def network_delay_time(times: list[list[int]], n: int, k: int) -> int:

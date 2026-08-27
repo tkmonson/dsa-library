@@ -1,4 +1,7 @@
-from structures import binarytree as bt
+import sys, os
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
+from adts.structures import binarytree as bt
 
 my_preorder      = ['M','G','C','A','F','D','K','J','I','L','X','V',
                     'T','R','P','Q','U']

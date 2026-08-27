@@ -1,4 +1,4 @@
-from structures import binaryheap as bh
+from .structures import binaryheap as bh
 
 class PriorityQueue:
     def __init__(self, data=[], structure=bh.ImplicitBinaryMinHeap):

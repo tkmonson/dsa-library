@@ -1,7 +1,10 @@
+import sys, os
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
 from contextlib import suppress
 import unittest
 
-from structures import binaryheap as bh
+from adts.structures import binaryheap as bh
 
 class TestImplicitBinaryMinHeap(unittest.TestCase):
     def setUp(self):

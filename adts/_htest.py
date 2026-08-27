@@ -1,5 +1,8 @@
-from structures import binaryheap as bh
-from structures import binarytree as bt
+import sys, os
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
+from adts.structures import binaryheap as bh
+from adts.structures import binarytree as bt
 
 #pre_data = [0,'b',1,2,'a',3,4]
 #in_data = [1,'b',2,0,3,'a',4]

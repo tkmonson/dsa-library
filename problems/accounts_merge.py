@@ -15,8 +15,11 @@ email address necessarily have the same name).
 '''
 
 from collections import defaultdict
+import os
 
-exec(open('_parent_import.py').read())
+script_dir = os.path.dirname(os.path.abspath(__file__))
+exec(open(os.path.join(script_dir, '_parent_import.py')).read())
+
 from structures.disjoint_set import DisjointSet
 
 def accounts_merge(accounts: list[list[str]]) -> list[list[str]]:
@@ -98,3 +101,8 @@ if __name__ == '__main__':
                 ["John", "johnnybravo@mail.com"]]
     print(accounts_merge(accounts))
 
+'''
+This can be modeled as a graph problem where emails are nodes and emails in the
+same account are connected by edges. To find all the emails belonging to one
+person, find all the nodes in a connected component.
+'''

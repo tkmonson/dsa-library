@@ -9,8 +9,11 @@ would make the graph acyclic if removed.
 '''
 
 from collections import defaultdict
+import os
 
-exec(open('_parent_import.py').read())
+script_dir = os.path.dirname(os.path.abspath(__file__))
+exec(open(os.path.join(script_dir, '_parent_import.py')).read())
+
 from structures.disjoint_set import DisjointSet
 
 def find_redundant_connection(edges: list[list[int]]) -> list[int]:

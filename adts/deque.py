@@ -1,5 +1,5 @@
-from structures import singlylinkedlist as sll
-from structures import doublylinkedlist as dll
+from .structures import singlylinkedlist as sll
+from .structures import doublylinkedlist as dll
 
 # Needs an array implementation option as well
 
