@@ -84,7 +84,7 @@ calls.
 The disjoint-set data structure can be used to detect cycles in an undirected
 graph. If graph A contains vertex x and graph B contains vertex y, the
 connection of A and B by the edge (x, y) can be represented by the union of a
-set containing A's verticies with a set containing B's verticies, both of which
+set containing A's vertices with a set containing B's vertices, both of which
 are represented as trees. If A and B are already connected (x and y exist
 within the same connected graph), the addition of edge (x, y) would produce a
 cycle. Attempting to add (x, y) would be analogous to unioning a set containing

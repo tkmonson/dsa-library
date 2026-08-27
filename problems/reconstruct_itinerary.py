@@ -40,7 +40,7 @@ arrive and depart from each airport (every vertex has equal in-degree and
 out-degree), the graph is guaranteed to have an Eulerian cycle.
 
 There is a primary cycle that starts and ends at the starting vertex, and there
-may be any number of secondary cycles that start and end at other verticies.
+may be any number of secondary cycles that start and end at other vertices.
 
 The reason the above implementation is so elegant is that it only adds a vertex
 to the result when the trail is backing out of recursion and the vertex has no
@@ -52,10 +52,10 @@ the trail backs out to a vertex v with no unexplored adjacent edges, v will be
 added to the result. Otherwise, if v does have unexplored adjacent edges, the
 trail will expand again to explore those edges, moving through secondary cycles
 that return to v. And once all cycles that start and end at v are explored, the
-trail will back out of those cycles, adding verticies to the result.
+trail will back out of those cycles, adding vertices to the result.
 
 The effect is that it does not matter if you explore secondary cycles before or
-after exploring the primary cycle. The verticies will be added to the result in
+after exploring the primary cycle. The vertices will be added to the result in
 the correct order regardless.
 '''
 

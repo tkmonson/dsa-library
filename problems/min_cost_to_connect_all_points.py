@@ -12,8 +12,11 @@ if there is exactly one simple path between any two points.
 '''
 
 import heapq
+import os
 
-exec(open('_parent_import.py').read())
+script_dir = os.path.dirname(os.path.abspath(__file__))
+exec(open(os.path.join(script_dir, '_parent_import.py')).read())
+
 from structures.disjoint_set import DisjointSet
 
 # Time: O(|E|log|V|)

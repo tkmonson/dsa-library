@@ -40,9 +40,9 @@ def network_delay_time(times: list[list[int]], n: int, k: int) -> int:
 
 '''
 This solution uses Dijkstra's algorithm, but it does not keep track of the
-information (distance and predecessor for all verticies) that would normally be
+information (distance and predecessor for all vertices) that would normally be
 returned by Dijkstra's algorithm. This is acceptable because the minimum time
-to reach all verticies is equal to the time to reach the vertex farthest from
+to reach all vertices is equal to the time to reach the vertex farthest from
 the source. Dijkstra's algorithm will visit this vertex last, so only the last
 distance value is needed.
 '''

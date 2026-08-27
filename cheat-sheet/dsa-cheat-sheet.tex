@@ -412,7 +412,7 @@ You can do a DFS or BFS of the graph's adjacency list with a visited set. If you
 
 You could also use a disjoint-set (union-find) forest (see Appendix \ref{disjoint-set}). The vertices are the elements of the subsets, and a union of subsets corresponds to an edge between vertices/components. If calling \texttt{union(x, y)} does not change the structure of the forest, then you know that \texttt{x} and \texttt{y} belong to the same component and that an edge between them would produce a cycle.
 
-\subsection{Do you need to connect verticies together without cycles while minimizing total edge weight?}
+\subsection{Do you need to connect vertices together without cycles while minimizing total edge weight?}
 
 Such a set of edges is known as the \textbf{minimum spanning tree} (MST) of a graph. You should use \textit{Kruskal's algorithm} (see Appendix \ref{kruskal}) or \textit{Prim's algorithm} (see Appendix \ref{prim}). The former is slightly preferred for sparse graphs, the latter for dense graphs.
 
@@ -425,7 +425,7 @@ For connected graphs:
   \item An undirected graph:
   \begin{itemize}
     \item Has an Eulerian cycle iff every vertex has even degree.
-    \item Has an Eulerian trail that is not a cycle iff exactly two verticies have odd degree (the start and end verticies).
+    \item Has an Eulerian trail that is not a cycle iff exactly two vertices have odd degree (the start and end vertices).
   \end{itemize}
   \item A directed graph:
   \begin{itemize}
@@ -636,9 +636,9 @@ class Color(Enum):
 
 \subsection{Shortest Path -- Dijkstra's Algorithm} \label{dijkstra}
 
-Dijkstra's algorithm finds the shortest path from a source vertex to every other vertex in a directed graph with non-negative edge weights. It is a greedy algorithm that, in each step, chooses to visit the unvisited vertex that is closest to the source. This vertex is necessarily adjacent to a visited vertex, as unvisited verticies that are not adjacent to a visited vertex are at least one additional edge away from the source. \\
+Dijkstra's algorithm finds the shortest path from a source vertex to every other vertex in a directed graph with non-negative edge weights. It is a greedy algorithm that, in each step, chooses to visit the unvisited vertex that is closest to the source. This vertex is necessarily adjacent to a visited vertex, as unvisited vertices that are not adjacent to a visited vertex are at least one additional edge away from the source. \\
 
-Let there be a set $U$ of verticies that are both unvisited and adjacent to a visited vertex. The algorithm can be described at a high level as follows:
+Let there be a set $U$ of vertices that are both unvisited and adjacent to a visited vertex. The algorithm can be described at a high level as follows:
 
 \begin{enumerate}
   \item Visit the vertex in $U$ that is closest to the source.
@@ -646,7 +646,7 @@ Let there be a set $U$ of verticies that are both unvisited and adjacent to a vi
   \item Repeat until $U$ is empty.
 \end{enumerate}
 
-From an arbitrary vertex $u$, the algorithm will update the distance between the source $s$ and each neighbor of $u$, if the path from $s$ to $u$ and the edge from $u$ to the neighbor form the shortest path found so far from $s$ to that neighbor. If only the shortest path between $s$ and some particular $v \in V$ is needed, the algorithm can terminate after visting $v$. \\
+From an arbitrary vertex $u$, the algorithm will update the distance between the source $s$ and each neighbor of $u$, if the path from $s$ to $u$ and the edge from $u$ to the neighbor form the shortest path found so far from $s$ to that neighbor. If only the shortest path between $s$ and some particular $v \in V$ is needed, the algorithm can terminate after visiting $v$. \\
 
 \begin{algorithm}[H]
   \SetAlgoLined
@@ -660,10 +660,10 @@ From an arbitrary vertex $u$, the algorithm will update the distance between the
     $P(v) \coloneqq$ \texttt{null}\;
   }
   $H \longleftarrow$\hspace{0.5mm} priority queue of $V$, using D as priorities\;
-  \hspace{13mm}(contains unvisited verticies)\;
+  \hspace{13mm}(contains unvisited vertices)\;
   \While{$H$ is not empty}{
     Pop $u$ from $H$ (the unvisited vertex closest to $s$)\;
-    \ForEach{$e = (u, v)$ where $v$ is unvisted}{
+    \ForEach{$e = (u, v)$ where $v$ is unvisited}{
         \If{$(s \rightarrow u \rightarrow v)$ is the shortest path $(s \rightarrow v)$ found so far}{
         Increase the priority of $v$ in $H$\hspace{9mm} ($D(v)\coloneqq D(u) + w(e)$)\;
         Let $v$ connect to $u$ when $v$ is popped\hspace{17mm} ($P(v)\coloneqq u$)\;
@@ -703,7 +703,7 @@ def dijkstra(adj_list, weight, source):
     return distance, predecessor
 \end{python}
 
-However, the code required to implement a heap with \textit{decrease-key} is cumbersome, and the algorithm can be written without modifying entries in the priority queue. Instead of initializing the heap with all of the verticies, verticies can be added when they become adjacent to the vertex currently being visited. And when a shorter alternate path to a vertex is found, duplicate entries can be inserted with higher priority. The priority queue will contain stale data, but if we keep track of which verticies have been visited already, then duplicate entries of lower priority can be discarded when popped. \\
+However, the code required to implement a heap with \textit{decrease-key} is cumbersome, and the algorithm can be written without modifying entries in the priority queue. Instead of initializing the heap with all of the vertices, vertices can be added when they become adjacent to the vertex currently being visited. And when a shorter alternate path to a vertex is found, duplicate entries can be inserted with higher priority. The priority queue will contain stale data, but if we keep track of which vertices have been visited already, then duplicate entries of lower priority can be discarded when popped. \\
 
 \begin{algorithm}[H]
   \SetAlgoLined
@@ -718,9 +718,9 @@ However, the code required to implement a heap with \textit{decrease-key} is cum
     $P(v) \coloneqq$ \texttt{null}\;
   }
   $H \longleftarrow$\hspace{0.5mm} priority queue containing $s$, highest priority\;
-  \hspace{13mm}(contains unvisited verticies adjacent to visited verticies)\;
+  \hspace{13mm}(contains unvisited vertices adjacent to visited vertices)\;
 
-  \While{there are unvisited verticies}{
+  \While{there are unvisited vertices}{
     Pop $u$ from $H$ until $u$ is unvisited (discard duplicates)\;
     \hspace{4mm} (break if $H$ is empty)\;
     Mark $u$ as visited\;
@@ -767,7 +767,7 @@ Dijkstra's algorithm is designed for directed graphs with non-negative edge weig
 
 Dijkstra's algorithm uses the same core procedure as Prim's algorithm. \\
 
-Dijkstra's algorithm can be modified to find paths that minimize some other quantity. This is done by prepending each entry in the heap with the quantity to be minimized. For example, in Problem \#778, vertex values represent height and the goal is to find the minimum height of a path from source to destination. If entries in the heap are of the form $(h, v)$ where $h$ is the height of vertex $v$, then verticies will be visited in order of increasing height.
+Dijkstra's algorithm can be modified to find paths that minimize some other quantity. This is done by prepending each entry in the heap with the quantity to be minimized. For example, in Problem \#778, vertex values represent height and the goal is to find the minimum height of a path from source to destination. If entries in the heap are of the form $(h, v)$ where $h$ is the height of vertex $v$, then vertices will be visited in order of increasing height.
 
 \subsection{Shortest Path -- Bellman-Ford Algorithm} \label{bellman-ford}
 
@@ -803,16 +803,16 @@ See Appendix \ref{disjoint-set} for an implementation of a disjoint-set forest w
 
 \begin{python}
 def kruskal(edges, weight):
-    verticies = set()
+    vertices = set()
     for u, v in edges:
-        verticies.add(u)
-        verticies.add(v)
-    verticies = list(verticies)
-    n = len(verticies)
+        vertices.add(u)
+        vertices.add(v)
+    vertices = list(vertices)
+    n = len(vertices)
 
     vertex_to_index = {}
     for i in range(n):
-        vertex_to_index[verticies[i]] = i
+        vertex_to_index[vertices[i]] = i
 
     edges.sort(key=weight)
     uf = DisjointSet(n)
@@ -826,7 +826,7 @@ def kruskal(edges, weight):
     return mst
 \end{python}
 
-Note that the values in the disjoint-set forest correspond to the indicies of the vertex list, but the disjoint sets in the forest represent groupings of the verticies themselves.
+Note that the values in the disjoint-set forest correspond to the indicies of the vertex list, but the disjoint sets in the forest represent groupings of the vertices themselves.
 
 \subsection{Minimum Spanning Trees -- Prim's Algorithm} \label{prim}
 
@@ -834,11 +834,11 @@ Prim's algorithm finds a minimum spanning tree (MST) of an undirected, weighted,
 
 \begin{enumerate}
   \item Initialize a tree with a single vertex, chosen arbitrarily from the graph.
-  \item Grow the tree by one edge; of the edges that connect the tree to verticies not yet in the tree, find the minimum-weight edge and transfer it to the tree.
-  \item Repeat step 2 until all verticies are in the tree.
+  \item Grow the tree by one edge; of the edges that connect the tree to vertices not yet in the tree, find the minimum-weight edge and transfer it to the tree.
+  \item Repeat step 2 until all vertices are in the tree.
 \end{enumerate}
 
-To find the minimum-weight edge from a tree vertex to a non-tree vertex, it would help to have a heap or priority queue. The heap could contain every non-tree vertex (initially, every vertex) and prioritize them based on the minimum cost to connect them to the tree (weight of lightest edge connecting to tree). Cost would be finite for adjacent verticies, infinite otherwise. As long as we keep track of which tree vertex provides that min-cost connection for each non-tree vertex, we will know which edges to add to the tree. \\
+To find the minimum-weight edge from a tree vertex to a non-tree vertex, it would help to have a heap or priority queue. The heap could contain every non-tree vertex (initially, every vertex) and prioritize them based on the minimum cost to connect them to the tree (weight of lightest edge connecting to tree). Cost would be finite for adjacent vertices, infinite otherwise. As long as we keep track of which tree vertex provides that min-cost connection for each non-tree vertex, we will know which edges to add to the tree. \\
 
 \begin{algorithm}[H]
   \SetAlgoLined
@@ -850,7 +850,7 @@ To find the minimum-weight edge from a tree vertex to a non-tree vertex, it woul
     $P(v) \coloneqq$ \texttt{null} (vertex that provides cheapest connection to $v$)\;
   }
   $H \longleftarrow$\hspace{0.5mm} priority queue of $V$, using $C$ as priorities\;
-  \hspace{13mm}(contains the verticies not yet in the tree)\;
+  \hspace{13mm}(contains the vertices not yet in the tree)\;
   \While{$H$ is not empty}{
     Pop $u$ from $H$ (the cheapest vertex to connect to the tree)
     \ForEach{$e = (u, v)$ where $v$ is not yet in the tree}{
@@ -885,7 +885,7 @@ def prim(adj_list, weight):
     return [(prev[v], v) for v in prev]
 \end{python}
 
-However, the code required to implement a heap with \textit{decrease-key} is cumbersome, and the algorithm can be written without modifying entries in the priority queue. Instead of initializing the heap with all of the verticies, verticies can be added when they become adjacent to the tree. And when costs to connect are lowered, duplicate entries can be inserted with higher priority. The priority queue will contain stale data, but if we keep track of which verticies have been added to the tree, then duplicate entries of lower priority can be discarded when popped. \\
+However, the code required to implement a heap with \textit{decrease-key} is cumbersome, and the algorithm can be written without modifying entries in the priority queue. Instead of initializing the heap with all of the vertices, vertices can be added when they become adjacent to the tree. And when costs to connect are lowered, duplicate entries can be inserted with higher priority. The priority queue will contain stale data, but if we keep track of which vertices have been added to the tree, then duplicate entries of lower priority can be discarded when popped. \\
 
 \begin{algorithm}[H]
   \SetAlgoLined
@@ -897,9 +897,9 @@ However, the code required to implement a heap with \textit{decrease-key} is cum
     $P(v) \coloneqq$ \texttt{null} (vertex that provides cheapest connection to $v$)\;
   }
   $H \longleftarrow$\hspace{0.5mm} priority queue containing arbitrary $v\in V$, highest priority\;
-  \hspace{13mm}(contains the verticies adjacent to but not yet in the tree and\;
-  \hspace{13mm}also possibly stale duplicates of verticies in the tree)\;
-  \While{there are verticies that are not in the tree}{
+  \hspace{13mm}(contains the vertices adjacent to but not yet in the tree and\;
+  \hspace{13mm}also possibly stale duplicates of vertices in the tree)\;
+  \While{there are vertices that are not in the tree}{
     Pop $u$ from $H$ until $u$ is not in the tree (discard duplicates)\;
     Add $u$ to the tree\;
     \ForEach{$e = (u, v)$ where $v$ is not yet in the tree}{
@@ -941,7 +941,7 @@ Prim's algorithm uses the same core procedure as Dijkstra's algorithm.
 
 \subsection{Eulerian Cycle Detection -- Hierholzer's Algorithm} \label{hierholzer}
 
-Hierholzer's algorithm finds an Eulerian cycle in a directed graph where such a cycle is assumed to exist. Below are two variants: the former returns a list of verticies, the latter returns a list of edges. These functions can also be used to find an Eulerian trail, provided that \texttt{s} is set to the vertex with \texttt{out-degree - in-degree = 1}, if such a vertex exists. \medskip
+Hierholzer's algorithm finds an Eulerian cycle in a directed graph where such a cycle is assumed to exist. Below are two variants: the former returns a list of vertices, the latter returns a list of edges. These functions can also be used to find an Eulerian trail, provided that \texttt{s} is set to the vertex with \texttt{out-degree - in-degree = 1}, if such a vertex exists. \medskip
 
 \begin{python}
 from collections import deque
@@ -1212,7 +1212,7 @@ Note that the elements of a disjoint set could be represented with something oth
   \item \textit{Walk}: a sequence of edges which joins a sequence of vertices
   \item \textit{Trail}: a walk in which all edges are distinct
   \item \textit{Cycle}: a trail that begins and ends at the same vertex
-  \item \textit{Path}: a trail in which all verticies are distinct
+  \item \textit{Path}: a trail in which all vertices are distinct
   \item A graph is \textit{strongly connected} if every vertex is reachable from every other vertex
 \end{itemize}
 

@@ -35,7 +35,7 @@ def prim(adj_list, weight):
     return [(prev[v], v) for v in prev]
 
 '''
-This solution adds verticies to the heap when they become adjacent to the tree.
+This solution adds vertices to the heap when they become adjacent to the tree.
 When the priority of an adjacent vertex increases, a duplicate entry for that
 vertex is added to heap, with higher priority. Thus, the heap may contain stale
 duplicates, but these can be discarded when popped by checking if the vertex is
@@ -57,7 +57,7 @@ def prim2(adj_list, weight):
     return [(prev[v], v) for v in prev]
 
 '''
-This solution adds all of the verticies to the heap initially. When the
+This solution adds all of the vertices to the heap initially. When the
 priority of a vertex increases, the heap restructures itself to maintain the
 heap invariant. To do this, the heap requires a decrease-key operation. The
 heapq module does not provide this operation, so a custom heap implementation

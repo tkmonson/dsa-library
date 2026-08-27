@@ -15,16 +15,16 @@ from structures.disjoint_set import DisjointSet
 # Time: O(|E|log|V|)
 # Auxiliary space: O(|V|)
 def kruskal(edges, weight):
-    verticies = set()
+    vertices = set()
     for u, v in edges:
-        verticies.add(u)
-        verticies.add(v)
-    verticies = list(verticies)
-    n = len(verticies)
+        vertices.add(u)
+        vertices.add(v)
+    vertices = list(vertices)
+    n = len(vertices)
 
     vertex_to_index = {}
     for i in range(n):
-        vertex_to_index[verticies[i]] = i
+        vertex_to_index[vertices[i]] = i
 
     uf = DisjointSet(n)
     edges.sort(key=weight)

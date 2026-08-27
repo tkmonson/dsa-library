@@ -61,7 +61,7 @@ def open_lock(deadends: list[str], target: str):
 
 '''
 At each step, you can make one of eight moves. This can be modeled as a graph,
-where the verticies are lock states that are connected if they differ by one
+where the vertices are lock states that are connected if they differ by one
 wheel rotation. Because we are looking for the minimum number of turns, do a
 BFS of the lock space, starting from 0000. Visited nodes are "deadends" during
 the search, so deadends can start in the visited set.

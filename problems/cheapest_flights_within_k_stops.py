@@ -29,7 +29,7 @@ def find_cheapest_price_bellman_ford(n: int, flights: list[list[int]],
 
 '''
 Let s be the source vertex.
-Let V' be the set of all verticies in a graph except s.
+Let V' be the set of all vertices in a graph except s.
 
 The Bellman-Ford algorithm is especially well-suited to solving this problem.
 Generally, single-source shortest path problems are solved by initially
@@ -74,16 +74,16 @@ def find_cheapest_price_dijkstra(n: int, flights: list[list[int]],
 
 '''
 We want to find the shortest path from src to dst that contains at most k + 2
-verticies => modified Dijkstra's algorithm.
+vertices => modified Dijkstra's algorithm.
 
-Normally, Dijkstra's algorithm explores verticies in the order of shortest
+Normally, Dijkstra's algorithm explores vertices in the order of shortest
 known distance to longest known distance. In this case, we want to explore in
 the order of fewer stops from src to more stops from src (essentially a BFS)
-and then terminate after exploring all verticies of k stops from src. To do
+and then terminate after exploring all vertices of k stops from src. To do
 this with a priority queue, we would compare elements in a min-heap by number
-of stops in the path from src. However, because verticies will be added in a
-monotonically increasing order in terms of steps (BFS explores all verticies of
-x steps before exploring verticies of x + 1 steps), elements in the heap will
+of stops in the path from src. However, because vertices will be added in a
+monotonically increasing order in terms of steps (BFS explores all vertices of
+x steps before exploring vertices of x + 1 steps), elements in the heap will
 never need to be shifted around to maintain the heap invariant. Thus, we can
 just use a queue instead of a priority queue.
 '''
