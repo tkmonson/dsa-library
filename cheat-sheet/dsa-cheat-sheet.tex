@@ -156,7 +156,7 @@ Backtracking is a strategy for solving \textit{combinatorial search} problems, w
 
 An efficient backtracking algorithm will prune the subtree rooted at a partial candidate that cannot be extended to a valid solution (i.e. it will not bother exploring such a subtree). At each node $c$, it will check whether $c$ can be extended to a valid solution. If it cannot, it will prune the subtree rooted at $c$ and backtrack from $c$. Otherwise, it will check whether $c$ itself is a valid solution, and then it will explore the subtree rooted at $c$. \\
 
-A backtracking algorithm that does no pruning is equivalent to a \textit{brute-force} or \textit{exhaustive} search of the state-space. The \textit{actual search tree} of a backtracking algorithm is the pruned version of its potential search tree. \\
+A backtracking algorithm that does no pruning is equivalent to a \textit{brute-force} or \textit{exhaustive} search of the state space. The \textit{actual search tree} of a backtracking algorithm is the pruned version of its potential search tree. \\
 
 In general, backtracking solutions can be implemented with the following template, where \texttt{reject(c)} returns whether \texttt{c} can be extended to a valid solution, \texttt{accept(c)} returns whether \texttt{c} is a valid solution, and \texttt{get\_steps(c)} returns a list of the elements that can be appended to \texttt{c} to extend it to a child partial candidate: \medskip
 
@@ -202,6 +202,15 @@ def combine(n: int, k: int) -> list[list[int]]:
     backtrack([], 1)
     return result
 \end{python}
+
+\subsection{Possible Optimizations}
+
+\begin{enumerate}
+  \item \textbf{Make early checks.} Sometimes, the answer is obvious for some inputs and backtracking is not required at all.
+  \item \textbf{Sort the input in descending order.} Consider the hardest or most constrained elements first. This allows you to fail fast and avoid wasting time on candidates that will fail further down the tree.
+  \item \textbf{Prune when adding to an empty partition fails.} When partitioning elements, if all paths fail after placing an element into an empty set, prune and backtrack immediately. It will not help to start with a different element. Your mistake is further up the call stack.
+  \item \textbf{Fill partitions sequentially.} When partitioning elements, it is often advantageous to fill one partition completely before adding elements to other partitions. This allows you to fail fast and avoid wasting time on candidates that will fail further down the tree.
+\end{enumerate}
 
 \section{Sets}
 
