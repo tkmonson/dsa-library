@@ -19,7 +19,7 @@ def knapsack_naive(wt: list[int], val: list[int], W: int) -> int:
         if n == 0 or w == 0:
             return 0
 
-        if wt[n - 1] > w:
+        if wt[n - 1] > w:  # can't take current item
             return knapsack(n - 1, w)
         else:
             return max(
@@ -54,7 +54,7 @@ def knapsack_memo(wt: list[int], val: list[int], W: int) -> int:
             return 0
 
         if dp[n][w] == -1:
-            if wt[n - 1] > w:
+            if wt[n - 1] > w:  # can't take current item
                 dp[n][w] = knapsack(n - 1, w)
             else:
                 dp[n][w] = max(
@@ -86,7 +86,7 @@ def knapsack_tab_2d(wt: list[int], val: list[int], W: int) -> int:
 
     for n in range(1, N + 1):
         for w in range(1, W + 1):
-            if wt[n - 1] > w:
+            if wt[n - 1] > w:  # can't take current item
                 dp[n][w] = dp[n - 1][w]
             else:
                 dp[n][w] = max(
