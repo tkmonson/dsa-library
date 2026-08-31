@@ -7,12 +7,14 @@ take course `b_i` first if you want to take course `a_i`, return any valid
 ordering of courses if such an ordering exists or an empty array otherwise.
 '''
 
+from collections import deque
+
 def find_order_dfs(
         num_courses: int,
         prerequisites: list[list[int]]) -> list[int]:
     adj_list = [[] for _ in range(num_courses)]
     visited = set()
-    dfs_tree = set()
+    dfs_path = set()
     topo_order = []
     for p in prerequisites:
         adj_list[p[1]].append(p[0])
@@ -20,15 +22,15 @@ def find_order_dfs(
     def has_cycle(v):
         if v in visited:  # path already explored
             return False
-        if v in dfs_tree:  # cycle detected
+        if v in dfs_path:  # cycle detected
             return True
 
-        dfs_tree.add(v)
+        dfs_path.add(v)
         for n in adj_list[v]:
             if has_cycle(n):
                 return True
 
-        dfs_tree.remove(v)
+        dfs_path.remove(v)
         visited.add(v)
         topo_order.append(v)
         return False
@@ -69,5 +71,5 @@ def find_order_bfs(
 if __name__ == '__main__':
     num_courses = 4
     prerequisites = [[1, 0], [2, 0], [3, 1], [3, 2]]
-    print(find_order(num_courses, prerequisites))
+    print(find_order_dfs(num_courses, prerequisites))
 

@@ -22,22 +22,22 @@ topological ordering exists only if the graph is acyclic.
 def can_finish_dfs(num_courses: int, prerequisites: list[list[int]]) -> bool:
     adj_list = [[] for _ in range(num_courses)]
     visited = set()
-    dfs_tree = set()
+    dfs_path = set()
     for p in prerequisites:
         adj_list[p[1]].append(p[0])
 
     def has_cycle(v):
         if v in visited:  # path already explored
             return False
-        if v in dfs_tree:  # cycle detected
+        if v in dfs_path:  # cycle detected
             return True
 
-        dfs_tree.add(v)
+        dfs_path.add(v)
         for n in adj_list[v]:
             if has_cycle(n):
                 return True
 
-        dfs_tree.remove(v)
+        dfs_path.remove(v)
         visited.add(v)
         return False
 
@@ -55,14 +55,14 @@ may not be able to reach all vertices in the graph from that vertex. In that
 case, for a DAG, there will be multiple "start vertices."
 
 Each vertex in the graph is in one of three states:
-    1. Being visited. The vertex is contained in the current DFS tree, which
+    1. Being visited. The vertex is contained in the current DFS path, which
        means that the DFS has wrapped back on itself and there is a cycle.
     2. Previously visited. No need to move the search to this vertex because it
        has already been explored.
     3. Unvisited.
 
 This implies that two collections need to be maintained, one for visited
-vertices and one for the DFS tree, which adds elements as the search goes
+vertices and one for the DFS path, which adds elements as the search goes
 deeper and removes elements as it backs out.
 '''
 
@@ -105,5 +105,5 @@ neighboring tasks. Repeat until the queue is empty.
 if __name__ == '__main__':
     num_courses = 5
     prerequisites = [[1, 0], [1, 2], [3, 1], [3, 2], [4, 2], [2, 4]]
-    print(can_finish2(num_courses, prerequisites))
+    print(can_finish_bfs(num_courses, prerequisites))
 
