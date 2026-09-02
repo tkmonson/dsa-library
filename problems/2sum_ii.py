@@ -8,6 +8,8 @@ len(numbers)`. Assume there is exactly one solution. The algorithm must use
 only constant space.
 '''
 
+# Time: O(n)
+# Auxiliary space: O(1)
 def two_sum(numbers: list[int], target: int) -> list[int]:
     left, right = 0, len(numbers) - 1
     while True:

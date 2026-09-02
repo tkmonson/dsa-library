@@ -8,6 +8,8 @@ nums[k] == 0`. The triplets in the solution set must be distinct sets.
 
 from itertools import combinations
 
+# Time: O(n^3)
+# Auxiliary space: O(n)
 def three_sum_naive(nums: list[int]) -> list[list[int]]:
     triplets = set()
     nums.sort()
@@ -18,21 +20,37 @@ def three_sum_naive(nums: list[int]) -> list[list[int]]:
                     triplets.add((nums[i], nums[j], nums[k]))
     return triplets
 
-
+# Time: O(n^2)
+# Auxiliary space: O(n)
 def three_sum(nums: list[int]) -> list[list[int]]:
-    triplets = set()
-    nums.sort()
-    for i in range(len(nums) - 2):
-        hash_map = {}
-        target = -nums[i]
-        for j in range(i + 1, len(nums)):
-            if nums[j] in hash_map:
-                triplets.add((nums[i], hash_map[nums[j]], nums[j]))
+    triplets = []
+    nums.sort()  # allows easy skipping of duplicate values
+    for i, a in enumerate(nums):
+        if i > 0 and a == nums[i - 1]:  # no duplicates for 1st element
+            continue
+
+        L, R = i + 1, len(nums) - 1
+        while L < R:
+            three_sum = a + nums[L] + nums[R]
+            if three_sum > 0:
+                R -= 1
+            elif three_sum < 0:
+                L += 1
             else:
-                hash_map[target - nums[j]] = nums[j]
-    return [list(triplet) for triplet in triplets]
+                triplets.append([a, nums[L], nums[R]])
+                L += 1
+                while nums[L] == nums[L - 1] and L < R:  # no duplicates for
+                    L += 1                               # 2nd element
 
+    return triplets
 
+'''
+It is faster and more space efficient to use the method from Two Sum II with
+the L and R pointers rather than the method from Two Sum I with the hash map.
+'''
+
+# Time: O(n^2)
+# Auxiliary space: O(n)
 def three_sum2(nums: list[int]) -> list[list[int]]:
     triplets = set()
 
@@ -74,6 +92,8 @@ def three_sum2(nums: list[int]) -> list[list[int]]:
     return [list(triplet) for triplet in triplets]
 
 
+# Time: O(n^2)
+# Auxiliary space: O(n)
 def three_sum3(nums: list[int]) -> list[list[int]]:
     triplets = set()
 

@@ -7,6 +7,8 @@ pair of numbers that add up to `target`. You may not use the same element
 twice. You can return the answer in any order.
 '''
 
+# Time: O(n^2)
+# Auxiliary space: O(1)
 def two_sum_naive(nums: list[int], target: int) -> list[int]:
     for i in range(len(nums)):
         for j in range(i + 1, len(nums)):
@@ -14,6 +16,8 @@ def two_sum_naive(nums: list[int], target: int) -> list[int]:
                 return [i, j]
 
 
+# Time: O(n)
+# Auxiliary space: O(1)
 def two_sum(nums: list[int], target: int) -> list[int]:
     hash_map = {}
     for i in range(len(nums)):
