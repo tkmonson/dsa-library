@@ -8,20 +8,94 @@ any order.
 from math import factorial
 from itertools import permutations
 
+# Time: O(n! * n) = O(n!) (n! perms; for each, there is a copy operation)
+# Auxiliary space: O(n) (O(n!) including output)
 def permute(nums: list[int]) -> list[list[int]]:
+    result = []
+    candidate = []
+    
+    def dfs():
+        if len(candidate) == len(nums):
+            result.append(candidate.copy())
+            return
+
+        for num in nums:
+            if num in candidate:
+                continue
+
+            candidate.append(num)
+            dfs()
+            candidate.pop()
+
+    dfs()
+    return result
+
+# Time: O(n! * n^2) = O(n!) (n! perms; for each, there are n insert operations)
+# Auxiliary space: O(n! * n) = O(n!) (recursion depth of n; each recursive
+#                                     state holds O(n!) perms)
+def permute_topdown(nums: list[int]) -> list[list[int]]:
+    if len(nums) == 0:
+        return [[]]
+    
+    perms = permute(nums[1:])
+    res = []
+    for p in perms:
+        for i in range(len(p) + 1):
+            p_copy = p.copy()
+            p_copy.insert(i, nums[0])
+            res.append(p_copy)
+
+    return res
+
+'''
+Finding all the permutations of [1, 2, 3] can be solved in terms of the
+subproblem of finding all the permutations of [2, 3] (i.e. [2, 3], [3, 2]). By
+inserting 1 in every possible location for all permutations of [2, 3], you get
+all the permutations of [1, 2, 3]:
+    * [1, 2, 3], [2, 1, 3], [2, 3, 1], [1, 3, 2], [3, 1, 2], [3, 2, 1]
+'''
+
+# Time: O(n!)
+# Auxiliary space: O(n!)
+def permute2_bottomup(nums: list[int]) -> list[list[int]]:
+    perms = [[]]
+    for n in nums:
+        new_perms = []
+        for p in perms:
+            for i in range(len(p) + 1):
+                p_copy = p.copy()
+                p_copy.insert(i, n)
+                new_perms.append(p_copy)
+        perms = new_perms
+
+    return perms
+
+'''
+Inserting nums[i] in all locations of all permutations of nums[:i] gets you all
+the permutations of nums[:i + 1].
+
+    * [[]], i = 0: [[1]]
+    * [[1]], i = 1: [[2, 1], [1, 2]]
+    * [[2, 1], [1, 2]], i = 2:
+          [[3, 2, 1], [2, 3, 1], [2, 1, 3], [3, 1, 2], [1, 3, 2], [1, 2, 3]]
+'''
+
+# Time: O(n!)
+# Auxiliary space: O(n^2) (recursion depth of n; each holds a copy)
+def permute_slow(nums: list[int]) -> list[list[int]]:
     result = []
     visited = set()
 
-    def backtrack(candidate):
+    def dfs(candidate):
         if len(candidate) == len(nums):
             result.append(candidate)
         for i in range(len(nums)):
             if i not in visited:
                 visited.add(i)
-                backtrack(candidate + [nums[i]])
+                dfs(candidate + [nums[i]])
                 visited.remove(i)
 
-    backtrack([])
+    dfs([])
     return result
 
 '''
@@ -56,13 +130,12 @@ the resulting candidate ([1, 3]).
 '''
 
 # Cheating solution
-def permute2(nums: list[int]) -> list[list[int]]:
+def permute_cheat(nums: list[int]) -> list[list[int]]:
     return permutations(nums)
 
 
 if __name__ == '__main__':
-    nums = [6, 3, 2, 7, 4, -1]
-    nums = [1, 2, 3, 4]
+    nums = [1, 2, 3]
     print(permute(nums))
 
 
