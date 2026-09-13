@@ -11,7 +11,7 @@ from collections import Counter
 import heapq
 
 # Time: O(nlogn)
-# Auxiliary space: O(n)
+# Auxiliary space: O(1) (fixed char set)
 def reorganize_string(s: str) -> str:
     count = Counter(s)
     heap = []
@@ -46,7 +46,7 @@ A character is pushed back onto the heap every turn.
 '''
 
 # Time: O(nlogn)
-# Auxiliary space: O(n)
+# Auxiliary space: O(1)
 def reorganize_string2(s: str) -> str:
     count = Counter(s)
     heap = []

@@ -11,7 +11,7 @@ E.g. [[1, 2, 3],
 from collections import defaultdict
 
 # Time: O(mn)
-# Auxiliary space: O(n)
+# Auxiliary space: O(mn)
 def find_diagonal_order(mat: list[list[int]]) -> list[int]:
     diagonal_dict = defaultdict(list)
 
@@ -40,6 +40,8 @@ top-to-bottom. Flip the order of every other diagonal.
 # Auxiliary space: O(n)
 def find_diagonal_order2(mat: list[list[int]]) -> list[int]:
     result = []
+
+    # Diagonals starting in first row
     for i in range(len(mat[0]) - 1):
         diag = []
         r, c = 0, i
@@ -49,6 +51,7 @@ def find_diagonal_order2(mat: list[list[int]]) -> list[int]:
             c -= 1
         result += diag if i % 2 else diag[::-1]
 
+    # Diagonals starting in last column
     down = len(mat[0]) % 2 == 0
     for i in range(len(mat)):
         diag = []

@@ -6,13 +6,14 @@ remove to make the rest of the intervals non-overlapping.
 '''
 
 # Time: O(nlogn)
-# Auxiliary space: O(1)
+# Auxiliary space: O(n) (Timsort uses space)
 def erase_overlap_intervals(intervals: list[list[int]]) -> int:
     intervals.sort()
 
     result = 0
     prev_end = intervals[0][1]
-    for start, end in intervals[1:]:
+    for i in range(1, len(intervals)):
+        start, end = intervals[i]
         if start >= prev_end:
             prev_end = end
         else:
@@ -42,3 +43,6 @@ if __name__ == '__main__':
     intervals = [[1, 2], [2, 3], [3, 4], [1, 3]]
     print(erase_overlap_intervals(intervals))
 
+'''
+There is a faster solution that is worth looking into sometime.
+'''

@@ -12,7 +12,7 @@ Recurrance relation: K(n, w) = max(val[n - 1] + K(n - 1, w - wt[n - 1]),
 '''
 
 # Time: O(2^N)
-# Auxiliary Space: O(N) (call stack)
+# Auxiliary space: O(N) (call stack)
 def knapsack_naive(wt: list[int], val: list[int], W: int) -> int:
     N = len(wt)
     def knapsack(n, w):
@@ -44,7 +44,7 @@ This solution recomputes subproblems, which adds unnecessary complexity.
 '''
 
 # Time: O(N * W)
-# Auxiliary Space: O(N * W) + O(N) (2D array + call stack)
+# Auxiliary space: O(N * W) + O(N) (2D array + call stack)
 def knapsack_memo(wt: list[int], val: list[int], W: int) -> int:
     N = len(wt)
     dp = [[-1 for _ in range(W + 1)] for _ in range(N + 1)]
@@ -79,7 +79,7 @@ across the same subproblem.
 '''
 
 # Time: O(N * W)
-# Auxiliary Space: O(N * W) (2D array)
+# Auxiliary space: O(N * W) (2D array)
 def knapsack_tab_2d(wt: list[int], val: list[int], W: int) -> int:
     N = len(wt)
     dp = [[0 for _ in range(W + 1)] for _ in range(N + 1)]
@@ -117,7 +117,7 @@ knapsack with capacity w, given an item set of (A).
 '''
 
 # Time: O(N * W)
-# Auxiliary Space: O(W) (1D array)
+# Auxiliary space: O(W) (1D array)
 def knapsack_tab_1d(wt: list[int], val: list[int], W: int) -> int:
     N = len(wt)
     dp = [0] * (W + 1)

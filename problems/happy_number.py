@@ -37,7 +37,7 @@ they will eventually intersect. If not, the fast pointer will hit 1 first.
 '''
 
 # Time: O(n)
-# Auxiliary space: O(n)
+# Auxiliary space: O(logn) (str allocates log10(n) chars)
 def is_happy2(n: int) -> bool:
     seen = set()
     while n not in seen and n != 1:

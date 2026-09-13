@@ -24,7 +24,7 @@ THIS SOLUTION IS UNTESTED, MAY NOT BE PERFECTLY CORRECT.
 from collections import deque
 
 # Time: O(m * n), where m = max(t), n = len(t)
-# Auxiliary space: O(k)
+# Auxiliary space: O(n + k)
 def max_points_in_k_days(t: list[int], k: int) -> int:
     # Copy first sprints that sum to k, append to t for cyclic requirement
     b = k

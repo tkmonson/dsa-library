@@ -13,7 +13,7 @@ from collections import defaultdict, deque
 import heapq
 
 # Time: O(n)
-# Auxiliary space: O(n)
+# Auxiliary space: O(k)
 def max_sliding_window(nums: list[int], k: int) -> list[int]:
     result = []
     queue = deque()
@@ -43,7 +43,7 @@ element.
 '''
 
 # Time: O(n)
-# Auxiliary space: O(n)
+# Auxiliary space: O(k)
 def max_sliding_window2(nums: list[int], k: int) -> list[int]:
     result = []
     queue = deque()

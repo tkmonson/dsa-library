@@ -24,7 +24,8 @@ exec(open(os.path.join(script_dir, '_parent_import.py')).read())
 from structures.disjoint_set import DisjointSet
 
 # Time: O(|E|log|V|) = O((r * c)log(r * c))
-# Auxiliary space: O(|V|^2) = (r * c)^2
+# Auxiliary space: O(|V|) = O(r * c) (heap may hold duplicates, but only 4
+#                                     entries per cell, 1 per neighbor)
 def minimum_effort_path(heights: list[list[int]]) -> int:
     R, C = len(heights), len(heights[0])
     min_heap = [[0, 0, 0]]

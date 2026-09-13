@@ -17,7 +17,7 @@ def two_sum_naive(nums: list[int], target: int) -> list[int]:
 
 
 # Time: O(n)
-# Auxiliary space: O(1)
+# Auxiliary space: O(n)
 def two_sum(nums: list[int], target: int) -> list[int]:
     hash_map = {}
     for i in range(len(nums)):

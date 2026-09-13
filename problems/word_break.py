@@ -6,6 +6,7 @@ segmented into a space-separated sequence of one or more words in `word_dict`.
 The same word may be reused multiple times in the segmentation.
 '''
 
+from collections import defaultdict
 from functools import lru_cache
 
 # Top-down
@@ -84,8 +85,8 @@ class TrieNode:
         curr.is_word = True
 
 
-# Time: O(n^2 + t) where n = len(s), t = sum([len(w) for w in word_dict])
-# Auxiliary space: O(n + m)
+# Time: O(n^2 + t) where n = len(s), t = total chars in word_dict
+# Auxiliary space: O(n + p) where p = total distinct prefixes in word_dict
 def word_break_trie(s: str, word_dict: list[str]) -> bool:
     root = TrieNode()
     for word in word_dict:

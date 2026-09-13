@@ -22,7 +22,7 @@ so the answer cannot be determined for them.
 from collections import defaultdict, deque
 
 # Time: O(q * e)
-# Auxiliary space: O(q + e)
+# Auxiliary space: O(e) (no isolated vertices)
 def calc_equation_dfs(
         equations: list[list[str]],
         values: list[float],
@@ -72,7 +72,7 @@ the target was not found. This is why I use a nonlocal found variable.
 '''
 
 # Time: O(q * e)
-# Auxiliary space: O(q + e)
+# Auxiliary space: O(e) (no isolated vertices)
 def calc_equation_bfs(
         equations: list[list[str]],
         values: list[float],

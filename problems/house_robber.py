@@ -18,7 +18,7 @@ def rob(nums: list[int]):
 
 
 # Time: O(n)
-# Auxiliary space: O(1)
+# Auxiliary space: O(n)
 def rob_tabu(nums: list[int]):
     dp = [-1] * (len(nums) + 1)
     dp[0] = 0

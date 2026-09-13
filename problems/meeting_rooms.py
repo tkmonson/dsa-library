@@ -13,7 +13,7 @@ class Interval(object):
 
 
 # Time: O(nlogn)
-# Auxiliary space: O(1)
+# Auxiliary space: O(n) (Timsort uses space)
 def can_attend_meetings(intervals: list[Interval]) -> bool:
     intervals.sort(key=lambda i: i.start)
     for i in range(1, len(intervals)):

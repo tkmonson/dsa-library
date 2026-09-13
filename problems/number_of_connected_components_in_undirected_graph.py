@@ -7,7 +7,7 @@ connected components in an undirected graph.
 '''
 
 # Time: O(V + E)
-# Auxiliary space: O(V)
+# Auxiliary space: O(V + E) (visited + adj)
 def num_components(n: int, edges: list[list[int]]) -> int:
     count = 0
     visited = set()

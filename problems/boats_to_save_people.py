@@ -12,7 +12,7 @@ Return the minimum number of boats to carry every given person.
 '''
 
 # Time: O(nlogn)
-# Auxiliary space: O(1)
+# Auxiliary space: O(n) (Timsort uses space)
 def num_rescue_boats(people: list[int], limit: int) -> int:
     n = len(people)
     people.sort()
@@ -46,7 +46,7 @@ order to stay under the limit and minimize the number of boats.
 '''
 
 # Time: O(nlogn)
-# Auxiliary space: O(1)
+# Auxiliary space: O(n) (Timsort uses space)
 def num_rescue_boats2(people: list[int], limit: int) -> int:
     n = len(people)
     people.sort()

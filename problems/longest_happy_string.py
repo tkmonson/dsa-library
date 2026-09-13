@@ -16,28 +16,28 @@ there is no such string, return the empty string "".
 A substring is a contiguous sequence of characters within a string.
 '''
 
-from contextlib import suppress
-
 # Time: O(a + b + c)
-# Auxiliary space: O(a + b + c)
+# Auxiliary space: O(1)
 def longest_happy_string(a: int, b: int, c: int) -> str:
     ans = []
+    prev2, prev1 = None, None
     while True:
         char_set = set([(a, 'a'), (b, 'b'), (c, 'c')])
         limit, char = max(char_set)
 
-        with suppress(IndexError):
-            if char == ans[-1] == ans[-2]:
-                limit, char = max(char_set - set([(limit, char)]))
+        if char == prev2 == prev1:
+            limit, char = max(char_set - set([(limit, char)]))
 
         if limit == 0:
             break
 
         ans.append(char)
+        prev2 = prev1
+        prev1 = char
 
-        if ans[-1] == 'a':
+        if char == 'a':
             a -= 1
-        elif ans[-1] == 'b':
+        elif char == 'b':
             b -= 1
         else:
             c -= 1

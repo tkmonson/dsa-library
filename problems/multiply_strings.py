@@ -7,7 +7,8 @@ directly.
 '''
 
 # Time: O(n + m)
-# Auxiliary space: O(1)
+# Auxiliary space: O(n + m) (Python ints are arbitrary-precision; space to
+# store int scales linearly with length of string)
 def multiply(num1: str, num2: str) -> str:
     d = {'0': 0, '1': 1, '2': 2, '3': 3, '4': 4,
          '5': 5, '6': 6, '7': 7, '8': 8, '9': 9}
@@ -23,7 +24,7 @@ def multiply(num1: str, num2: str) -> str:
 
 
 # Time: O(n * m)
-# Auxiliary space: O(1)
+# Auxiliary space: O(n + m)
 def multiply2(num1: str, num2: str) -> str:
     d = {'0': 0, '1': 1, '2': 2, '3': 3, '4': 4,
          '5': 5, '6': 6, '7': 7, '8': 8, '9': 9}

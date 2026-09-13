@@ -19,9 +19,8 @@ All given words have the same length and consist of lowercase letters.
 
 from collections import deque
 
-# Time: O(m*n^2) where m = word length, n = number of words (worst-case: one
-#       pattern maps to all words except end_word, no sequence exists)
-# Auxiliary space: O(m*n)
+# Time: O(n*m^2) where n = number of words, m = word length
+# Auxiliary space: O(n*m^2)
 def ladder_length(begin_word: str, end_word: str, word_list: list[str]) -> int:
     change_map = {}
     word_list.append(begin_word)

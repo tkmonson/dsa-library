@@ -6,7 +6,7 @@ indicies of `p`'s anagrams in `s`.
 '''
 
 # Time: O(n)
-# Auxiliary space: O(n)
+# Auxiliary space: O(1)
 def find_anagrams(s: str, p: str) -> list[int]:
     result = []
     if len(s) < len(p):

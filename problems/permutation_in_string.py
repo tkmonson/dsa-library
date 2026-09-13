@@ -6,7 +6,8 @@ Given two strings `s1` and `s2`, return True if `s2` contains a permutation of
 '''
 
 # Time: O(n)
-# Auxiliary space: O(1)
+# Auxiliary space: O(n) (Python ints are arbitrary-precision; target_code and
+# window_code are products of up to n primes => O(n) bits of storage)
 def check_inclusion(s1: str, s2: str) -> bool:
     if len(s1) > len(s2):
         return False

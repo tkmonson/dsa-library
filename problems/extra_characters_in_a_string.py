@@ -11,7 +11,7 @@ any of the substrings.
 '''
 
 # Time: O(n^3)
-# Auxiliary space: O(n)
+# Auxiliary space: O(n + m), where m is number of words in dictionary
 def min_extra_char(s: str, dictionary: list[str]) -> int:
     words = set(dictionary)
     dp = { len(s): 0 }
@@ -62,8 +62,8 @@ class Trie:
                 curr = curr.children[c]
             curr.word = True
 
-# Time: O(n^2)
-# Auxiliary space: O(n)
+# Time: O(n^2 + t), where t = total chars in dict
+# Auxiliary space: O(n + p), where p = number of distinct prefixes in dict
 def min_extra_char_trie(s: str, dictionary: list[str]) -> int:
     dp = { len(s): 0 }
     trie = Trie(dictionary).root

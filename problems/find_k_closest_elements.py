@@ -13,7 +13,7 @@ from bisect import bisect_left
 from random import randint
 
 # Time: O(log(n) + k)
-# Auxiliary space: O(k)
+# Auxiliary space: O(1)
 def find_k_closest_integers(arr: list[int], k: int, x: int) -> list[int]:
     right = bisect_left(arr, x)
     left = right - 1
@@ -35,7 +35,7 @@ of increasing distance from x, return the subarray once it contains k elements.
 '''
 
 # Time: O(log(n - k))
-# Auxiliary space: O(k)
+# Auxiliary space: O(1)
 def find_k_closest_integers2(arr: list[int], k: int, x: int) -> list[int]:
     left, right = 0, len(arr) - k
 

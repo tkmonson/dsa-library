@@ -8,7 +8,7 @@ the largest number and return it as a string.
 import functools
 
 # Time: O(n*log(n))
-# Auxiliary Space: O(n)
+# Auxiliary space: O(n)
 def largest_number(nums: list[int]) -> str:
     def comparator(s1, s2):
         if (s1 + s2) < (s2 + s1):

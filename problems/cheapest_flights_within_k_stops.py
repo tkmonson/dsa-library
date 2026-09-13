@@ -52,7 +52,7 @@ destination.
 '''
 
 # Time: O(|E| + |V|^k) ?
-# Auxiliary space: O(n)
+# Auxiliary space: O(n + |E|) (dist and adj; |E| is n^2 for dense graphs)
 def find_cheapest_price_dijkstra(n: int, flights: list[list[int]],
                                  src: int, dst: int, k: int) -> int:
     adj = [[] for _ in range(n)]

@@ -61,8 +61,8 @@ target as possible.
 '''
 
 # Time: O(n * t)
-# Auxiliary space: O(n * t)
-def last_stone_weight_ii_tab(stones: list[int]) -> int:
+# Auxiliary space: O(t)
+def last_stone_weight_ii_tab_1d(stones: list[int]) -> int:
     total = sum(stones)
     target = total // 2
     dp = [0] * (target + 1)
@@ -75,8 +75,8 @@ def last_stone_weight_ii_tab(stones: list[int]) -> int:
 
 
 # Time: O(n * t)
-# Auxiliary space: O(n * t)
-def last_stone_weight_ii_tab2(stones: list[int]) -> int:
+# Auxiliary space: O(t)
+def last_stone_weight_ii_tab_1d2(stones: list[int]) -> int:
     total = sum(stones)
     target = total // 2
 
@@ -101,7 +101,7 @@ that can be formed. That is the sum of your smaller subset.
 '''
 
 # Time: O(n * t) (beats 99%)
-# Auxiliary space: O(n * t)
+# Auxiliary space: O(t)
 def last_stone_weight_ii_sign(stones: list[int]) -> int:
     dp = {0}
     for weight in stones:

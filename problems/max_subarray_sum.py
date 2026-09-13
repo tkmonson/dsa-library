@@ -6,7 +6,7 @@ with the largest sum and return its sum.
 '''
 
 # Time: O(n)
-# Auxiliary Space: O(1)
+# Auxiliary space: O(1)
 def max_subarray_sum(nums: list[int]) -> int:
     max_sum = float('-inf')
     current_sum = 0
@@ -18,7 +18,7 @@ def max_subarray_sum(nums: list[int]) -> int:
 
 
 # Time: O(n*log(n))
-# Auxiliary Space: O(log(n)) (call stack)
+# Auxiliary space: O(log(n)) (call stack)
 def max_subarray_sum_daq(nums: list[int]) -> int:
     def daq(left, right):
         if left == right:

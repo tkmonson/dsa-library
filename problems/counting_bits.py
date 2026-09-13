@@ -7,7 +7,7 @@ representation of `i`.
 '''
 
 # Time: O(n)
-# Auxiliary space: O(1)
+# Auxiliary space: O(n) (a is used as working memory)
 def count_bits(n: int) -> list[int]:
     a = [0]
     i = 0
@@ -28,7 +28,7 @@ appending increases, set i to 0. Append a[i] + 1, increment i, and repeat.
 '''
 
 # Time: O(n)
-# Auxiliary space: O(1)
+# Auxiliary space: O(n) (a is used as working memory)
 def count_bits2(n: int) -> list[int]:
     a = [0] * (n + 1)
     for i in range(1, n + 1):

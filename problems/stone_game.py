@@ -29,7 +29,7 @@ optimally).
 '''
 
 # Time: O(n^2)
-# Auxiliary space: O(n^2) (call stack)
+# Auxiliary space: O(n^2)
 def stone_game2(piles: list[int]) -> bool:
     dp = {}
     def max_alice_score(i, j):

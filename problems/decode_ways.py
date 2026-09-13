@@ -56,8 +56,8 @@ def num_decodings_memo(s: str) -> int:
     return f(0)
 
 
-# Time: O(n)
-# Auxiliary space: O(n)
+# Time: O(n^2)
+# Auxiliary space: O(n^2)
 @cache
 def num_decodings_memo2(s: str) -> int:
     with suppress(IndexError):
@@ -66,9 +66,9 @@ def num_decodings_memo2(s: str) -> int:
     if len(s) <= 1:
         return 1
 
-    ways = num_decodings_memo(s[1:])
+    ways = num_decodings_memo2(s[1:])
     if int(s[:2]) < 27:
-        ways += num_decodings_memo(s[2:])
+        ways += num_decodings_memo2(s[2:])
 
     return ways
 

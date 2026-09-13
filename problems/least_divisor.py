@@ -10,7 +10,7 @@
     # res = 3
 
 # Time: O(NlogM) where m is the max number of nums and n is the length of nums
-# Space: O(1)
+# Auxiliary space: O(1)
 
 # Assume a maximum divisor of 10^6.
 

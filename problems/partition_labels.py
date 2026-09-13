@@ -9,7 +9,7 @@ parts.
 from collections import defaultdict
 
 # Time: O(n) (fastest)
-# Auxiliary space: O(n)
+# Auxiliary space: O(1) (fixed char set)
 def partition_labels(s: str) -> list[int]:
     last_index = {c: i for i, c in enumerate(s)}
     start, end = 0, 0
@@ -33,7 +33,7 @@ the right boundary.
 '''
 
 # Time: O(n)
-# Auxiliary space: O(n)
+# Auxiliary space: O(1) (fixed char set)
 def partition_labels2(s: str) -> list[int]:
     p = []  # left index of partition
     z = []  # size of partition
@@ -60,7 +60,7 @@ partition P, remove the partitions that came after P and expand P up to c.
 '''
 
 # Time: O(n)
-# Auxiliary space: O(n)
+# Auxiliary space: O(1) (fixed char set)
 def partition_labels3(s: str) -> list[int]:
     intervals = []
     d = {}

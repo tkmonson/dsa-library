@@ -19,7 +19,7 @@ def get_successor(root: TreeNode) -> TreeNode:
     return root
 
 # Time: O(h) where h is the height of the tree (O(logn) if tree is balanced)
-# Auxiliary space: O(1)
+# Auxiliary space: O(h) (stack space)
 def delete_node(root: TreeNode, key: int) -> TreeNode:
     if not root:
         return root

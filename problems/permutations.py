@@ -37,7 +37,7 @@ def permute_topdown(nums: list[int]) -> list[list[int]]:
     if len(nums) == 0:
         return [[]]
     
-    perms = permute(nums[1:])
+    perms = permute_topdown(nums[1:])
     res = []
     for p in perms:
         for i in range(len(p) + 1):

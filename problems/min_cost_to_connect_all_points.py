@@ -20,7 +20,7 @@ exec(open(os.path.join(script_dir, '_parent_import.py')).read())
 from structures.disjoint_set import DisjointSet
 
 # Time: O(|E|log|V|)
-# Auxiliary space: O(|V|)
+# Auxiliary space: O(|E|) = O(|V|^2)
 def min_cost_connect_points_kruskal(p: list[list[int]]) -> int:
     manhattan = lambda u, v: abs(u[0] - v[0]) + abs(u[1] - v[1])
     n = len(p)
@@ -41,8 +41,8 @@ def min_cost_connect_points_kruskal(p: list[list[int]]) -> int:
 
 
 # Time: O(|E|log|V|)
-# Auxiliary space: O(|E|^2) (max amount of stale duplicates would be
-#                            (E - 1) + (E - 2) + ... + 1)
+# Auxiliary space: O(|E|) = O(|V|^2) (max amount of stale duplicates would be
+#                                     (n - 1) + (n - 2) + ... + 1)
 def min_cost_connect_points_prim(p: list[list[int]]) -> int:
     manhattan = lambda u, v: abs(u[0] - v[0]) + abs(u[1] - v[1])
     n = len(p)

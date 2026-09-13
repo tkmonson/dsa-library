@@ -8,15 +8,15 @@ there is no common subsequence, return 0.
 from functools import cache
 
 # Time: O(2^(m + n))?
-# Auxiliary space: O(m + n)
+# Auxiliary space: O(m*n) (@cache; stack depth is O(m + n))
 def longest_common_subsequence_memo(s1: str, s2: str) -> int:
     @cache
     def lcs(i, j):
         if i < 0 or j < 0:
             return 0
         if s1[i] == s2[j]:
-            return dfs(i - 1, j - 1) + 1
-        return max(dfs(i, j - 1), dfs(i - 1, j))
+            return lcs(i - 1, j - 1) + 1
+        return max(lcs(i, j - 1), lcs(i - 1, j))
 
     return lcs(len(s1) - 1, len(s2) - 1)
 

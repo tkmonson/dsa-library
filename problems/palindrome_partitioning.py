@@ -7,21 +7,23 @@ a palindrome. Return all possible palindrome partitions of `s`.
 E.g. s = 'aab'  =>  [['a', 'a', 'b'], ['aa', 'b']]
 '''
 
-# Time: O(n2^n)
-# Auxiliary space: O(n)
+# Time: O(n*2^n)
+# Auxiliary space: O(n) (max of n frames, one partition in each)
 def partition(s: str) -> list[list[str]]:
     result = []
     n = len(s)
 
     def backtrack(i, curr):
         if i == n:
-            result.append(curr)
+            result.append(curr.copy())
             return
 
         for j in range(i + 1, n + 1):
             a = s[i:j]
             if a == a[::-1]:
-                backtrack(j, curr + [a])
+                curr.append(a)
+                backtrack(j, curr)
+                curr.pop()
 
     backtrack(0, [])
     return result

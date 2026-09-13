@@ -110,7 +110,7 @@ Merge:
 '''
 
 # Time: O(n^2) (O(nlogn) average)
-# Auxiliary space: O(logn) (stack space)
+# Auxiliary space: O(n) (stack space for sorted input; can be O(logn) with TCO)
 def quicksort(nums: list[int]) -> list[int]:
     def partition(lo, hi):
         pivot = nums[hi]

@@ -6,7 +6,7 @@ Given an integer array `nums`, return an array that is the concatenation of two
 '''
 
 # Time: O(n)
-# Auxiliary space: O(n)
+# Auxiliary space: O(1)
 def get_concatenation(nums: list[int]) -> list[int]:
     for i in range(len(nums)):
         nums.append(nums[i])

@@ -12,7 +12,7 @@ You may return the answer in any order.
 '''
 
 # Time: O(n^3)
-# Auxiliary space: O(n)
+# Auxiliary space: O(n) (Timsort uses space)
 def four_sum(nums: list[int], target: int) -> list[list[int]]:
     res = []
     nums.sort()
@@ -44,7 +44,7 @@ This is just 3Sum with an additional for-loop.
 '''
 
 # Time: O(n^3)
-# Auxiliary space: O(n)
+# Auxiliary space: O(n) (Timsort uses space)
 def four_sum_recur(nums: list[int], target: int) -> list[list[int]]:
     res, quad = [], []
     nums.sort()
@@ -80,7 +80,7 @@ A general kSum implementation, written recursively.
 '''
 
 # Time: O(n^3) (15x faster)
-# Auxiliary space: O(n)
+# Auxiliary space: O(n) (Timsort uses space)
 def four_sum_fast(nums: list[int], target: int) -> list[list[int]]:
     n = len(nums)
     if n < 4:

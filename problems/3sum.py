@@ -9,7 +9,7 @@ nums[k] == 0`. The triplets in the solution set must be distinct sets.
 from itertools import combinations
 
 # Time: O(n^3)
-# Auxiliary space: O(n)
+# Auxiliary space: O(n) (Timsort uses space)
 def three_sum_naive(nums: list[int]) -> list[list[int]]:
     triplets = set()
     nums.sort()
@@ -21,7 +21,7 @@ def three_sum_naive(nums: list[int]) -> list[list[int]]:
     return triplets
 
 # Time: O(n^2)
-# Auxiliary space: O(n)
+# Auxiliary space: O(n) (Timsort uses space)
 def three_sum(nums: list[int]) -> list[list[int]]:
     triplets = []
     nums.sort()  # allows easy skipping of duplicate values
@@ -50,7 +50,7 @@ the L and R pointers rather than the method from Two Sum I with the hash map.
 '''
 
 # Time: O(n^2)
-# Auxiliary space: O(n)
+# Auxiliary space: O(n^2) (because technically triplets is read at the end)
 def three_sum2(nums: list[int]) -> list[list[int]]:
     triplets = set()
 
@@ -93,7 +93,7 @@ def three_sum2(nums: list[int]) -> list[list[int]]:
 
 
 # Time: O(n^2)
-# Auxiliary space: O(n)
+# Auxiliary space: O(n^2) (because technically triplets is read at the end)
 def three_sum3(nums: list[int]) -> list[list[int]]:
     triplets = set()
 

@@ -10,7 +10,7 @@ same letter.
 from collections import defaultdict
 
 # Time: O(n)
-# Auxiliary space: O(n)
+# Auxiliary space: O(1) (count holds at most 26 keys)
 def longest_repeating_character_replacement(s: str, k: int) -> int:
     count = defaultdict(lambda: 0)
     left = 0

@@ -9,7 +9,9 @@ solution in any order.
 from itertools import combinations
 
 # Time: O(n*2^n)
-# Auxiliary space: O(n*2^n) (n items in set, each is in 1/2 of the 2^n subsets)
+# Auxiliary space: O(n*2^n) (n items in set, each in half of the 2^n subsets;
+#                            counts as auxiliary because each level is read to
+#                            build the next)
 def subsets(nums: list[int]) -> list[list[int]]:
     if len(nums) == 0:
         return [[]]

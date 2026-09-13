@@ -18,7 +18,7 @@ import heapq
 
 class KthLargest:
     # Time: O(nlogn)
-    # Auxiliary space: O(k)
+    # Auxiliary space: O(n) (Timsort uses space)
     def __init__(self, k: int, nums: list[int]):
         self.k = k
         nums.sort(reverse=True)

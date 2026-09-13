@@ -7,7 +7,7 @@ use the division operation.
 '''
 
 # Time: O(n)
-# Auxiliary space: O(n)
+# Auxiliary space: O(n) (answer is used as working space)
 def product_except_self(nums: list[int]) -> list[int]:
     answer = [1]
     for i in range(len(nums) - 1):

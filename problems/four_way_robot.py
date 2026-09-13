@@ -1,3 +1,5 @@
+# Time: O(4^(m*n))
+# Auxiliary space: O(m*n) (stack space; path can cover whole grid)
 def robotPaths(matrix):
     row_dim = len(matrix)
     col_dim = len(matrix[0])
@@ -24,8 +26,10 @@ def robotPaths(matrix):
     
     return helper(0, 0)
 
-print(robotPaths([[0 for c in range(4)] for r in range(3)]))
 
-# Dynamic programming will not work for this problem...
-# Time complexity: O(4^(MN)) where M is rows and N is cols
-# Space complexity: O(1)
+if __name__ == '__main__':
+    print(robotPaths([[0 for c in range(4)] for r in range(3)]))
+
+'''
+Dynamic programming will not work for this problem...
+'''
