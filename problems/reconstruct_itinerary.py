@@ -17,7 +17,7 @@ ticket exactly once.
 
 from collections import defaultdict, deque
 
-# Time: O(E)
+# Time: O(ElogE) (sorting; Hierholzer's algorithm itself is O(E))
 # Auxiliary space: O(E) (adjacency list and call stack)
 def find_itinerary(tickets: list[list[str]]) -> list[str]:
     tickets.sort(reverse=True)

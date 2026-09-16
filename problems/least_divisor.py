@@ -30,9 +30,10 @@ def minimum_divisor(nums, threshold):
 
     return lo
 
-nums = [1,3,5,7,9,41]
-threshold = 7
-print(minimum_divisor(nums, threshold))
+if __name__ == '__main__':
+    nums = [1,3,5,7,9,41]
+    threshold = 7
+    print(minimum_divisor(nums, threshold))
 
 # [1,3,5,7]
 

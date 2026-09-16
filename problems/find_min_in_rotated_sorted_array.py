@@ -6,7 +6,7 @@ has been rotated between 1 and `n` times, return the minimum element of this
 array in O(logn) time. The array contains unique elements.
 '''
 
-# Time: O(n)
+# Time: O(logn)
 # Auxiliary space: O(1)
 def find_min(nums: list[int]) -> int:
     left, right = 0, len(nums) - 1

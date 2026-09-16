@@ -35,33 +35,6 @@ the right boundary.
 # Time: O(n)
 # Auxiliary space: O(1) (fixed char set)
 def partition_labels2(s: str) -> list[int]:
-    p = []  # left index of partition
-    z = []  # size of partition
-    d = {}  # letter -> index of partition that letter belongs to
-    for i, c in enumerate(s):
-        if c in d:
-            for _ in range(len(p) - d[c] - 1):
-                p.pop()
-                z.pop()
-            for j in range(p[-1], i + 1):
-                d[s[j]] = len(p) - 1
-            z[-1] = i - p[-1] + 1
-        else:
-            d[c] = len(p)
-            p.append(i)
-            z.append(1)
-
-    return z
-
-'''
-Assume the partitions are as small as possible (size of 1) until proven
-otherwise. If you come across a character c that was included in a previous
-partition P, remove the partitions that came after P and expand P up to c.
-'''
-
-# Time: O(n)
-# Auxiliary space: O(1) (fixed char set)
-def partition_labels3(s: str) -> list[int]:
     intervals = []
     d = {}
     for i, c in enumerate(s):
@@ -87,6 +60,33 @@ def partition_labels3(s: str) -> list[int]:
 This solution uses the strategy from the "Merge Intervals" problem. Get a list
 of intervals from the first instance to the last instance of a character. Merge
 the intervals such that they do not overlap.
+'''
+
+# Time: O(n^2) (for "ababab...", for i > 1, d[s[0]] to d[s[i]] are written)
+# Auxiliary space: O(1) (fixed char set)
+def partition_labels3(s: str) -> list[int]:
+    p = []  # left index of partition
+    z = []  # size of partition
+    d = {}  # letter -> index of partition that letter belongs to
+    for i, c in enumerate(s):
+        if c in d:
+            for _ in range(len(p) - d[c] - 1):
+                p.pop()
+                z.pop()
+            for j in range(p[-1], i + 1):
+                d[s[j]] = len(p) - 1
+            z[-1] = i - p[-1] + 1
+        else:
+            d[c] = len(p)
+            p.append(i)
+            z.append(1)
+
+    return z
+
+'''
+Assume the partitions are as small as possible (size of 1) until proven
+otherwise. If you come across a character c that was included in a previous
+partition P, remove the partitions that came after P and expand P up to c.
 '''
 
 if __name__ == '__main__':

@@ -37,7 +37,7 @@ if __name__ == '__main__':
     prices = [1, 2, 3, 0, 2]
     print(max_profit(prices))
 
-'''
+r'''
 This is a problem about making decisions. For each day, you can either buy (if
 you do not hold a share and did not sell the previous day), sell (if you do
 hold a share), or cooldown (do nothing). In other words:

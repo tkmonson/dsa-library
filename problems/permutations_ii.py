@@ -7,12 +7,11 @@ all possible unique permutations in any order.
 
 from collections import Counter
 
-# Time: O(n! * n) = O(n!) (n! perms; for each, there is a copy operation)
+# Time: O(n! * n) = O(n!) (n! perms; e * n! nodes in tree; loop for each node)
 # Auxiliary space: O(n) (O(n!) including output)
 def permute(nums: list[int]) -> list[list[int]]:
     result = []
     candidate = []
-
     count = Counter(nums)
     
     def dfs():
@@ -20,7 +19,7 @@ def permute(nums: list[int]) -> list[list[int]]:
             result.append(candidate.copy())
             return
 
-        for num in count.keys():
+        for num in count:
             if count[num] == 0:
                 continue
 

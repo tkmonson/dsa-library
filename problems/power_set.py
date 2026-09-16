@@ -46,7 +46,7 @@ def subsets_backtrack(nums: list[int]) -> list[list[int]]:
     backtrack(0)
     return power_set
 
-'''
+r'''
     {1, 2, 3}  =>
                              {}
                  ___________/  \___________

@@ -13,3 +13,9 @@ If we consider our model of computation to be a Turing machine with a read-only 
 2. Some algorithms may use a very large output space and a much smaller auxiliary space, like an algorithm to compute all of the permutations of a set of integers. For such algorithms, output space will be noted separately.
 
 3. In a multi-tape Turing machine, when a symbol is written to the output tape, it is final. On a RAM-based computer, an algorithm could define an "output array" (the array that is eventually returned), do work inside of it, and be considered O(1) because the output space does not count toward auxiliary space. This is "gaming" the auxiliary space complexity analysis based on exploitation of the above definition. Let's say you are building up an output array as the algorithm runs. Technically, if elements in the output array are ever read or modified after being appended, then it counts as auxiliary space because work is being done. If not, then the elements could conceivably be printed to the output tape as they are computed, and the output array would not count as auxiliary space.
+
+## Note on Integer Arithmetic
+
+**Arithmetic is assumed to be unit-cost when its operands fit in O(logn) bits (the word-RAM model). Where an integer's width grows with the input, the bit length is charged instead.**
+
+Nearly every problem here constrains values to fit comfortably in a machine word, so additions, comparisons and multiplications are O(1) in both time and space. Sums and products of such values stay within O(logn) bits, which is still one word. The exception is an algorithm whose operands grow with the input (see `find_duplicate_number.py`, `multiply_strings.py`, `permutation_in_string.py`).

@@ -5,6 +5,8 @@ Given a string `s` of characters '(', ')', and '*', where '*' can reduce to
 '(', ')', or '', return True if `s` can be a valid parenthesis string.
 '''
 
+from functools import cache
+
 # Time: O(n)
 # Auxiliary space: O(1)
 def check_valid_string(s: str) -> bool:

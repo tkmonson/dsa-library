@@ -7,7 +7,7 @@ there is no common subsequence, return 0.
 
 from functools import cache
 
-# Time: O(2^(m + n))?
+# Time: O(m*n) (one O(1) op per (i, j) pair; O(2^(m + n)) without caching)
 # Auxiliary space: O(m*n) (@cache; stack depth is O(m + n))
 def longest_common_subsequence_memo(s1: str, s2: str) -> int:
     @cache

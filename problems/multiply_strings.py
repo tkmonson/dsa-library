@@ -6,7 +6,7 @@ also represented as a string. You cannot convert the inputs to integers
 directly.
 '''
 
-# Time: O(n + m)
+# Time: O(n^2 + m^2) (multiplication and int allocation are O(n + m))
 # Auxiliary space: O(n + m) (Python ints are arbitrary-precision; space to
 # store int scales linearly with length of string)
 def multiply(num1: str, num2: str) -> str:
@@ -23,7 +23,7 @@ def multiply(num1: str, num2: str) -> str:
     return str(a * b)
 
 
-# Time: O(n * m)
+# Time: O(n * m * (n + m)) (multiplication and int allocation are O(n + m))
 # Auxiliary space: O(n + m)
 def multiply2(num1: str, num2: str) -> str:
     d = {'0': 0, '1': 1, '2': 2, '3': 3, '4': 4,

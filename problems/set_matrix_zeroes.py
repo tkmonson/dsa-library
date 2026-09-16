@@ -5,7 +5,7 @@ Given an mxn integer matrix, if an element is 0, set its entire row and column
 to 0s. The solution should be in-place.
 '''
 
-# Time: O(mn)
+# Time: O(m*n)
 # Auxiliary space: O(1)
 def set_zeroes(matrix: list[list[int]]) -> None:
     m, n = len(matrix), len(matrix[0])
@@ -53,7 +53,7 @@ information about which rows and columns to zero out instead of auxiliary
 arrays.
 '''
 
-# Time: O(mn)
+# Time: O(m*n)
 # Auxiliary space: O(m + n)
 def set_zeroes2(matrix: list[list[int]]) -> None:
     m, n = len(matrix), len(matrix[0])
@@ -76,7 +76,7 @@ def set_zeroes2(matrix: list[list[int]]) -> None:
                 matrix[i][j] = 0
 
 
-# Time: O(mn)
+# Time: O(m*n(m + n)) (for zero matrix, row and column pass for every cell)
 # Auxiliary space: O(1)
 def set_zeroes3(matrix: list[list[int]]) -> None:
     m, n = len(matrix), len(matrix[0])

@@ -4,6 +4,8 @@ Maximum Product Subarray (#152)
 Given an array of integers, find a subarray that has the largest product and
 return that product.
 
+The answer will fit in a 32-bit integer.
+
 E.g.
     [-6, 4, -5, 8, -10, 0, 8]  =>  1600 (subarray is [4, -5, 8, -10])
     [40, 0, -20, -10]  =>  200 (subarray is [-20, -10])

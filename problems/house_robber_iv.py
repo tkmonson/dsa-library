@@ -10,7 +10,7 @@ the minimum capability of a robber who must rob at least `k` houses without
 alerting the police. Assume it is always possible to rob at least `k` houses.
 '''
 
-# Time: O(nlogn)
+# Time: O(n * log(max(nums) - min(nums))) (binary search is over value range)
 # Auxiliary space: O(1)
 def min_capability(nums: list[int], k: int) -> int:
     def possible(capability):

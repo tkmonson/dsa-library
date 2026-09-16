@@ -10,10 +10,10 @@ Return the minimum number of extra characters in `s` which are not present in
 any of the substrings.
 '''
 
-# Time: O(n^3)
-# Auxiliary space: O(n + m), where m is number of words in dictionary
+# Time: O(n^3 + t) where t = total chars in dict
+# Auxiliary space: O(n + m) where m = number of words in dict
 def min_extra_char(s: str, dictionary: list[str]) -> int:
-    words = set(dictionary)
+    words = set(dictionary)  # hashing string of length L is O(L) in time
     dp = { len(s): 0 }
     def dfs(i):  # n nested calls (starts)
         if i in dp:
@@ -62,7 +62,7 @@ class Trie:
                 curr = curr.children[c]
             curr.word = True
 
-# Time: O(n^2 + t), where t = total chars in dict
+# Time: O(n^2 + t) where t = total chars in dict
 # Auxiliary space: O(n + p), where p = number of distinct prefixes in dict
 def min_extra_char_trie(s: str, dictionary: list[str]) -> int:
     dp = { len(s): 0 }

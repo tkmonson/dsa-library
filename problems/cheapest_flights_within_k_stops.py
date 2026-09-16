@@ -13,7 +13,7 @@ return -1.
 from collections import deque
 from math import inf
 
-# Time: O(k|E|)
+# Time: O(k * (|E| + n))
 # Auxiliary space: O(n)
 def find_cheapest_price_bellman_ford(n: int, flights: list[list[int]],
                                      src: int, dst: int, k: int) -> int:
@@ -51,7 +51,7 @@ Run the relaxation loop k + 1 times, look up the shortest distance to the
 destination.
 '''
 
-# Time: O(|E| + |V|^k) ?
+# Time: O(k * W * |E|) where W is the max price
 # Auxiliary space: O(n + |E|) (dist and adj; |E| is n^2 for dense graphs)
 def find_cheapest_price_dijkstra(n: int, flights: list[list[int]],
                                  src: int, dst: int, k: int) -> int:
@@ -94,5 +94,5 @@ if __name__ == '__main__':
     src = 0
     dst = 3
     k = 1
-    print(find_cheapest_price(n, flights, src, dst, k))
+    print(find_cheapest_price_bellman_ford(n, flights, src, dst, k))
 

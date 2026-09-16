@@ -12,7 +12,7 @@ Given the array `nums` after the rotation and an integer `target`, return true
 if `target` is in `nums`, or false if it is not in `nums`.
 '''
 
-# Time: O(logn)
+# Time: O(n) (worst-case, can be O(logn) for certain inputs)
 # Auxiliary space: O(1)
 def search(nums: list[int], target: int) -> int:
     left, right = 0, len(nums) - 1

@@ -7,9 +7,11 @@ or more times. Return the duplicate integer in O(1) space and without modifying
 the input array.
 '''
 
-# This problem has many solutions. They are sorted below in order of increasing
-# time complexity, and those of the same time complexity are sorted in order of
-# increasing space complexity. In short, they are sorted best to worst.
+'''
+This problem has many solutions. They are sorted below in order of increasing
+time complexity, and those of the same time complexity are sorted in order of
+increasing space complexity. In short, they are sorted best to worst.
+'''
 
 # Time: O(n)
 # Auxiliary space: O(1)
@@ -30,7 +32,7 @@ def find_duplicate_tortoise_hare(nums: list[int]) -> int:
 
     return hare
 
-'''
+r'''
 This is a cycle detection algorithm called Floyd's Tortoise and Hare.
 
 Let f(x) = nums[x]. We can use f(x) to construct the sequence x, nums[x],
@@ -162,22 +164,6 @@ somewhere else. We will have found a duplicate when we attempt to overwrite an
 equivalent value.
 '''
 
-# Time: O(n)
-# Auxiliary space: O(n) (looks like O(1) but bit length of seen grows linearly)
-def find_duplicate_seen(nums: list[int]) -> int:
-    seen = 0
-    for num in nums:
-        if seen & (1 << num):
-            return num
-        seen |= 1 << num
-
-'''
-This solution does not use constant space, so it does not satisfy the
-constraints of the problem. Instead of using an array or set to keep track of
-whether a number in [1, n] has been seen before, we can store this state in the
-bits of an integer. Clever, but this still ultimately requires linear space.
-'''
-
 # Time: O(nlogn)
 # Auxiliary space: O(1)
 def find_duplicate_binary_search(nums: list[int]) -> int:
@@ -242,6 +228,23 @@ def find_duplicate_sort(nums: list[int]) -> int:
 '''
 This solution modifies the input array and does not use constant space, so it
 does not satisfy the constraints of the problem.
+'''
+
+# Time: O(n^2) (bit shift, AND, OR, and new int allocation are all O(n))
+# Auxiliary space: O(n) (looks like O(1) but bit length of seen grows linearly)
+def find_duplicate_seen(nums: list[int]) -> int:
+    seen = 0
+    for num in nums:
+        mask = (1 << num)
+        if seen & mask:
+            return num
+        seen |= mask
+
+'''
+This solution does not use constant space, so it does not satisfy the
+constraints of the problem. Instead of using an array or set to keep track of
+whether a number in [1, n] has been seen before, we can store this state in the
+bits of an integer. Clever, but this still ultimately requires linear space.
 '''
 
 # Time: O(n^2)

@@ -18,7 +18,7 @@ class TreeNode:
         self.right = right
 
 
-# Time: O(logn) where n is the number of nodes in the BST
+# Time: O(h) where h is the height of the tree (O(logn) if tree is balanced)
 # Auxiliary space: O(1)
 def insert_into_bst(root: TreeNode, val: int) -> TreeNode:
     if not root:
@@ -37,7 +37,7 @@ def insert_into_bst(root: TreeNode, val: int) -> TreeNode:
     return root
 
 
-# Time: O(logn) where n is the number of nodes in the BST
+# Time: O(h) where h is the height of the tree (O(logn) if tree is balanced)
 # Auxiliary space: O(1)
 def insert_into_bst2(root: TreeNode, val: int) -> TreeNode:
     if not root:

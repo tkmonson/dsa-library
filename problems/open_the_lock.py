@@ -16,12 +16,14 @@ it.
 Given a target representing the value of the wheels that will unlock the lock,
 return the minimum total number of turns required to open the lock, or -1 if it
 is impossible.
+
+1 <= deadends.length <= 500
 '''
 
 from collections import deque
 
-# Time: O(1) (not dependent on input)
-# Auxiliary space: O(d) (set with deadends)
+# Time: O(1) (constant 10^4-state space)
+# Auxiliary space: O(1) (constant 10^4-state space)
 def open_lock(deadends: list[str], target: str):
     rot = {
         '0': ('9', '1'),

@@ -14,7 +14,6 @@ def sort_colors(nums: list[int]) -> None:
     hi = len(nums) - 1
 
     while mid <= hi:
-        print(nums)
         if nums[mid] == 0:
             nums[lo], nums[mid] = nums[mid], nums[lo]
             lo += 1

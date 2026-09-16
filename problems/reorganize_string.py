@@ -10,7 +10,7 @@ Return any possible rearrangement of s or return "" if not possible.
 from collections import Counter
 import heapq
 
-# Time: O(nlogn)
+# Time: O(n) (len(heap) <= 26)
 # Auxiliary space: O(1) (fixed char set)
 def reorganize_string(s: str) -> str:
     count = Counter(s)
@@ -45,8 +45,8 @@ most recently appended character.
 A character is pushed back onto the heap every turn.
 '''
 
-# Time: O(nlogn)
-# Auxiliary space: O(1)
+# Time: O(n) (len(heap) <= 26)
+# Auxiliary space: O(1) (fixed char set)
 def reorganize_string2(s: str) -> str:
     count = Counter(s)
     heap = []

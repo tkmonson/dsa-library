@@ -38,7 +38,7 @@ So the answer is either 2 or 3.
 So 3 is optimal, you want the maximum number of 3s.
 '''
 
-# Time: O(1)
+# Time: O(n)
 # Auxiliary space: O(1)
 def integer_break2(n: int) -> int:
     max_product = 0

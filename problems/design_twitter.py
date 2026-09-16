@@ -48,7 +48,7 @@ class Twitter:
         self.tweets[user_id] = tweet
         self.time += 1
 
-    # Time: O(10logk), where k is the number of followees a user has
+    # Time: O(k), where k is the number of followees a user has
     def get_news_feed(self, user_id: int) -> list[int]:
         pq = []
         if (head := self.tweets[user_id]):
@@ -92,7 +92,7 @@ class Twitter2:
         self.tweets[user_id].append((-self.time, tweet_id))
         self.time += 1
 
-    # Time: O(10logk), where k is the number of followees a user has
+    # Time: O(k), where k is the number of followees a user has
     def get_news_feed(self, user_id: int) -> list[int]:
         pq = []
         self.followees[user_id].add(user_id)

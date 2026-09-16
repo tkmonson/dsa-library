@@ -8,7 +8,8 @@ any order.
 from math import factorial
 from itertools import permutations
 
-# Time: O(n! * n) = O(n!) (n! perms; for each, there is a copy operation)
+# Time: O(n! * n^2) = O(n!) (n! perms; e * n! nodes in tree; linear check in
+#                            loop for each node)
 # Auxiliary space: O(n) (O(n!) including output)
 def permute(nums: list[int]) -> list[list[int]]:
     result = []

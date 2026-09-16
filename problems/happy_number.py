@@ -11,7 +11,7 @@ the following process:
     * Those numbers for which this process ends in 1 are happy.
 '''
 
-# Time: O(n)
+# Time: O(logn) (f traverses n's digits; the loop is O(1))
 # Auxiliary space: O(1)
 def is_happy(n: int) -> bool:
     def f(n):
@@ -36,7 +36,7 @@ exists. Thus, we can just run a slow and fast pointer, and if there is a cycle,
 they will eventually intersect. If not, the fast pointer will hit 1 first.
 '''
 
-# Time: O(n)
+# Time: O(logn)
 # Auxiliary space: O(logn) (str allocates log10(n) chars)
 def is_happy2(n: int) -> bool:
     seen = set()

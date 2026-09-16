@@ -9,9 +9,8 @@ The same word may be reused multiple times in the segmentation.
 from collections import defaultdict
 from functools import lru_cache
 
-# Top-down
-# Time: O(n^3 + m) where n = len(s), m = len(word_dict)
-# Auxiliary space: O(n + m)
+# Time: O(n^3 + t) where t = total chars in dict (string hashing is linear)
+# Auxiliary space: O(n + m) where m = number of words in dict
 def word_break_memo(s: str, word_dict: list[str]) -> bool:
     n = len(s)
     word_dict = set(word_dict)
@@ -42,9 +41,8 @@ segmented into words in word_dict. This answer is cached so that that section
 of s is not explored again in the future after backtracking and resegmenting.
 '''
 
-# Bottom-up
-# Time: O(n^3 + m) where n = len(s), m = len(word_dict)
-# Auxiliary space: O(n + m)
+# Time: O(n^3 + t) where t = total chars in dict (string hashing is linear)
+# Auxiliary space: O(n + m) where m = number of words in dict
 def word_break_tab(s: str, word_dict: list[str]) -> bool:
     word_dict = set(word_dict)
     n = len(s)

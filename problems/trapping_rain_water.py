@@ -16,7 +16,7 @@ from contextlib import suppress
 
 # Time: O(n)
 # Auxiliary space: O(1)
-def trap(self, height: List[int]) -> int:
+def trap(self, height: list[int]) -> int:
     left, right = 0, len(height) - 1
     left_max, right_max = 0, 0
     trapped_water = 0

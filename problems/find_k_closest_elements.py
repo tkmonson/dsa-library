@@ -34,7 +34,7 @@ Find x or the closest element to x, add elements on either side of it in order
 of increasing distance from x, return the subarray once it contains k elements.
 '''
 
-# Time: O(log(n - k))
+# Time: O(log(n - k) + k)
 # Auxiliary space: O(1)
 def find_k_closest_integers2(arr: list[int], k: int, x: int) -> list[int]:
     left, right = 0, len(arr) - k
@@ -45,6 +45,7 @@ def find_k_closest_integers2(arr: list[int], k: int, x: int) -> list[int]:
             left = m + 1
         else:
             right = m
+
     return arr[left : left + k]
 
 '''

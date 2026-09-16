@@ -19,7 +19,7 @@ def length_of_lis(nums: list[int]) -> int:
 
     return len(sub)
 
-'''
+r'''
 Greedily construct a strictly increasing subsequence (if you can take an
 element, take it). If the next element is not greater than the last element in
 the subsequence, it cannot be added to that subsequence. But the LIS may

@@ -1,4 +1,4 @@
-# Time: O(4^(m*n))
+# Time: O(3^(m*n)) (3 fresh branches at each step)
 # Auxiliary space: O(m*n) (stack space; path can cover whole grid)
 def robotPaths(matrix):
     row_dim = len(matrix)

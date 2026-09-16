@@ -14,7 +14,7 @@ Assuming Alice and Bob play optimally, return the maximum number of stones
 Alice can get.
 '''
 
-# Time: O(n^2)
+# Time: O(n^3) (O(n^2) states, loop for each)
 # Auxiliary space: O(n^2)
 def stone_game(piles: list[int]) -> int:
     dp = {}

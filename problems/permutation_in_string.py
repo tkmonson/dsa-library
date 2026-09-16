@@ -5,7 +5,7 @@ Given two strings `s1` and `s2`, return True if `s2` contains a permutation of
 `s1` or False otherwise.
 '''
 
-# Time: O(n)
+# Time: O(n^2) (multiplication and division are O(n))
 # Auxiliary space: O(n) (Python ints are arbitrary-precision; target_code and
 # window_code are products of up to n primes => O(n) bits of storage)
 def check_inclusion(s1: str, s2: str) -> bool:
@@ -46,7 +46,7 @@ need this character check to be O(1). We can do this by mapping collections of
 characters to unique numbers using a prime factorization hash.
 '''
 
-if __name__ in '__main__':
+if __name__ == '__main__':
     s1 = 'adc'
     s2 = 'dcda'
     print(check_inclusion(s1, s2))
