@@ -23,6 +23,10 @@ following is true:
 
 from collections import defaultdict, deque
 
+# Time: O(C + U + E) = O(C), where C is total chars, U is unique chars, and E
+#       is number of edges (Kahn's algorithm is O(U + E); E is less than or
+#       equal to (N - 1) and at most U^2, so U and E are bounded by C)
+# Auxiliary space: O(1) (fixed char set; in theory, O(U + E))
 def alien_dictionary(words: list[str]) -> str:
     adj = defaultdict(set)
     indegree = {ch: 0 for word in words for ch in word}
