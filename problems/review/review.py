@@ -582,18 +582,18 @@ def cmd_issue(args, state, problems, config, today):
                  int(m[3]) if m[3] else None, None, today))
 
 def email_body(state, problems, config, system, today) -> tuple[str, str]:
+    '''Numbers only: no titles, and no visible URLs that contain one (the
+    LeetCode and solution links), so nothing hints at the problem early.'''
     text, rows = [], []
     for entry in state['queue']:
         p = queued_problem(entry, problems)
-        label = f'#{p.num} {p.title}'
+        label = f'#{p.num}'
         meta = (f'{DIFFICULTY[p.diff]} · {p.minutes} min · '
                 f'{describe(p, entry, system, today)}')
         solution = solution_link(config, p)
         links = {r: issue_link(config, p.num, r) for r in RATINGS}
 
-        text += [label, f'  {meta}', f'  {p.link}']
-        if solution:
-            text.append(f'  your solution (after!): {solution}')
+        text += [label, f'  {meta}']
         text += [f'  {r}: {links[r]}' for r in RATINGS] + ['']
 
         record_links = ' · '.join(
@@ -647,8 +647,7 @@ def cmd_email(args, state, problems, config, today):
         print('Nothing to send.')
         return
     titles = [queued_problem(e, problems) for e in state['queue']]
-    subject = 'LeetCode today: ' + ', '.join(
-        f'#{p.num} {p.title}' for p in titles)
+    subject = 'LeetCode today: ' + ', '.join(f'#{p.num}' for p in titles)
     text, body = email_body(state, problems, config, args.system, today)
 
     if args.dry_run:
