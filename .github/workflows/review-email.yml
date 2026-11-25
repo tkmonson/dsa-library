@@ -1,0 +1,49 @@
+name: Daily review email
+
+on:
+  schedule:
+    # 8 am New York is 12:00 UTC in summer (EDT) and 13:00 UTC in winter
+    # (EST). Both run; the script sends once, at or after 8 am local.
+    - cron: '0 12 * * *'
+    - cron: '0 13 * * *'
+  workflow_dispatch:
+    inputs:
+      force:
+        description: Send now, even if today's email already went out
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+
+concurrency:
+  group: review-state
+
+jobs:
+  email:
+    runs-on: ubuntu-latest
+    env:
+      PYTHONDONTWRITEBYTECODE: 1
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.13'
+      - name: Send email
+        env:
+          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+          EMAIL_TO: ${{ secrets.EMAIL_TO }}
+          EMAIL_FROM: ${{ vars.EMAIL_FROM }}
+          FORCE: ${{ inputs.force && '--force' || '' }}
+        run: python problems/review/review.py email $FORCE
+      - name: Save queue
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add problems/review/state.json
+          git diff --cached --quiet && exit 0
+          git commit -m 'Update review queue'
+          git pull --rebase --autostash -q
+          git push -q

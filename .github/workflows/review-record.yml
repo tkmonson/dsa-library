@@ -1,0 +1,59 @@
+name: Record review result
+
+# Triggered by the again/hard/good/easy links in the daily email, which open
+# an issue titled like "done 146 good" (optionally "done 146 good 18").
+on:
+  issues:
+    types: [opened]
+
+permissions:
+  contents: write
+  issues: write
+
+concurrency:
+  group: review-state
+
+jobs:
+  record:
+    if: >-
+      github.event.issue.user.login == github.repository_owner &&
+      startsWith(github.event.issue.title, 'done ')
+    runs-on: ubuntu-latest
+    env:
+      PYTHONDONTWRITEBYTECODE: 1
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.13'
+      - name: Record
+        id: record
+        env:
+          TITLE: ${{ github.event.issue.title }}
+        run: python problems/review/review.py issue "$TITLE" > result.txt 2>&1
+      - name: Save
+        id: save
+        if: steps.record.outcome == 'success'
+        env:
+          TITLE: ${{ github.event.issue.title }}
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add problems/review/state.json
+          git commit -m "Record review: ${TITLE#done }"
+          git pull --rebase --autostash -q
+          git push -q
+      - name: Close issue
+        if: always()
+        env:
+          GH_TOKEN: ${{ github.token }}
+          ISSUE: ${{ github.event.issue.number }}
+          OUTCOME: ${{ steps.save.outcome }}
+        run: |
+          if [ "$OUTCOME" = success ]; then
+            gh issue close "$ISSUE" -R "$GITHUB_REPOSITORY" --comment "$(cat result.txt)"
+          else
+            gh issue comment "$ISSUE" -R "$GITHUB_REPOSITORY" --body "Couldn't record that: $(cat result.txt 2>/dev/null)"
+          fi

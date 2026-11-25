@@ -1,0 +1,10 @@
+{
+  "system": "rotation",
+  "per_day": 2,
+  "new_chance": 0.0,
+  "include_premium": false,
+  "timezone": "America/New_York",
+  "send_hour": 8,
+  "github_repo": "tkmonson/dsa-library",
+  "branch": "master"
+}
