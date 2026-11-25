@@ -1,12 +1,15 @@
 {
   "added": {},
-  "history": {},
+  "history": {
+    "46": [
+      {
+        "date": "2026-11-25",
+        "rating": "easy"
+      }
+    ]
+  },
   "last_email": "2026-11-25",
   "queue": [
-    {
-      "num": 46,
-      "since": "2026-11-25"
-    },
     {
       "num": 146,
       "since": "2026-11-25"
