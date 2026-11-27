@@ -23,59 +23,42 @@ The `get` and `put` operations must run in O(1) time.
 from collections import OrderedDict
 
 class ListNode:
-    def __init__(self, val: int):
-        self.val = val
-        self.prev = None
-        self.next = None
-
+    def __init__(self, key: int = 0, val: int = 0):
+        self.key, self.val = key, val
+        self.prev = self.next = None
 
 class LRUCache:
     def __init__(self, capacity: int):
-        self._cache = {}
         self._capacity = capacity
-        self._lru = None
-        self._mru = None
+        self._cache = {}
+        self._head = ListNode()  # head.next is the least recently used
+        self._tail = ListNode()  # tail.prev is the most recently used
+        self._head.next, self._tail.prev = self._tail, self._head
+
+    def _remove(self, node: ListNode) -> None:
+        node.prev.next, node.next.prev = node.next, node.prev
+
+    def _append(self, node: ListNode) -> None:
+        node.prev, node.next = self._tail.prev, self._tail
+        self._tail.prev.next = self._tail.prev = node
 
     def get(self, key: int) -> int:
         if key not in self._cache:
             return -1
-        self._update_to_most_recent(key)
-        return self._cache[key][0]
+        node = self._cache[key]
+        self._remove(node)
+        self._append(node)
+        return node.val
 
     def put(self, key: int, value: int) -> None:
         if key in self._cache:
-            self._update_to_most_recent(key)
-            self._cache[key][0] = value
-        else:
-            node = ListNode(key)
-            if not len(self._cache):
-                self._lru = node
-            else:
-                self._mru.next = node
-                node.prev = self._mru
-            self._mru = node
-
-            if len(self._cache) == self._capacity:
-                del self._cache[self._lru.val]
-                self._lru = self._lru.next
-                self._lru.prev = None
-            self._cache[key] = [value, node]
-
-    def _update_to_most_recent(self, key):
-        node = self._cache[key][1]
-        if node is self._mru:
-            return
-        if node is self._lru:
-            self._lru = self._lru.next
-
-        if node.prev:
-            node.prev.next = node.next
-        node.next.prev = node.prev
-
-        self._mru.next = node
-        node.prev = self._mru
-        node.next = None
-        self._mru = self._mru.next
+            self._remove(self._cache[key])
+        node = self._cache[key] = ListNode(key, value)
+        self._append(node)
+        if len(self._cache) > self._capacity:
+            lru = self._head.next
+            self._remove(lru)
+            del self._cache[lru.key]
 
 
 class LRUCache2:
@@ -86,15 +69,15 @@ class LRUCache2:
     def get(self, key: int) -> int:
         if key not in self._cache:
             return -1
-        self._cache[key] = self._cache.pop(key)
+        self._cache.move_to_end(key)
         return self._cache[key]
 
     def put(self, key: int, value: int) -> None:
-        if key not in self._cache and len(self._cache) >= self._capacity:
-            self._cache.popitem(last=False)
         if key in self._cache:
-            self._cache.pop(key)
+            self._cache.move_to_end(key)
         self._cache[key] = value
+        if len(self._cache) > self._capacity:
+            self._cache.popitem(last=False)
 
 
 if __name__ == '__main__':
@@ -118,4 +101,3 @@ while maintaining O(1) time implies the need for a linked list structure, which
 has O(1) remove and append operations. Thus, the LRU cache must make use of a
 hash map and a linked list.
 '''
-
