@@ -95,6 +95,6 @@ Dividing at each step keeps the number small.
 '''
 
 if __name__ == '__main__':
-    m, n = 3, 7
-    print(unique_paths4(m, n))
-
+    m = 3
+    n = 7
+    print(unique_paths(m, n))

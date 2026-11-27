@@ -16,6 +16,37 @@ def max_subarray_sum(nums: list[int]) -> int:
         max_sum = max(max_sum, current_sum)
     return max_sum
 
+'''
+This problem has optimal substructure (the maximum subarray of nums can be
+calculated from e.g. the maximum subarray of nums[:-1] or from e.g. the maximum
+subarrays of nums[:i] and nums[i:] (or some subarray that crosses both)) and
+overlapping subproblems (the subarrays are nested).
+
+This problem is solved by Kadane's algorithm, which is similar to a sliding
+window solution. Starting from the left, you add elements to a sum; the left
+pointer is at 0, and the right pointer increments as elements are added. If the
+sum becomes negative after adding nums[i] to it, you know that nums[i + 1] is
+greater than the sum of the subarray nums[:i + 2], so it makes sense to get rid
+of the elements that came before nums[i + 1] by setting the sum to nums[i + 1]
+(in other words, moving the left and right pointer to i + 1). Keep track of the
+largest sum that is generated and return it once the whole array has been
+traversed.
+
+Because this algorithm calculates the maximum subarray ending at each position
+from a related overlapping subproblem (the maximum subarray ending at the
+previous position), it is an example of dynamic programming.
+
+   [-2,  1, -3, 4, -1, 2, 1, -5, 4]
+-2 |__|
+      1 |_|
+     -2 |_____|
+             4 |_|
+             3 |_____|
+             5 |________|
+             6 |___________|
+             1 |_______________|
+             5 |__________________|  => the largest sum is 6.
+'''
 
 # Time: O(n*log(n))
 # Auxiliary space: O(log(n)) (call stack)
@@ -48,36 +79,6 @@ def max_subarray_sum_daq(nums: list[int]) -> int:
     return daq(0, len(nums) - 1)
 
 '''
-This problem has optimal substructure (the maximum subarray of nums can be
-calculated from e.g. the maximum subarray of nums[:-1] or from e.g. the maximum
-subarrays of nums[:i] and nums[i:] (or some subarray that crosses both)) and
-overlapping subproblems (the subarrays are nested).
-
-This problem is solved by Kadane's algorithm, which is similar to a sliding
-window solution. Starting from the left, you add elements to a sum; the left
-pointer is at 0, and the right pointer increments as elements are added. If the
-sum becomes negative after adding nums[i] to it, you know that nums[i + 1] is
-greater than the sum of the subarray nums[:i + 2], so it makes sense to get rid
-of the elements that came before nums[i + 1] by setting the sum to nums[i + 1]
-(in other words, moving the left and right pointer to i + 1). Keep track of the
-largest sum that is generated and return it once the whole array has been
-traversed.
-
-Because this algorithm calculates the maximum subarray ending at each position
-from a related overlapping subproblem (the maximum subarray ending at the
-previous position), it is an example of dynamic programming.
-
-   [-2,  1, -3, 4, -1, 2, 1, -5, 4]
--2 |__|
-      1 |_|
-     -2 |_____|
-             4 |_|
-             3 |_____|
-             5 |________|
-             6 |___________|
-             1 |_______________|
-             5 |__________________|  => the largest sum is 6.
-
 This problem can also be solved by a divide-and-conquer algorithm:
     1. Divide the given array in two halves
     2. Return the maximum of:
@@ -89,3 +90,6 @@ This problem can also be solved by a divide-and-conquer algorithm:
             iii. Return their sum
 '''
 
+if __name__ == '__main__':
+    nums = [-2, 1, -3, 4, -1, 2, 1, -5, 4]
+    print(max_subarray_sum(nums))
