@@ -9,7 +9,25 @@ bottom-right corner.
 
 from math import factorial
 
+# Time: O(m * n)
+# Auxiliary space: O(m * n) + O(m + n) (memo + stack)
 def unique_paths(m, n):
+    dp = {}
+    def dfs(r, c):
+        if r == m - 1 or c == n - 1:
+            return 1
+        if (r, c) not in dp:
+            dp[(r, c)] = dfs(r + 1, c) + dfs(r, c + 1)
+        return dp[(r, c)]
+    return dfs(0, 0)
+
+'''
+Top-down, recursive solution with memoization.
+'''
+
+# Time: O(m * n)
+# Auxiliary space: O(m * n)
+def unique_paths2(m, n):
     dp = [[1 for _ in range(n)] for _ in range(m)]
     for r in range(1, m):
         for c in range(1, n):
@@ -29,7 +47,9 @@ cell's top neighbor plus the number of paths from the start to that cell's left
 neighbor.
 '''
 
-def unique_paths2(m, n):
+# Time: O(m * n)
+# Auxiliary space: O(n)
+def unique_paths3(m, n):
     dp = [1] * n
     for _ in range(1, m):
         for c in range(1, n):
@@ -41,7 +61,9 @@ A space-optimized version of the same algorithm. The new dp[c] is equal to the
 sum of the old dp[c] (top neighbor) and dp[c - 1] (left neighbor).
 '''
 
-def unique_paths3(m, n):
+# Time: O(m + n)
+# Auxiliary space: O(1)
+def unique_paths4(m, n):
     k = min(m - 1, n - 1)
     n = m + n - 2
     return factorial(n) // (factorial(k) * factorial(n - k))
@@ -55,20 +77,21 @@ m + n - 2 moves, in how many different ways can you choose m - 1 of these moves
 to be down?". nCk = n! / (k!(n - k)!).
 '''
 
-def unique_paths4(m, n):
+# Time: O(min(m, n))
+# Auxiliary space: O(1)
+def unique_paths5(m, n):
     k = min(m - 1, n - 1)
     n = m + n - 2
-    numer, denom = 1, 1
+    result = 1
     for i in range(k):
-        numer *= (n - i)
-        denom *= (i + 1)
-    return numer // denom
+        result = result * (n - i) // (i + 1)
+    return result
 
 '''
 A more efficient version of the binomial coefficient solution that uses the
 multiplicative formula nCk = n * (n - 1) * ... * (n - k + 1) / k!. This works
-better for very large n and k because it avoids computing n! and (n - k)!,
-instead computing only the numerator shown above.
+better for very large n and k because it avoids computing n! and (n - k)!.
+Dividing at each step keeps the number small.
 '''
 
 if __name__ == '__main__':
